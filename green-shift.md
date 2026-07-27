@@ -34,7 +34,7 @@
 ### B. Frontend & UI Department (Shared IT / Non-IT)
 
 * **Task 1:** Setup the Agile board and finalize basic wireframes (e.g., using a whiteboard tool).
-* **Task 2:** Build the UI skeleton (using Streamlit for pure Python, or basic HTML/Bootstrap) to display the active server.
+* **Task 2:** Build the UI skeleton (using REACT) to display the active server.
 * **Task 3:** Connect the frontend to the API so the UI dynamically updates when the backend shifts routing.
 
 ### C. QA & Data Simulation Department (Non-IT Focus)
