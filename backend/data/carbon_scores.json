@@ -1,0 +1,10 @@
+{
+    "regions": {
+        "eu-west": {
+            "carbon_score": 25
+        },
+        "us-east": {
+            "carbon_score": 70
+        }
+    }
+}
