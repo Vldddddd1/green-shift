@@ -18,6 +18,8 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                 },
                 paper: {
                     backgroundColor: BackgroundColors.DarkThemeBackground,
+                    'box-shadow': shadows.darkMode,
+                    elevation: 1,
                 }
             }
             : {
@@ -33,6 +35,8 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                 },
                 paper: {
                     backgroundColor: BackgroundColors.LightThemeBackground,
+                    'box-shadow': shadows.lightMode,
+                    elevation: 1,
                 }
             }),
     },
