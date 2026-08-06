@@ -6,9 +6,12 @@ import svgr from 'vite-plugin-svgr'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-  react(),
-  svgr({
-    include: "**/*.svg?react",
-  }),
-],
+    react(),
+    babel({
+      presets: [reactCompilerPreset()],
+    }),
+    svgr({
+      include: "**/*.svg?react",
+    }),
+  ],
 })

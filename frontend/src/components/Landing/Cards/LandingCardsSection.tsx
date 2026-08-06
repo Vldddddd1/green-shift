@@ -1,6 +1,5 @@
-import {Box, Stack} from "@mui/material";
+import { Stack, } from "@mui/material";
 import {LandingCards} from "./LandingCards";
-import { shadows } from "../../../assets/themes/colors";
 
 const cardData = [
     { 

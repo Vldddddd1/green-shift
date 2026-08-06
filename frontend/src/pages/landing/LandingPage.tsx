@@ -1,5 +1,5 @@
-import { Box, Button, Grid, Typography, Stack } from '@mui/material'
-
+import { Box, Button, Typography, Stack } from '@mui/material'
+import { Link } from 'react-router';
 
 import { useTheme, } from '@mui/material/styles'
 import { useColorMode, } from '../../assets/themes/ThemeProvider'
@@ -9,6 +9,7 @@ import LogoDark from '../../assets/logos/mainLogoDark.svg?react';
 import LogoLight from '../../assets/logos/mainLogoLight.svg?react';
 
 import { LandingCardsSection } from '../../components/Landing/Cards/LandingCardsSection';
+import DashboardPage from '../dashboard';
 
 function LandingPage() {
     const { toggleColorMode } = useColorMode();
@@ -70,6 +71,7 @@ function LandingPage() {
                             </Typography>
                         </Stack>
                         <Button variant="contained"
+                            component = {Link} to="/dashboard"
                             sx={{
                                 alignSelf: 'center',
                                 width: { md: '320px' },
@@ -179,6 +181,7 @@ function LandingPage() {
                             </Typography>
                         </Stack>
                         <Button variant="contained"
+                            component = {Link} to="/dashboard"
                             sx={{
                                 alignSelf: 'center',
                                 width: { md: '320px' },
