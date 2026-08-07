@@ -1,5 +1,5 @@
 import { Box, Stack, useTheme } from '@mui/material';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 
 import { BackgroundColors, shadows } from '../../assets/themes/colors';
 
@@ -36,6 +36,7 @@ export const RegionMap = ({ regions, height = '500px' }: RegionMapProps) => {
                 zoom={5}
                 minZoom={3}
                 maxZoom={15}
+                zoomControl={false}
                 style={{
                     height: '100%',
                     width: '100%'
@@ -47,6 +48,7 @@ export const RegionMap = ({ regions, height = '500px' }: RegionMapProps) => {
                 {regions.map(r => (
                     <Marker key={r.id} position={[r.lat, r.lng]} />
                 ))}
+                <ZoomControl position="topright" /> 
             </MapContainer>
             <Stack sx={{
                 position: 'absolute',
