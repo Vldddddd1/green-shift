@@ -140,6 +140,13 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             ].join(','),
     },
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                '*': {
+                    transition: 'background-color 0.2s ease, color 0.5s ease, border-color 0.5s ease',
+                }
+            }
+        },
         MuiCard: {
             styleOverrides: {
                 root: {

@@ -1,3 +1,11 @@
+html, body {
+    background-color: #202020;
+}
+
+.no-transitions, .no-transitions * {
+    transition: none !important;
+}
+
 @font-face {
   font-family: 'Sora';
   /* Point to your asset folder. Vite handles these relative paths during build */
