@@ -31,8 +31,7 @@ declare module '@mui/material/styles' {
 const fluid: FluidTokens = {
     // Corner anchor. The logo sits this far from the top-left corner, the
     // theme toggle this far from the top-right corner, and the same distance
-    // pulls the footer credit up from the bottom - one number, three spots,
-    // so the page reads as evenly margined instead of eyeballed per element.
+    // pulls the footer credit up from the bottom
     // e.g. <Box sx={{ top: theme.fluid.edgeOffset, right: theme.fluid.edgeOffset }}>
     edgeOffset: 'clamp(16px, calc(-24.35px + 4.18vw), 32px)',
 
@@ -40,39 +39,29 @@ const fluid: FluidTokens = {
     // ("Green-Shift - Eco-Routing Cloud Balancer - Simplified demo build").
     textSm: 'clamp(11px, calc(5.96px + 0.52vw), 13px)',
 
-    // Shared by the small eyebrow label above the headline
-    // ("ECO-ROUTING CLOUD BALANCER") and the paragraph below the headline -
-    // they're not the same purpose but they read fine at the same size.
+    // ("ECO-ROUTING CLOUD BALANCER") and the paragraph below the headline
     textMd: 'clamp(14px, calc(3.91px + 1.04vw), 18px)',
 
     // The headline itself - "Route traffic to the cleanest grid,
     // automatically." The one thing on this page allowed to be huge.
     textXl: 'clamp(32px, calc(-28.53px + 6.27vw), 56px)',
 
-    // Caps how wide the text block (eyebrow + headline + paragraph) is
-    // allowed to get, so lines don't stretch edge-to-edge on a wide monitor.
-    // Deliberately shares its max with cardsMaxWidth below, so on a big
-    // screen the text column and the card grid line up at the same 800px -
-    // on a small screen it's only ever equal to or narrower than the cards,
-    // never wider.
     // e.g. the Stack wrapping the eyebrow/headline/paragraph, as `maxWidth`
     elementMaxWidth: 'clamp(320px, calc(-890.65px + 125.33vw), 800px)',
 
-    // Caps how wide the card grid is allowed to get, so it doesn't sprawl
-    // across a 27" monitor edge-to-edge.
     // e.g. the Stack wrapping <LandingCardsSection />, as `maxWidth`
     cardsMaxWidth: 'clamp(320px, calc(-890.65px + 125.33vw), 800px)',
 
-    // Width of the "View Live Dashboard →" button.
+    // Width of the "View Live Dashboard" button.
     ctaWidth: 'clamp(240px, calc(38.23px + 20.89vw), 320px)',
 
-    // Height of the "View Live Dashboard →" button.
+    // Height of the "View Live Dashboard" button.
     ctaHeight: 'clamp(40px, calc(19.82px + 2.09vw), 48px)',
 
     // Width of the small "Theme" toggle button in the corner.
     toggleWidth: 'clamp(64px, calc(23.65px + 4.18vw), 80px)',
 
-    // Height of the small "Theme" toggle button in the corner.
+    // Height of the small "Theme" toggle button.
     toggleHeight: 'clamp(28px, calc(17.91px + 1.04vw), 32px)',
 
     // Gap between the eyebrow, headline and paragraph inside the text block.
