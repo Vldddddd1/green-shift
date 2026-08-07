@@ -143,7 +143,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         MuiCssBaseline: {
             styleOverrides: {
                 '*': {
-                    transition: 'background-color 0.2s ease, color 0.5s ease, border-color 0.5s ease',
+                    transition: 'background-color 0.5s ease, color 0.5s ease, border-color 0.6s ease, box-shadow 0.5s ease',
                 }
             }
         },
