@@ -1,3 +1,4 @@
+import { useLayoutEffect, useState } from 'react';
 import { Box, Button, Typography, Stack } from '@mui/material'
 import { Link } from 'react-router';
 
@@ -9,11 +10,28 @@ import LogoDark from '../../assets/logos/mainLogoDark.svg?react';
 import LogoLight from '../../assets/logos/mainLogoLight.svg?react';
 
 import { LandingCardsSection } from '../../components/Landing/Cards/LandingCardsSection';
-import DashboardPage from '../dashboard';
 
 function LandingPage() {
     const { toggleColorMode } = useColorMode();
     const theme = useTheme();
+
+    // Tracks the cards grid's actual rendered width so the text block above
+    // it (eyebrow/headline/paragraph) can be sized to match exactly, instead
+    // of shrink-wrapping to its own content.
+    const [cardsEl, setCardsEl] = useState<HTMLDivElement | null>(null);
+    const [cardsWidth, setCardsWidth] = useState<number | null>(null);
+
+    useLayoutEffect(() => {
+        if (!cardsEl) return;
+
+        const observer = new ResizeObserver(([entry]) => {
+            setCardsWidth(entry.contentRect.width);
+        });
+        observer.observe(cardsEl);
+        return () => observer.disconnect();
+    }, [cardsEl]);
+
+    const textStackWidth = cardsWidth ? `${cardsWidth}px` : theme.fluid.elementMaxWidth;
 
     return (
         theme.palette.mode === 'dark' ? (
@@ -21,32 +39,34 @@ function LandingPage() {
                 <Stack sx={{
                     position: 'relative',
                     width: '100%',
-                    minHeight: '100vh',
+                    minHeight: { xs: 'auto', sm: '100dvh' },
+                    paddingTop: { xs: '5rem', sm: 0 },
                     justifyContent: 'center',
                 }}>
-                    <Box sx={{
-                        position: 'absolute',
-                        top: { xs: '16px', md: '32px' },
-                        left: { xs: '16px', md: '32px' },
-                        userSelect: 'none',
-                    }}>
-                        <LogoDark />
-                    </Box>
                     <Stack sx={{
-                        gap: 4,
+                        gap: theme.fluid.sectionGap,
                     }}>
+                        <Box sx={{
+                            position: 'absolute',
+                            top: { xs: '3%', sm: theme.fluid.edgeOffset },
+                            left: { xs: '27%', sm: theme.fluid.edgeOffset },
+                            userSelect: 'none',
+                        }}>
+                            <LogoDark />
+                        </Box>
                         <Stack sx={{
                             alignSelf: 'center',
                             alignItems: 'center',
-                            maxWidth: { md: '800px' },
+                            width: textStackWidth,
+                            maxWidth: '100%',
                             textAlign: 'center',
-                            gap: 3,
+                            gap: theme.fluid.elementGap,
                         }}>
 
                             <Typography sx={{
                                 color: TextColors.MainGreen,
                                 fontFamily: 'Sora',
-                                fontSize: { md: '18px' },
+                                fontSize: theme.fluid.textMd,
                                 fontWeight: 'semi-bold',
                                 userSelect: 'none',
                             }}>
@@ -55,7 +75,7 @@ function LandingPage() {
                             <Typography sx={{
                                 color: TextColors.DarkThemeText,
                                 fontFamily: 'Sora',
-                                fontSize: { md: '56px' },
+                                fontSize: theme.fluid.textXl,
                                 fontWeight: 'bold',
                                 userSelect: 'none',
                             }}>
@@ -63,7 +83,7 @@ function LandingPage() {
                             </Typography>
                             <Typography sx={{
                                 color: TextColors.DarkThemeWhite,
-                                fontSize: { md: '18px' },
+                                fontSize: theme.fluid.textMd,
                                 fontFamily: 'Sora',
                                 userSelect: 'none',
                             }}>
@@ -71,54 +91,47 @@ function LandingPage() {
                             </Typography>
                         </Stack>
                         <Button variant="contained"
-                            component = {Link} to="/dashboard"
+                            component={Link} to="/dashboard"
                             sx={{
                                 alignSelf: 'center',
-                                width: { md: '320px' },
-                                height: { md: '48px' },
+                                width: theme.fluid.ctaWidth,
+                                height: theme.fluid.ctaHeight,
                                 borderRadius: '32px',
                                 userSelect: 'none',
                             }}>
                             View Live Dashboard →
                         </Button>
-                        <Stack sx={{
+                        <Stack ref={setCardsEl} sx={{
                             alignSelf: 'center',
                             alignItems: 'center',
+                            maxWidth: { xs: theme.fluid.cardsMaxWidth, sm: '100%', lg: theme.fluid.cardsMaxWidth },
+                            width: '100%',
                         }}>
                             <LandingCardsSection />
                         </Stack>
+                        <Typography sx={{
+                            position: { xs: 'static', sm: 'absolute' },
+                            bottom: { xs: 'auto', sm: theme.fluid.edgeOffset },
+                            alignSelf: 'center',
+                            color: TextColors.DarkThemeText,
+                            fontFamily: 'Sora',
+                            fontSize: theme.fluid.textSm,
+                            fontWeight: 300,
+                            userSelect: 'none',
+                        }}>
+                            Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
+                        </Typography>
                     </Stack>
                 </Stack>
                 <Stack sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    bottom: { xs: '16px', md: '32px' },
-                }}>
-                    <Typography sx={{
-                        position: 'absolute',
-                        bottom: { xs: '16px', md: '32px' },
-                        color: TextColors.DarkThemeWhite,
-                        fontFamily: 'Sora',
-                        fontSize: { md: '13px' },
-                        fontWeight: 300,
-                        userSelect: 'none',
-                    }}>
-                        Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
-                    </Typography>
-                </Stack>
-                <Stack sx={{
-                    display: 'flex',
                     position: 'absolute',
-                    bottom: { xs: '16px', md: '128px' },
-                    left: { xs: '16px', md: '32px' },
+                    top: theme.fluid.edgeOffset,
+                    right: theme.fluid.edgeOffset,
                 }}>
                     <Button variant="contained" onClick={toggleColorMode}
                         sx={{
-                            position: 'absolute',
-                            width: { md: '80px' },
-                            height: { md: '32px' },
+                            width: theme.fluid.toggleWidth,
+                            height: theme.fluid.toggleHeight,
                             borderRadius: '16px',
                             userSelect: 'none',
                         }}>
@@ -131,32 +144,34 @@ function LandingPage() {
                 <Stack sx={{
                     position: 'relative',
                     width: '100%',
-                    minHeight: '100vh',
+                    minHeight: { xs: 'auto', sm: '100dvh' },
+                    paddingTop: { xs: '5rem', sm: 0 },
                     justifyContent: 'center',
                 }}>
-                    <Box sx={{
-                        position: 'absolute',
-                        top: { xs: '16px', md: '32px' },
-                        left: { xs: '16px', md: '32px' },
-                        userSelect: 'none',
-                    }}>
-                        <LogoLight />
-                    </Box>
                     <Stack sx={{
-                        gap: 4,
+                        gap: theme.fluid.sectionGap,
                     }}>
+                        <Box sx={{
+                            position: 'absolute',
+                            top: { xs: '3%', sm: theme.fluid.edgeOffset },
+                            left: { xs: '27%', sm: theme.fluid.edgeOffset },
+                            userSelect: 'none',
+                        }}>
+                            <LogoLight />
+                        </Box>
                         <Stack sx={{
                             alignSelf: 'center',
                             alignItems: 'center',
-                            maxWidth: { md: '800px' },
+                            width: textStackWidth,
+                            maxWidth: '100%',
                             textAlign: 'center',
-                            gap: 3,
+                            gap: theme.fluid.elementGap,
                         }}>
 
                             <Typography sx={{
                                 color: TextColors.MainGreen,
                                 fontFamily: 'Sora',
-                                fontSize: { md: '18px' },
+                                fontSize: theme.fluid.textMd,
                                 fontWeight: 'semi-bold',
                                 userSelect: 'none',
                             }}>
@@ -165,7 +180,7 @@ function LandingPage() {
                             <Typography sx={{
                                 color: TextColors.LightThemeText,
                                 fontFamily: 'Sora',
-                                fontSize: { md: '56px' },
+                                fontSize: theme.fluid.textXl,
                                 fontWeight: 'bold',
                                 userSelect: 'none',
                             }}>
@@ -173,7 +188,7 @@ function LandingPage() {
                             </Typography>
                             <Typography sx={{
                                 color: TextColors.LightThemeGray,
-                                fontSize: { md: '18px' },
+                                fontSize: theme.fluid.textMd,
                                 fontFamily: 'Sora',
                                 userSelect: 'none',
                             }}>
@@ -181,54 +196,47 @@ function LandingPage() {
                             </Typography>
                         </Stack>
                         <Button variant="contained"
-                            component = {Link} to="/dashboard"
+                            component={Link} to="/dashboard"
                             sx={{
                                 alignSelf: 'center',
-                                width: { md: '320px' },
-                                height: { md: '48px' },
+                                width: theme.fluid.ctaWidth,
+                                height: theme.fluid.ctaHeight,
                                 borderRadius: '32px',
                                 userSelect: 'none',
                             }}>
                             View Live Dashboard →
                         </Button>
-                        <Stack sx={{
+                        <Stack ref={setCardsEl} sx={{
                             alignSelf: 'center',
                             alignItems: 'center',
+                            maxWidth: { xs: theme.fluid.cardsMaxWidth, sm: '100%', lg: theme.fluid.cardsMaxWidth },
+                            width: '100%',
                         }}>
                             <LandingCardsSection />
                         </Stack>
+                        <Typography sx={{
+                            position: { xs: 'static', sm: 'absolute' },
+                            bottom: { xs: 'auto', sm: theme.fluid.edgeOffset },
+                            alignSelf: 'center',
+                            color: TextColors.LightThemeGray,
+                            fontFamily: 'Sora',
+                            fontSize: theme.fluid.textSm,
+                            fontWeight: 300,
+                            userSelect: 'none',
+                        }}>
+                            Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
+                        </Typography>
                     </Stack>
                 </Stack>
                 <Stack sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    bottom: { xs: '16px', md: '32px' },
-                }}>
-                    <Typography sx={{
-                        position: 'absolute',
-                        bottom: { xs: '16px', md: '32px' },
-                        color: TextColors.LightThemeGray,
-                        fontFamily: 'Sora',
-                        fontSize: { md: '13px' },
-                        fontWeight: 300,
-                        userSelect: 'none',
-                    }}>
-                        Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
-                    </Typography>
-                </Stack>
-                <Stack sx={{
-                    display: 'flex',
                     position: 'absolute',
-                    bottom: { xs: '16px', md: '128px' },
-                    left: { xs: '16px', md: '32px' },
+                    top: theme.fluid.edgeOffset,
+                    right: theme.fluid.edgeOffset,
                 }}>
                     <Button variant="contained" onClick={toggleColorMode}
                         sx={{
-                            position: 'absolute',
-                            width: { md: '80px' },
-                            height: { md: '32px' },
+                            width: theme.fluid.toggleWidth,
+                            height: theme.fluid.toggleHeight,
                             borderRadius: '16px',
                             userSelect: 'none',
                         }}>

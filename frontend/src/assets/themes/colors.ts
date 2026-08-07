@@ -9,7 +9,7 @@ export const TextColors = {
     MainGreen: '#3A8005',
     DarkThemeText: '#F5EEE0',
     DarkThemeWhite: '#F6F6F6',
-    DarkThemeGrey: '#737373',
+    DarkThemeGray: '#737373',
     LightThemeText: '#202020',
     LightThemeWhite: '#F5EEE0',
     LightThemeGray: '#666666',

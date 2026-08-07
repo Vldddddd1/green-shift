@@ -1,5 +1,6 @@
-import { Stack, } from "@mui/material";
-import {LandingCards} from "./LandingCards";
+import { Stack, useMediaQuery, } from "@mui/material";
+import { LandingCards } from "./LandingCards";
+import { LandingCardsCarousel } from "./LandingCardsCarousel";
 
 const cardData = [
     { 
@@ -21,13 +22,21 @@ const cardData = [
 ]
 
 export const LandingCardsSection = () => {
+    const isDesktop = useMediaQuery('(pointer: fine)');
 
+    if (!isDesktop) {
+        return (
+            <LandingCardsCarousel cardData={cardData} />
+        );
+    }
+    
     return (
         <Stack sx={{
             display: 'flex',
             flexDirection: 'row',
-            width: '100%',
+            width: '100vw',
             flexWrap: 'wrap',
+            justifyContent: 'center',
             gap: '32px',
         }}
         >
