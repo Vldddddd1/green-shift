@@ -12,7 +12,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage/>} />
-        <Route path="/home" element={<LandingPage/>} />
         <Route path="/dashboard" element={<DashboardPage/>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

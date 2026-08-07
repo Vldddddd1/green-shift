@@ -4,6 +4,9 @@ import './index.css'
 import App from './App.tsx'
 import { AppThemeProvider } from './assets/themes/ThemeProvider.tsx'
 
+import 'leaflet/dist/leaflet.css';
+import './assets/leaflet/leafletSetup';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AppThemeProvider>
