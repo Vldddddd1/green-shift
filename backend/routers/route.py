@@ -13,6 +13,6 @@ def get_carbon_scores():
 
 @router.get("/route", response_model=RouteResponse)
 def get_route():
-    region = decide_route()
+    region, scores = decide_route()
     server_response = forward_to_region(region)
-    return {"selected_region": region, "server_response": server_response}
+    return {"selected_region": region,  "scores": scores, "server_response": server_response}
