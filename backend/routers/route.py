@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.get("/carbon", response_model=CarbonScoreResponse)
 def get_carbon_scores():
-    return read_carbon_scores()
+   return {"regions": read_carbon_scores()}
 
 @router.get("/route", response_model=RouteResponse)
 def get_route():
