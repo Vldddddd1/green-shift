@@ -6,6 +6,9 @@ class RouteResponse(BaseModel):
 
 class RegionData(BaseModel):
     carbon_score: int
+    current_load: int
+    latency: int
+    status: str
 
 class CarbonScoreResponse(BaseModel):
     regions: dict[str, RegionData]

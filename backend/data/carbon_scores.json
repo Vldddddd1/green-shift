@@ -1,10 +1,16 @@
 {
     "regions": {
         "eu-west": {
-            "carbon_score": 25
+            "carbon_score": 25,
+            "current_load": 0,
+            "latency" : 20,
+            "status" : "online" 
         },
         "us-east": {
-            "carbon_score": 70
+            "carbon_score": 70,
+            "current_load": 0,
+            "latency" : 15,
+            "status" : "online"
         }
     }
 }
