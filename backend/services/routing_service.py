@@ -1,12 +1,21 @@
 from services.carbon_reader import read_carbon_scores
 
+
+
+def calculate_score(region_data: dict) -> float:
+
+    return(region_data["carbon_score"] + 0.6 * region_data["current_load"] + 0.1 * region_data["latency"])
+
 def decide_route() -> str:
     scores = read_carbon_scores()
     
-    eu_score = scores["eu-west"]["carbon_score"]
-    us_score = scores["us-east"]["carbon_score"]
+    region_scores = {
+        region: calculate_score(data)
+        for region, data in scores.items()
+    }
     
-    if eu_score <= us_score:
-        return "eu-west"
-    else:
-        return "us-east"
+    best_region = min(region_scores, key=region_scores.get)
+    return best_region, region_scores
+
+if __name__ == "__main__": 
+    print(decide_route())
