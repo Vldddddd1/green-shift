@@ -1,0 +1,30 @@
+services:
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+
+  eu-west-1:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-west-1
+      ZONE: eu-west
+
+  eu-west-2:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-west-2
+      ZONE: eu-west
+
+  us-east-1:
+    build: ./server
+    environment:
+      SERVER_NAME: us-east-1
+      ZONE: us-east
+
+  us-east-2:
+    build: ./server
+    environment:
+      SERVER_NAME: us-east-2
+      ZONE: us-east
