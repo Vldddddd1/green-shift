@@ -6,4 +6,4 @@ app = FastAPI()
 
 @app.get("/")
 def status():
-    return{"region":"eu-west", "status":"ok"}
+    return{"region":"eu-west-2", "status":"ok"}
