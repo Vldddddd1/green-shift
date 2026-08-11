@@ -1,7 +1,8 @@
+import { Stack, Box, Typography, useTheme } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+
 import type { ReactNode } from 'react';
 
-import { useEffect, useRef, useState } from 'react';
-import { Stack, Typography, Box, useTheme } from '@mui/material';
 
 import { BrandColors, TextColors } from '../../assets/themes/colors';
 
@@ -170,10 +171,15 @@ export const OverviewDetails = () => {
                 <MetricRow
                     label='API Connection'
                     value={
-                        <>
+                        <Stack direction='row' 
+                        sx={{
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                        >
                             <StatusDot color={API_STATUS_CONFIG[metrics.apiHealth].color} />
                             {API_STATUS_CONFIG[metrics.apiHealth].label}
-                        </>
+                        </Stack>
                     }
                     valueColor={API_STATUS_CONFIG[metrics.apiHealth].color}
                 />

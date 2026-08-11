@@ -17,6 +17,8 @@ interface RegionMapProps {
     activeZone?: string | null;
 }
 
+//-------------------------------------------------------------------------------------------------
+
 // AWS-region markers whose name is covered by the currently active
 // backend zone (e.g. zone "eu-west" highlights AWS regions "eu-west-1",
 // "eu-west-2", ...). regions.ts has no us-east entries yet, so an
@@ -28,6 +30,7 @@ const activeIcon = L.divIcon({
     iconAnchor: [9, 9],
 });
 
+//-------------------------------------------------------------------------------------------------
 export const RegionMap = ({ regions, height = '500px', activeZone = null }: RegionMapProps) => {
     const theme = useTheme();
 
