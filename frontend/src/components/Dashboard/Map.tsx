@@ -28,7 +28,7 @@ const activeIcon = L.divIcon({
     iconAnchor: [9, 9],
 });
 
-export const RegionMap = ({ regions, height = '500px', activeZone = null }: RegionMapProps) => {
+export const RegionMap = ({ regions, height = '100vh', activeZone = null }: RegionMapProps) => {
     const theme = useTheme();
     const tileUrl = theme.palette.mode === 'dark'
         ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
@@ -38,7 +38,7 @@ export const RegionMap = ({ regions, height = '500px', activeZone = null }: Regi
         <Box sx={{
             position: 'relative',
             width: '100svw',
-            height: '100vh',
+            height,
             overflow: 'hidden',
             '& .leaflet-container': {
                 backgroundColor: theme.palette.mode === 'dark' ? '#202020' : '#F5EEE0',
