@@ -12,3 +12,22 @@ if (!window.matchMedia) {
     dispatchEvent: () => false,
   }) as unknown as MediaQueryList
 }
+
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+if (!window.ResizeObserver) {
+  window.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver
+}
+
+class MockIntersectionObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() { return [] }
+}
+if (!window.IntersectionObserver) {
+  window.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver
+}
