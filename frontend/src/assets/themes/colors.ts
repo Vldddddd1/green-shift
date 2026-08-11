@@ -13,6 +13,7 @@ export const TextColors = {
     LightThemeText: '#202020',
     LightThemeWhite: '#F5EEE0',
     LightThemeGray: '#666666',
+    OverviewContent: '#BFBFBF',
 }
 
 export const BackgroundColors = {

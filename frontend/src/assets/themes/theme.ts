@@ -17,6 +17,7 @@ export interface FluidTokens {
     toggleHeight: string;
     elementGap: string;
     sectionGap: string;
+    navbarHeight: string;
 }
 
 declare module '@mui/material/styles' {
@@ -74,6 +75,8 @@ const fluid: FluidTokens = {
     // and the card grid.
     // e.g. the outer Stack that holds all three, as `gap`
     sectionGap: 'clamp(12px, calc(-38.44px + 5.22vw), 32px)',
+
+    navbarHeight: 'clamp(48px, calc(15.65px + 4.18vw), 64px)',
 };
 
 export const getDesignTokens = (mode: PaletteMode) => ({

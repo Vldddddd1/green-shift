@@ -3,16 +3,15 @@ import { Box, Button, Typography, Stack } from '@mui/material'
 import { Link } from 'react-router';
 
 import { useTheme, } from '@mui/material/styles'
-import { useColorMode, } from '../../assets/themes/ThemeProvider'
 import { TextColors, } from '../../assets/themes/colors'
 
 import LogoDark from '../../assets/logos/mainLogoDark.svg?react';
 import LogoLight from '../../assets/logos/mainLogoLight.svg?react';
 
 import { LandingCardsSection } from '../../components/Landing/Cards/LandingCardsSection';
+import ThemeButton from '../../components/NavBar/ThemeButton';
 
 function LandingPage() {
-    const { toggleColorMode } = useColorMode();
     const theme = useTheme();
 
     const Logo = theme.palette.mode === 'dark' ? LogoDark : LogoLight;
@@ -130,15 +129,7 @@ function LandingPage() {
                 top: theme.fluid.edgeOffset,
                 right: theme.fluid.edgeOffset,
             }}>
-                <Button variant="contained" onClick={toggleColorMode}
-                    sx={{
-                        width: theme.fluid.toggleWidth,
-                        height: theme.fluid.toggleHeight,
-                        borderRadius: '16px',
-                        userSelect: 'none',
-                    }}>
-                    Theme
-                </Button>
+                <ThemeButton/>
             </Stack>
         </Stack>
     );

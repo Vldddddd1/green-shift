@@ -30,6 +30,10 @@ export const RegionMap = ({ regions, height = '500px' }: RegionMapProps) => {
             '& .leaflet-container': {
                 backgroundColor: theme.palette.mode === 'dark' ? '#202020' : '#F5EEE0',
             },
+            '& .leaflet-top.leaflet-right': {
+                marginTop: `calc(${theme.fluid.navbarHeight} + 0px)`,
+                marginRight: '16px'
+            },
         }}>
             <MapContainer
                 center={[50, 20]}
@@ -48,19 +52,8 @@ export const RegionMap = ({ regions, height = '500px' }: RegionMapProps) => {
                 {regions.map(r => (
                     <Marker key={r.id} position={[r.lat, r.lng]} />
                 ))}
-                <ZoomControl position="topright" /> 
+                <ZoomControl position="topright" />
             </MapContainer>
-            <Stack sx={{
-                position: 'absolute',
-                top: theme.fluid.edgeOffset,
-                left: theme.fluid.edgeOffset,
-                backgroundColor: BackgroundColors.CardBackground,
-                borderRadius: '16px',
-                padding: '12px',
-                boxShadow: theme.palette.mode === 'dark' ? shadows.darkMode : shadows.lightMode,
-            }}>
-
-            </Stack>
         </Box>
 
     );

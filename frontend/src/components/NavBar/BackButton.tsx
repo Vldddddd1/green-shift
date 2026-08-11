@@ -1,4 +1,4 @@
-import { Stack, useTheme, Button } from '@mui/material';
+import { useTheme, Button } from '@mui/material';
 import { Link } from 'react-router';
 import { BrandColors, TextColors } from '../../assets/themes/colors';
 
@@ -12,17 +12,12 @@ function BackButton() {
                 component={Link} to="/"
                 
                 sx={{
-                    position: 'absolute',
-                    top: theme.fluid.edgeOffset,
-                    left: theme.fluid.edgeOffset,
                     backgroundColor: BrandColors.MainPrimary,
                     minWidth: 0,
                     width: '32px',
                     height: '32px',
                     padding: 0,
                     borderRadius: '50%',
-                    transform: 'translateZ(0)',
-                    zIndex: 1000,
                 }}
             >
                 <BackIcon 

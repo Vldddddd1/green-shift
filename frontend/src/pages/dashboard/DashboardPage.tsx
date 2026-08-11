@@ -1,13 +1,15 @@
 import { RegionMap } from '../../components/Dashboard/Map';
 
+import Navbar from '../../components/NavBar/Navbar';
 import regionData from '../../assets/leaflet/regions';
+import OverviewDetails from '../../components/Dashboard/OverviewDetails';
 
-import BackButton from '../../components/NavBar/BackButton';
 
 function DashboardPage() {
     return (
         <>
-            <BackButton />
+            <Navbar/>
+            <OverviewDetails/>
             <RegionMap regions={regionData} />
         </>
 
