@@ -1,8 +1,11 @@
-import L from 'leaflet';
 import { Box, useTheme } from '@mui/material';
 import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 
 import { BrandColors } from '../../assets/themes/colors';
+
+import L from 'leaflet';
+
+const WORLD_BOUNDS = L.latLngBounds([-60, -180], [85, 180]);
 
 interface Region {
     id: string;
@@ -67,10 +70,9 @@ export const RegionMap = ({ regions, height = '500px', activeZone = null }: Regi
                 minZoom={3}
                 maxZoom={15}
                 zoomControl={false}
-                style={{
-                    height: '100%',
-                    width: '100%'
-                }}>
+                maxBounds={WORLD_BOUNDS}
+                maxBoundsViscosity={1.0}
+                style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                     url={theme.custom.mapTileUrl}
                     noWrap={true}
