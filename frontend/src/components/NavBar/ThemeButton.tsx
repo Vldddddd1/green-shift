@@ -1,4 +1,4 @@
-import { Button, Box } from '@mui/material'
+import { Button, } from '@mui/material'
 
 import { useTheme, } from '@mui/material/styles'
 import { useColorMode, } from '../../assets/themes/ThemeProvider'
@@ -22,7 +22,7 @@ function ThemeButton() {
                 padding: 0,
                 borderRadius: '50%',
             }}>
-            <Icon width={16} height={16} />
+            <Icon width={16} height={16} style={{ color: theme.custom.themeIconColor }} />
         </Button>
     )
 }

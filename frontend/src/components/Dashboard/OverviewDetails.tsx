@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { useEffect, useRef, useState } from 'react';
-import { Stack, Typography, Box } from '@mui/material';
+import { Stack, Typography, Box, useTheme } from '@mui/material';
 
 import { BrandColors, TextColors } from '../../assets/themes/colors';
 
@@ -61,9 +61,11 @@ function MetricRow({ label, value, valueColor }: { label: string; value: ReactNo
 }
 
 export const OverviewDetails = () => {
+    const theme = useTheme();
+
     const { metrics } = useLiveMetrics();
 
-    const [position, setPosition] = useState( () => {
+    const [position, setPosition] = useState(() => {
         const saved = localStorage.getItem('overviewDetailsPosition');
         return saved ? JSON.parse(saved) : DEFAULT_POSITION;
     });
@@ -73,6 +75,7 @@ export const OverviewDetails = () => {
     }, [position]);
 
     const dragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
+    const panelRef = useRef<HTMLDivElement | null>(null);
 
     const handlePointerDown = (e: React.PointerEvent) => {
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -89,8 +92,9 @@ export const OverviewDetails = () => {
         const dx = e.clientX - dragRef.current.startX;
         const dy = e.clientY - dragRef.current.startY;
 
+        const panelHeight = panelRef.current?.offsetHeight ?? 120;
         const maxX = window.innerWidth - 360; // 360 - panel width
-        const maxY = window.innerHeight - 120;
+        const maxY = Math.max(window.innerHeight - panelHeight, 0);
 
         setPosition({
             x: Math.min(Math.max(dragRef.current.originX + dx, 0), maxX),
@@ -104,7 +108,9 @@ export const OverviewDetails = () => {
     };
 
     return (
-        <Stack onPointerDown={handlePointerDown}
+        <Stack
+            ref={panelRef}
+            onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             sx={{
@@ -117,17 +123,24 @@ export const OverviewDetails = () => {
                 width: '360px',
                 padding: '22px 24px',
                 borderRadius: '18px',
-                backgroundColor: 'rgba(32, 32, 32, 0.8)',
-                border: '3.5px solid rgba(245, 238, 224, 0.75)',
                 boxShadow: '0px 10px 24px 0px rgba(0,0,0,0.25)',
 
+                borderTop: '3.5px solid transparent',
+                borderLeft: '3.5px solid transparent',
+                borderRight: '3.5px solid transparent',
+                borderBottom: '3.5px solid transparent',
+                backgroundImage: `linear-gradient(rgba(32, 32, 32, 0.8), rgba(32, 32, 32, 0.8)), ${theme.custom.navBorderGradient}`,
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+                transition: 'background-color 0.5s ease, color 0.5s ease',
+
                 userSelect: 'none',
+                touchAction: 'none',
                 cursor: 'grab',
-                '&active': { cursor: 'grabbing' }
+                '&:active': { cursor: 'grabbing' }
             }}>
             <Stack
                 direction='row'
-
             >
                 <Typography sx={{
                     fontSize: '16px',
@@ -208,5 +221,3 @@ export const OverviewDetails = () => {
         </Stack>
     )
 };
-
-export default OverviewDetails;

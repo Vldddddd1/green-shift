@@ -1,5 +1,5 @@
 import { Typography, Box, Stack, } from '@mui/material';
-import { BrandColors, BackgroundColors, TextColors, shadows } from '../../../assets/themes/colors';
+import { BrandColors, BackgroundColors, TextColors } from '../../../assets/themes/colors';
 
 import { useTheme, } from '@mui/material/styles'
 
@@ -20,7 +20,8 @@ export const LandingCards = ({ title, subtitle }: LandingCardProps) => {
             padding: '24px',
             gap: '8px',
             alignItems: {xs: 'center', md: 'self-start'},
-            boxShadow: theme.palette.mode === 'dark' ? shadows.darkMode : shadows.lightMode
+            boxShadow: theme.custom.cardShadow,
+            transition: 'background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
         }}>
             <Box
                 sx={{

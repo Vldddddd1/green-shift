@@ -5,19 +5,16 @@ import { Link } from 'react-router';
 import { useTheme, } from '@mui/material/styles'
 import { TextColors, } from '../../assets/themes/colors'
 
-import LogoDark from '../../assets/logos/mainLogoDark.svg?react';
-import LogoLight from '../../assets/logos/mainLogoLight.svg?react';
-
+import { Logo } from '../../components/Logo';
 import { LandingCardsSection } from '../../components/Landing/Cards/LandingCardsSection';
 import ThemeButton from '../../components/NavBar/ThemeButton';
 
 function LandingPage() {
     const theme = useTheme();
 
-    const Logo = theme.palette.mode === 'dark' ? LogoDark : LogoLight;
-    const titleColor = theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText;
-    const bodyColor = theme.palette.mode === 'dark' ? TextColors.DarkThemeWhite : TextColors.LightThemeGray;
-    const footerColor = theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeGray;
+    const titleColor = theme.palette.text.primary;
+    const bodyColor = theme.custom.landingBodyColor;
+    const footerColor = theme.custom.landingFooterColor;
 
     // Tracks the cards grid's actual rendered width so the text block above
     // it (eyebrow/headline/paragraph) can be sized to match exactly, instead

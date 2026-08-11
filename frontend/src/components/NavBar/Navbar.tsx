@@ -1,50 +1,54 @@
-import Stack from "@mui/material/Stack";
+import { Stack, Box } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
 
-import LogoDark from "../../assets/logos/mainLogoDark.svg?react";
-import LogoLight from "../../assets/logos/mainLogoLight.svg?react";
-
+import { Logo } from "../Logo";
 import BackButton from "../../components/NavBar/BackButton";
 import ThemeButton from "./ThemeButton";
-import { BackgroundColors } from "../../assets/themes/colors";
 
 function Navbar() {
     const theme = useTheme();
 
-    const Logo = theme.palette.mode === 'dark' ? LogoDark : LogoLight;
-
-
     return (
         <Stack direction="row" sx={{
-            width: '35%',
-            maxWidth: theme.fluid.elementMaxWidth,
+            width: { xs: '100%', md: '35%' },
+            maxWidth: { xs: 'none', md: theme.fluid.elementMaxWidth },
             height: theme.fluid.navbarHeight,
 
             position: 'fixed',
-            top: 0,
+            top: { xs: 0, md: 0 },
             right: 0,
             paddingLeft: theme.fluid.edgeOffset,
-            paddingRight: '40px',
-            justifyContent: 'space-between',
+            paddingRight: { xs: theme.fluid.edgeOffset, md: '40px' },
             alignItems: 'center',
+            justifyContent: {xs: 'space-between', md: 'none'},
+            gap: '12px',
             zIndex: 1000,
 
-            backgroundColor: theme.palette.mode === 'dark' ? BackgroundColors.DarkThemeBackground : BackgroundColors.LightThemeBackground,
-            borderLeft: theme.palette.mode === 'dark' ? '3.5px solid rgba(0, 0, 0, 0.75)' : '3.5px solid rgba(255, 255, 255, 0.75)',
-            borderRight: theme.palette.mode === 'dark' ? '3.5px solid rgba(0, 0, 0, 0.75)' : '3.5px solid rgba(255, 255, 255, 0.75)',
-            borderBottom: theme.palette.mode === 'dark' ? '3.5px solid rgba(0, 0, 0, 0.75)' : '3.5px solid rgba(255, 255, 255, 0.75)',
+            borderLeft: '3.5px solid transparent',
+            borderRight: '3.5px solid transparent',
+            borderBottom: '3.5px solid transparent',
+            backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}), ${theme.custom.navBorderGradient}`,
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            transition: 'background-color 0.5s ease, color 0.5s ease',
             borderBottomLeftRadius: '32px',
             borderBottomRightRadius: '32px',
         }}>
-            <Stack direction='row' sx={{
-                alignItems: 'center',
-                gap: '12px',
+            <BackButton />
+
+            <Box sx={{
+                order: { xs: 1, md: 2 },
+                marginLeft: { xs: 0, md: 'auto' },
+                height: { xs: '28px', md: '32px' },
+                '& svg': { height: '100%', width: 'auto' },
             }}>
-                <BackButton />
+                <Logo />
+            </Box>
+
+            <Box sx={{ order: { xs: 2, md: 1 }, marginRight: 0 }}>
                 <ThemeButton />
-            </Stack>
-            <Logo sx={{ height: '60%' }} />
+            </Box>
         </Stack>
     )
 };

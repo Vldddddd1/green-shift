@@ -5,21 +5,21 @@ export const BrandColors = {
     AltSecondary: '#14461E',
 }
 
-export const TextColors = {
-    MainGreen: '#3A8005',
-    DarkThemeText: '#F5EEE0',
-    DarkThemeWhite: '#F6F6F6',
-    DarkThemeGray: '#737373',
-    LightThemeText: '#202020',
-    LightThemeWhite: '#F5EEE0',
-    LightThemeGray: '#666666',
-    OverviewContent: '#BFBFBF',
+export const BackgroundColors = {
+    DarkThemeBackground: BrandColors.LightSecondary,
+    LightThemeBackground: BrandColors.MainSecondary,
+    CardBackground: '#F6F6F6',
 }
 
-export const BackgroundColors = {
-    DarkThemeBackground: '#202020',
-    LightThemeBackground: '#F5EEE0',
-    CardBackground: '#F6F6F6',
+export const TextColors = {
+    MainGreen: BrandColors.MainPrimary,
+    DarkThemeText: BrandColors.MainSecondary,
+    DarkThemeWhite: BackgroundColors.CardBackground,
+    DarkThemeGray: '#737373',
+    LightThemeText: BrandColors.LightSecondary,
+    LightThemeWhite: BrandColors.MainSecondary,
+    LightThemeGray: '#666666',
+    OverviewContent: '#BFBFBF',
 }
 
 export const shadows = {

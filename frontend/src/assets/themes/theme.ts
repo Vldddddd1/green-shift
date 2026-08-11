@@ -2,7 +2,6 @@ import { BrandColors, TextColors, BackgroundColors, shadows } from './colors.ts'
 import type { PaletteMode } from '@mui/material';
 
 // Fluid values: clamp(min, preferred, max)
-// Below 966px it holds flat at min, above 1349px flat at max.
 // See each key's usage in LandingPage.tsx for what it drives.
 export interface FluidTokens {
     edgeOffset: string;
@@ -20,12 +19,27 @@ export interface FluidTokens {
     navbarHeight: string;
 }
 
+// Values that differ by light/dark mode but aren't colors pulled straight
+// from the palette - things components used to re-derive themselves via a
+// `theme.palette.mode === 'dark' ? a : b` ternary.
+export interface CustomTokens {
+    navBorderGradient: string;
+    backIconColor: string;
+    themeIconColor: string;
+    mapTileUrl: string;
+    landingBodyColor: string;
+    landingFooterColor: string;
+    cardShadow: string;
+}
+
 declare module '@mui/material/styles' {
     interface Theme {
         fluid: FluidTokens;
+        custom: CustomTokens;
     }
     interface ThemeOptions {
         fluid?: FluidTokens;
+        custom?: CustomTokens;
     }
 }
 
@@ -79,8 +93,28 @@ const fluid: FluidTokens = {
     navbarHeight: 'clamp(48px, calc(15.65px + 4.18vw), 64px)',
 };
 
-export const getDesignTokens = (mode: PaletteMode) => ({
+export const getDesignTokens = (mode: PaletteMode) => {
+    const custom: CustomTokens = mode === 'dark' ? {
+        navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.DarkThemeText} 100%)`,
+        backIconColor: TextColors.DarkThemeWhite,
+        themeIconColor: TextColors.DarkThemeWhite,
+        mapTileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        landingBodyColor: TextColors.DarkThemeWhite,
+        landingFooterColor: TextColors.DarkThemeText,
+        cardShadow: shadows.darkMode,
+    } : {
+        navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
+        backIconColor: TextColors.LightThemeText,
+        themeIconColor: TextColors.LightThemeText,
+        mapTileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        landingBodyColor: TextColors.LightThemeGray,
+        landingFooterColor: TextColors.LightThemeGray,
+        cardShadow: shadows.lightMode,
+    };
+
+    return {
     fluid,
+    custom,
     palette: {
         mode,
         ...(mode === 'dark'
@@ -135,15 +169,16 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         MuiCssBaseline: {
             styleOverrides: {
                 '*': {
-                    transition: 'background-color 0.5s ease, color 0.5s ease, border-color 0.6s ease, box-shadow 0.5s ease',
+                    transition: 'background-color 0.5s ease, color 0.5s ease',
                 }
             }
         },
         MuiCard: {
             styleOverrides: {
                 root: {
-                    boxShadow: mode === 'dark' ? shadows.darkMode : shadows.lightMode,
+                    boxShadow: custom.cardShadow,
                     borderRadius: '8px',
+                    transition: 'background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
                 },
             },
         },
@@ -153,5 +188,13 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                 disableTouchRipple: true,
             },
         },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    transition: 'background-color 0.5s ease, color 0.5s ease',
+                },
+            },
+        },
     }
-});
+    };
+};

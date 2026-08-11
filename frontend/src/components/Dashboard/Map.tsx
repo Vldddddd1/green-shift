@@ -1,7 +1,5 @@
-import { Box, Stack, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
-
-import { BackgroundColors, shadows } from '../../assets/themes/colors';
 
 interface Region {
     id: string;
@@ -12,23 +10,19 @@ interface Region {
 
 interface RegionMapProps {
     regions: Region[];
-    height?: string;
 }
 
-export const RegionMap = ({ regions, height = '500px' }: RegionMapProps) => {
+export const RegionMap = ({ regions }: RegionMapProps) => {
     const theme = useTheme();
-    const tileUrl = theme.palette.mode === 'dark'
-        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
     return (
         <Box sx={{
             position: 'relative',
             width: '100svw',
-            height: '100vh',
+            height: '100svh',
             overflow: 'hidden',
             '& .leaflet-container': {
-                backgroundColor: theme.palette.mode === 'dark' ? '#202020' : '#F5EEE0',
+                backgroundColor: theme.palette.background.default,
             },
             '& .leaflet-top.leaflet-right': {
                 marginTop: `calc(${theme.fluid.navbarHeight} + 0px)`,
@@ -46,7 +40,7 @@ export const RegionMap = ({ regions, height = '500px' }: RegionMapProps) => {
                     width: '100%'
                 }}>
                 <TileLayer
-                    url={tileUrl}
+                    url={theme.custom.mapTileUrl}
                     noWrap={true}
                     attribution='© OpenStreetMap, © CARTO' />
                 {regions.map(r => (
