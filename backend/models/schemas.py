@@ -1,11 +1,17 @@
 from pydantic import BaseModel
 
 class RouteResponse(BaseModel):
-    selected_region: str
+    selected_zone: str
+    selected_server: str
     server_response: dict
+    carbon_saved_kg: float
+    savings_multiplier: float
 
-class RegionData(BaseModel):
+class ServerData(BaseModel):
     carbon_score: int
+    current_load: int
+    latency: int
+    status: str
 
 class CarbonScoreResponse(BaseModel):
-    regions: dict[str, RegionData]
+    zones: dict[str, dict[str, ServerData]]

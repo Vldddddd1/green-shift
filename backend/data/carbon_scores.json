@@ -1,10 +1,12 @@
 {
-    "regions": {
-        "eu-west": {
-            "carbon_score": 25
-        },
-        "us-east": {
-            "carbon_score": 70
-        }
+  "zones": {
+    "eu-west": {
+      "eu-west-1": {"carbon_score": 25, "current_load": 10, "latency": 20, "status": "online"},
+      "eu-west-2": {"carbon_score": 27, "current_load": 40, "latency": 22, "status": "online"}
+    },
+    "us-east": {
+      "us-east-1": {"carbon_score": 35, "current_load": 5, "latency": 15, "status": "online"},
+      "us-east-2": {"carbon_score": 33, "current_load": 60, "latency": 18, "status": "online"}
     }
+  }
 }
