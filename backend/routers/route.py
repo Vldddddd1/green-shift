@@ -9,10 +9,10 @@ router = APIRouter()
 
 @router.get("/carbon", response_model=CarbonScoreResponse)
 def get_carbon_scores():
-    return {"regions": read_carbon_scores()}
+    return {"zones": read_carbon_scores()}
 
 @router.get("/route", response_model=RouteResponse)
 def get_route():
-    region = decide_route()
-    server_response = forward_to_region(region)
-    return {"selected_region": region, "server_response": server_response}
+    zone, server = decide_route()
+    server_response = forward_to_region(server)
+    return {"selected_zone": zone,  "selected_server": server, "server_response": server_response}
