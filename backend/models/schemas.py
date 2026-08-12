@@ -13,3 +13,27 @@ class ServerData(BaseModel):
 
 class CarbonScoreResponse(BaseModel):
     zones: dict[str, dict[str, ServerData]]
+
+class UpdateCarbonScoreRequest(BaseModel):
+    zone: str
+    server: str
+    carbon_score: int
+
+
+class UpdateLoadRequest(BaseModel):
+    zone: str
+    server: str
+    current_load: int
+
+class UpdateLatencyRequest(BaseModel):
+    zone: str
+    server: str
+    latency: int
+
+class UpdateStatusRequest(BaseModel):
+    zone: str
+    server: str
+    status: str
+
+class SimulateRequest(BaseModel):
+    count: int

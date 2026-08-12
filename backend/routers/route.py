@@ -19,3 +19,4 @@ def get_route():
     update_load_after_request(zone, server)
     
     return {"selected_zone": zone,  "selected_server": server, "server_response": server_response}
+
