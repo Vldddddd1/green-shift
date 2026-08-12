@@ -50,19 +50,19 @@ export const RegionMap = ({ regions, height = '500px', activeZone = null }: Regi
                 marginTop: `calc(${theme.fluid.navbarHeight} + 0px)`,
                 marginRight: '16px'
             },
-            '& .active-region-marker__dot': {
-                display: 'block',
-                width: '18px',
-                height: '18px',
-                borderRadius: '50%',
-                backgroundColor: BrandColors.MainPrimary,
-                animation: 'active-region-pulse 1.6s infinite',
-            },
-            '@keyframes active-region-pulse': {
-                '0%': { boxShadow: `0 0 0 0 ${BrandColors.MainPrimary}99` },
-                '70%': { boxShadow: `0 0 0 12px ${BrandColors.MainPrimary}00` },
-                '100%': { boxShadow: `0 0 0 0 ${BrandColors.MainPrimary}00` },
-            },
+            // '& .active-region-marker__dot': {
+            //     display: 'block',
+            //     width: '18px',
+            //     height: '18px',
+            //     borderRadius: '50%',
+            //     backgroundColor: BrandColors.MainPrimary,
+            //     animation: 'active-region-pulse 1.6s infinite',
+            // },
+            // '@keyframes active-region-pulse': {
+            //     '0%': { boxShadow: `0 0 0 0 ${BrandColors.MainPrimary}99` },
+            //     '70%': { boxShadow: `0 0 0 12px ${BrandColors.MainPrimary}00` },
+            //     '100%': { boxShadow: `0 0 0 0 ${BrandColors.MainPrimary}00` },
+            // },
         }}>
             <MapContainer
                 center={[50, 20]}

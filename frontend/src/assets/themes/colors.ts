@@ -26,3 +26,10 @@ export const shadows = {
   lightMode: '8px 8px 16px -4px rgba(0, 0, 0, 0.2)',
   darkMode: '8px 8px 16px -4px rgba(255, 255, 255, 0.2)',
 };
+
+export const regionColors = {
+    active: BrandColors.MainPrimary,
+    available: BrandColors.MainSecondary,
+    unavailable: TextColors.DarkThemeGray,
+    offline: '#CC3333',
+}
