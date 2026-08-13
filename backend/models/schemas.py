@@ -37,3 +37,7 @@ class UpdateStatusRequest(BaseModel):
 
 class SimulateRequest(BaseModel):
     count: int
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str

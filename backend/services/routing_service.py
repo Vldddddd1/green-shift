@@ -12,6 +12,7 @@ def pick_zone(zones: dict) -> str:
     zone_avg_carbon = { zone_name: sum(s["carbon_score"] for s in servers.values()) / len(servers) 
                        + 0.3 * (sum(s["current_load"] for s in servers.values()) / len(servers))
                        for zone_name, servers in zones.items()}
+    
     return min(zone_avg_carbon, key=zone_avg_carbon.get)
 
 def pick_server_in_zone(servers: dict) -> str:
