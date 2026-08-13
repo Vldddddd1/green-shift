@@ -5,7 +5,6 @@ import { regionMarkerStates } from '../../assets/themes/colors';
 import type { RegionMarkerState } from '../../assets/themes/colors';
 
 import L from 'leaflet';
-import { act } from 'react';
 
 const WORLD_BOUNDS = L.latLngBounds([-60, -180], [85, 180]);
 
