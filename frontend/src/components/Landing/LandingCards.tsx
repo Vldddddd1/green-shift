@@ -1,5 +1,5 @@
 import { Typography, Box, Stack, } from '@mui/material';
-import { BrandColors, BackgroundColors, TextColors } from '../../../assets/themes/colors';
+import { BrandColors, BackgroundColors, TextColors } from '../../assets/themes/colors';
 
 import { useTheme, } from '@mui/material/styles'
 

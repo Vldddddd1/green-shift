@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { Stack, Box, Typography, } from '@mui/material'
+import { Stack, Box, Typography, useTheme, } from '@mui/material'
 import { BrandColors, TextColors, BackgroundColors, regionMarkerStates } from '../../assets/themes/colors'
 import type { RegionMarkerState } from '../../assets/themes/colors'
 
@@ -32,6 +32,7 @@ function Badge({ label, color }: { label: string; color: string }) {
 }
 
 export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelProps>(({ region, left, top, state = 'available', carbonIntensity = null, lastRoutingDecision = 'N/A',}, ref) => {
+    const theme = useTheme();
     const { fill } = regionMarkerStates[state];
 
     return (
@@ -47,7 +48,7 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                 gap: '14px',
                 padding: '20px 22px',
                 borderRadius: '16px',
-                backgroundColor: BackgroundColors.DarkThemeBackground,
+                backgroundColor: theme.palette.mode === 'dark' ? BackgroundColors.DarkThemeBackground : BackgroundColors.LightThemeBackground,
                 borderLeft: `4px solid ${BrandColors.MainPrimary}`,
                 boxShadow: '0px 8px 20px 0px rgba(0,0,0,0.15)',
             }}>
@@ -59,23 +60,23 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     <Typography sx={{
                         fontSize: '20px',
                         fontWeight: 600,
-                        color: TextColors.DarkThemeText
+                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
                     }}>
-                        {region.name}
+                        {region.name.toUpperCase()}
                     </Typography>
                     <Badge label = {state.toUpperCase()} color = {BrandColors.MainPrimary} />
                 </Stack>
 
                 <Typography sx={{
                     fontSize: '12px',
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
                 }}>
                     CARBON INTENSITY
                 </Typography>
                 <Typography sx={{
                     fontSize: '30px',
                     fontWeight: 700,
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
                 }}>
                     {carbonIntensity !== null ? `${carbonIntensity} gCO₂/kWh` : 'N/A'}
                 </Typography>
@@ -93,7 +94,7 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     }}/>
                     <Typography sx={{
                         fontSize: '12px',
-                        color: TextColors.LightThemeGray
+                        color: theme.palette.mode === 'dark' ? TextColors.LightThemeGray : TextColors.DarkThemeGray
                     }}>
                         {state === 'active' ? 'Currently receiving traffic' : region.geography}
                     </Typography>
@@ -106,7 +107,7 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     <Typography sx={{
                         fontSize: '20px',
                         fontWeight: 600,
-                        color: TextColors.DarkThemeText,
+                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
                     }}>
                         Region Details
                     </Typography>
@@ -118,14 +119,14 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                 }}>
                     <Typography sx={{
                         fontSize: '13px',
-                        color: TextColors.DarkThemeGray
+                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeGray : TextColors.LightThemeGray
                     }}>
                         Last Routing Decision
                     </Typography>
                     <Typography sx={{
                         fontSize: '13px',
                         fontWeight: 600,
-                        color: TextColors.DarkThemeGray
+                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeGray : TextColors.LightThemeGray
                     }}>
                         {lastRoutingDecision}
                     </Typography>

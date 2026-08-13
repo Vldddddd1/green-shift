@@ -6,8 +6,8 @@ import { useTheme, } from '@mui/material/styles'
 import { TextColors, } from '../../assets/themes/colors'
 
 import { Logo } from '../../components/Logo';
-import { LandingCardsSection } from '../../components/Landing/Cards/LandingCardsSection';
-import ThemeButton from '../../components/NavBar/ThemeButton';
+import { LandingCardsSection } from '../../components/Landing/LandingCardsSection';
+import ThemeButton from '../../components/ThemeButton';
 
 function LandingPage() {
     const theme = useTheme();

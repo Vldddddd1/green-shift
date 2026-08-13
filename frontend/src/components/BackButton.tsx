@@ -1,8 +1,8 @@
 import { useTheme, Button } from '@mui/material';
 import { Link } from 'react-router';
-import { BrandColors } from '../../assets/themes/colors';
+import { BrandColors } from '../assets/themes/colors';
 
-import BackIcon from '../../assets/icons/backIcon.svg?react';
+import BackIcon from '../assets/icons/backIcon.svg?react';
 
 function BackButton() {
     const theme = useTheme();

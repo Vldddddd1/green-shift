@@ -1,11 +1,11 @@
 import { Button, } from '@mui/material'
 
 import { useTheme, } from '@mui/material/styles'
-import { useColorMode, } from '../../assets/themes/ThemeProvider'
+import { useColorMode, } from '../assets/themes/ThemeProvider'
 
-import { BrandColors } from '../../assets/themes/colors'
-import Moon from '../../assets/icons/Moon.svg?react'
-import Sun from '../../assets/icons/Sun.svg?react'
+import { BrandColors } from '../assets/themes/colors'
+import Moon from '../assets/icons/Moon.svg?react'
+import Sun from '../assets/icons/Sun.svg?react'
 
 function ThemeButton() {
     const { toggleColorMode } = useColorMode();

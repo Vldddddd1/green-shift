@@ -1,4 +1,4 @@
-import { Stack, Box, Typography, useTheme } from '@mui/material';
+import { Stack, Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import type { ReactNode } from 'react';
@@ -23,6 +23,10 @@ const API_STATUS_CONFIG: Record<APIStatus, { label: string; color: string }> = {
 interface PanelPosition {
     x: number;
     y: number;
+}
+
+interface OverviewDetailsProps{
+    visible?: boolean;
 }
 
 function StatusDot({ color, size }: { color: string; size?: string }) {
@@ -51,13 +55,13 @@ function MetricRow({ label, value, valueColor }: { label: string; value: ReactNo
             width: '100%',
         }}>
             <Typography sx={{
-                fontSize: '13px',
+                fontSize: {xs: '11px', md: '13px'},
                 color: TextColors.OverviewContent
             }}>
                 {label}
             </Typography>
             <Typography sx={{
-                fontSize: '15px',
+                fontSize: {xs: '12px', md: '15px'},
                 fontWeight: 600,
                 color: isNA ? TextColors.DarkThemeGray : (valueColor ?? TextColors.DarkThemeText)
             }}>
@@ -67,8 +71,9 @@ function MetricRow({ label, value, valueColor }: { label: string; value: ReactNo
     );
 }
 
-export const OverviewDetails = () => {
+export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const { metrics } = useLiveMetrics();
 
@@ -115,7 +120,9 @@ export const OverviewDetails = () => {
         const dy = e.clientY - dragRef.current.startY;
 
         const panelHeight = panelRef.current?.offsetHeight ?? 120;
-        const maxX = window.innerWidth - 360; // 360 - panel width
+        // const maxX = window.innerWidth - 360; // 360 - panel width
+        const panelWidth = panelRef.current?.offsetWidth ?? 360;
+        const maxX = window.innerHeight - panelWidth;
         const maxY = Math.max(window.innerHeight - panelHeight - (showLegend ? legendHeight : 0), 0);
 
         setPosition({
@@ -128,6 +135,8 @@ export const OverviewDetails = () => {
         e.currentTarget.releasePointerCapture(e.pointerId);
         dragRef.current = null;
     };
+
+    if (isMobile && !visible) return null;
 
     return (
         <>
@@ -142,9 +151,9 @@ export const OverviewDetails = () => {
                     left: `${position.x}px`,
                     zIndex: 9000,
 
-                    gap: '16px',
-                    width: '360px',
-                    padding: '22px 24px',
+                    gap: {xs: '10px', md: '16px'},
+                    width: {xs: '240px', md: '360px'},
+                    padding: {xs: '14px 16px', md: '22px 24px'},
                     borderRadius: '18px',
                     boxShadow: '0px 10px 24px 0px rgba(0,0,0,0.25)',
 
@@ -170,7 +179,7 @@ export const OverviewDetails = () => {
                     }}
                 >
                     <Typography sx={{
-                        fontSize: '16px',
+                        fontSize: {xs: '13px', md: '16px'},
                         fontWeight: 600,
                         color: TextColors.DarkThemeText,
                     }}>
@@ -180,14 +189,14 @@ export const OverviewDetails = () => {
                         onPointerDown={(e) => e.stopPropagation()}
                         onClick={() => setShowLegend(e => !e)}
                         sx={{
-                            width: '20px',
-                            height: '20px',
+                            width: {xs: '16px', md: '20px'},
+                            height: {xs: '16px', md: '20px'},
                             borderRadius: '50%',
                             border: `1px solid ${TextColors.OverviewContent}`,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '12px',
+                            fontSize: {xs: '10px', md: '12px'},
                             color: TextColors.OverviewContent,
                             cursor: 'pointer',
                         }}
@@ -221,7 +230,7 @@ export const OverviewDetails = () => {
                                     gap: '8px'
                                 }}
                             >
-                                <StatusDot color={API_STATUS_CONFIG[metrics.apiHealth].color} size='8px' />
+                                <StatusDot color={API_STATUS_CONFIG[metrics.apiHealth].color} size={isMobile? '6px' : '8px'} />
                                 {API_STATUS_CONFIG[metrics.apiHealth].label}
                             </Stack>
                         }
@@ -243,7 +252,7 @@ export const OverviewDetails = () => {
                 }} />
 
                 <Typography sx={{
-                    fontSize: '16px',
+                    fontSize: {xs: '13px', md: '16px'},
                     fontWeight: 600,
                     color: TextColors.OverviewContent,
                 }}>
@@ -252,21 +261,28 @@ export const OverviewDetails = () => {
 
                 {metrics.recentSwitches.length === 0 ? (
                     <Typography sx={{
-                        fontSize: '14px',
+                        fontSize: {xs: '12px', md: '14px'},
                         color: TextColors.DarkThemeGray
                     }}>
                         {NA}
                     </Typography>
                 ) : (
-                    metrics.recentSwitches.map(s => (
+                    <Stack sx={{
+                        gap: '6px',
+                        maxHeight: {xs: '90px', md: 'none'},
+                        overflowY: {xs: 'none', md: 'visible'},
+                    }}>
+                        {metrics.recentSwitches.map(s => (
                         <Typography key={s.id}
                             sx={{
-                                fontSize: '14px',
+                                fontSize: {xs: '12px', md: '14px'},
                                 color: TextColors.OverviewContent
                             }}>
                             {s.time} - switched to {s.region}
                         </Typography>
-                    ))
+                    ))}
+                    </Stack>
+                    
                 )}
             </Stack>
             {

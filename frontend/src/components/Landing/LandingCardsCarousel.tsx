@@ -4,7 +4,7 @@ import useEmblaCarousel from "embla-carousel-react";
 
 import { LandingCards } from "./LandingCards";
 
-import { BrandColors, } from "../../../assets/themes/colors";
+import { BrandColors, } from "../../assets/themes/colors";
 
 interface CardData {
     title: string;
