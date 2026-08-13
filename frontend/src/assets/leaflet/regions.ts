@@ -1,13 +1,12 @@
 //AWS data https://docs.aws.amazon.com/global-infrastructure/latest/regions/aws-availability-zones.html
 //coordiantes picked randomly within the country of the region
 const regionData = [
+    //EUROPE
     { id: "euc1-az1", name: "eu-central-1", geography: "Germany", lat: 48.425021189312666, lng: 12.12524597171188 },
     { id: "euc1-az2", name: "eu-central-1", geography: "Germany", lat: 51.185883459342605, lng: 8.749894626667752 },
     { id: "euc1-az3", name: "eu-central-1", geography: "Germany", lat: 53.11285204970809, lng: 13.535366958449208 },
     { id: "euc2-az1", name: "eu-central-2", geography: "Switzerland", lat: 47.19926048808229, lng: 9.108529193193565 },
     { id: "euc2-az2", name: "eu-central-2", geography: "Switzerland", lat: 46.780398731995085, lng: 7.1095812767517135 },
-    { id: "euc2-az3", name: "eu-central-2", geography: "Switzerland", lat: 46.295098932088116, lng: 8.8080337547742 },
-    { id: "eun1-az1", name: "eu-north-1", geography: "Sweden", lat: 58.72119717321712, lng: 15.476132264085901 },
     { id: "eun1-az2", name: "eu-north-1", geography: "Sweden", lat: 62.57136967534173, lng: 14.979661539740862 },
     { id: "eun1-az3", name: "eu-north-1", geography: "Sweden", lat: 56.8163398598078, lng: 15.70873086333921 },
     { id: "eus1-az1", name: "eu-south-1", geography: "Italy", lat: 44.97103317260579, lng: 10.795127136838337 },
@@ -17,14 +16,39 @@ const regionData = [
     { id: "eus2-az2", name: "eu-south-2", geography: "Spain", lat: 37.87927358696817, lng: -5.8867940874228175 }, 
     { id: "eus2-az3", name: "eu-south-2", geography: "Spain", lat: 43.16574271567276, lng: -5.311924596669878 }, 
     { id: "euw1-az1", name: "eu-west-1", geography: "Ireland", lat: 53.45733122482943, lng: -9.469877142136859 }, 
-    { id: "euw1-az2", name: "eu-west-1", geography: "Ireland", lat: 53.86243617608214, lng: -6.7353215239760305 }, 
     { id: "euw1-az3", name: "eu-west-1", geography: "Ireland", lat: 52.37109319227783, lng: -6.66141461537709 },
     { id: "euw2-az1", name: "eu-west-2", geography: "United Kingdom", lat: 50.89664257263105, lng: -0.02979650623206081 },
     { id: "euw2-az2", name: "eu-west-2", geography: "United Kingdom", lat: 53.3903899777078, lng: 0.058094115321656724 },
     { id: "euw2-az3", name: "eu-west-2", geography: "United Kingdom", lat: 55.808099912353136, lng: -3.1222831651261784 },
     { id: "euw3-az1", name: "eu-west-3", geography: "France", lat: 48.92573449737775, lng: 6.659828960819835 },
-    { id: "euw3-az2", name: "eu-west-3", geography: "France", lat: 46.625870214752105, lng: -0.8917520568493744 },
-    { id: "euw3-az3", name: "eu-west-3", geography: "France", lat: 44.48090605135034, lng: 5.044147748478464 }
+    { id: "euw3-az3", name: "eu-west-3", geography: "France", lat: 44.48090605135034, lng: 5.044147748478464 },
+
+    //AFRICA
+    { id: "afs1-az1", name: "af-south-1", geography: "South Africa", lat: -32.70077638248971, lng: 19.712896651547755 },
+    { id: "afs1-az2", name: "af-south-1", geography: "South Africa", lat: -28.000602935630173, lng: 23.843755864572444 },
+    { id: "afs1-az3", name: "af-south-1", geography: "South Africa", lat: -23.731441583440642, lng: 30.171880616440056 },
+
+    //US-EAST
+    { id: "use1-az1", name: "us-east-1", geography: "New York USA", lat: 41.87172621075909, lng: -74.908040585001 },
+    { id: "use1-az2", name: "us-east-1", geography: "Florida USA", lat: 28.88965459191704, lng: -82.2767112804786 },
+    { id: "use1-az3", name: "us-east-1", geography: "Kentucky USA", lat: 36.8657164533312, lng: -83.37417288166236 },
+    { id: "use1-az4", name: "us-east-1", geography: "Michigan USA", lat: 43.143002119335655, lng: -84.52389455909298 },
+
+    //US-WEST
+    { id: "usw1-az1", name: "us-west-1", geography: "Arizona USA", lat: 35.13238058470228, lng: -112.16947494900204 },
+    { id: "usw1-az2", name: "us-west-1", geography: "Idaho USA", lat: 42.529855000625915, lng: -113.8417973889011 },
+    { id: "usw1-az3", name: "us-west-1", geography: "California USA", lat: 35.72853078575619, lng: -118.54520425111721 },
+    { id: "usw1-az4", name: "us-west-1", geography: "Washington USA", lat: 46.658023305966886, lng: -118.17938371738931 },
+
+    //ASIA + PACIFIC
+    { id: "apne1-az1", name: "ap-northeast-1", geography: "Japan", lat: 34.85638214046611, lng: 132.91468495461686 },
+    { id: "apne1-az2", name: "ap-northeast-1", geography: "Japan", lat: 38.787177527384856, lng: 140.64917623915002 },
+    { id: "apne1-az3", name: "ap-northeast-1", geography: "Japan", lat: 44.14712680757399, lng: 142.58279906028332 },
+    { id: "aps1-az1", name: "ap-south-1", geography: "India", lat: 22.335036845202456, lng: 73.37645543431293 },
+    { id: "aps1-az2", name: "ap-south-1", geography: "India", lat: 27.68276104724875, lng: 80.46133364769298 },
+    { id: "aps1-az3", name: "ap-south-1", geography: "India", lat: 12.506112007912082, lng: 78.96978033961297 },
+    { id: "apse2-az1", name: "ap-southeast-2", geography: "Australia", lat: -27.66683515162605, lng: 115.42602006379327 },
+    { id: "apse2-az2", name: "ap-southeast-2", geography: "Australia", lat: -30.06138872530054, lng: 150.34703437679306 },
 ];
 
 export default regionData;

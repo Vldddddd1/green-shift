@@ -140,7 +140,7 @@ export const OverviewDetails = () => {
                     position: 'fixed',
                     top: `${position.y}px`,
                     left: `${position.x}px`,
-                    zIndex: 900,
+                    zIndex: 9000,
 
                     gap: '16px',
                     width: '360px',

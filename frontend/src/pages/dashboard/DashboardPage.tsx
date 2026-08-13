@@ -13,7 +13,7 @@ function DashboardPage() {
         <>
             <Navbar/>
             <OverviewDetails/>
-            <RegionMap regions={regionData} activeZone={metrics.activeRegion} />
+            <RegionMap regions={regionData} servers={metrics.servers} />
         </>
 
     )

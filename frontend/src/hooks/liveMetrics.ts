@@ -31,6 +31,7 @@ export interface LiveMetricsPayload{
 
 export interface LiveMetrics{
     activeRegion: string | null;
+    servers: ServerStatus[];
     carbonSavedKg: number | null;
     savingsMultiplier: number | null;
     apiHealth: APIStatus | null;
@@ -40,6 +41,7 @@ export interface LiveMetrics{
 
 const INITIAL_METRICS: LiveMetrics = {
     activeRegion: null,
+    servers: [],
     carbonSavedKg: null,
     savingsMultiplier: null,
     apiHealth: null,
@@ -54,6 +56,7 @@ function toLiveMetrics(payload: LiveMetricsPayload) : LiveMetrics {
 
     return {
         activeRegion: active?.region ?? null,
+        servers: payload.servers,
         carbonSavedKg: payload.carbonSavedKg,
         savingsMultiplier: payload.savingsMultiplier,
         apiHealth: payload.apiHealth,

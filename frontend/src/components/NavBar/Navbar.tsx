@@ -23,7 +23,7 @@ function Navbar() {
             alignItems: 'center',
             justifyContent: {xs: 'space-between', md: 'none'},
             gap: '12px',
-            zIndex: 1000,
+            zIndex: 9000,
 
             borderLeft: '3.5px solid transparent',
             borderRight: '3.5px solid transparent',
