@@ -1,13 +1,15 @@
 import { forwardRef, } from 'react';
 
 import { Stack, Box, Typography, useTheme } from '@mui/material';
-import { TextColors, regionColors } from '../../assets/themes/colors';
+import { TextColors, regionMarkerStates } from '../../assets/themes/colors';
 
-const LEGEND_CONFIG = [
-    { label: 'Active - Routing Now', color: regionColors.active },
-    { label: 'Available - Standby', color: regionColors.available },
-    { label: 'Unavailable', color: regionColors.unavailable },
-    { label: 'Offline / Error', color: regionColors.offline },
+import type { RegionMarkerState } from '../../assets/themes/colors';
+
+const LEGEND_CONFIG: {label: string; state: RegionMarkerState}[] = [
+    { label: 'Active - Routing Now', state: 'active' },
+    { label: 'Available - Standby', state: 'available' },
+    { label: 'Unavailable', state: 'unavailable' },
+    { label: 'Offline / Error', state: 'offline' },
 ] as const;
 
 interface RegionStatusProps {
@@ -15,28 +17,32 @@ interface RegionStatusProps {
     left: number;
 }
 
-function StatusDot({ color, size }: { color: string; size?: string }) {
+function StatusDot({ state, size = '12px' }: { state: RegionMarkerState; size?: string }) {
+    const { fill, stroke } = regionMarkerStates[state];
+    
     return (
         <Box sx={{
             width: size,
             height: size,
             borderRadius: '50%',
-            backgroundColor: color,
+            backgroundColor: fill,
+            border: `2px solid ${stroke}`,
+            boxSizing: 'border-box',
             flexShrink: 0,
         }} />
     )
 }
 
-function LegendRow({ label, color }: { label: string; color: string; }) {
+function LegendRow({ label, state }: { label: string; state: RegionMarkerState; }) {
     return (
         <Stack direction='row' sx={{
             alignItems: 'center',
             width: '100%',
             gap: '10px',
         }}>
-            <StatusDot color={color} size='12px' />
+            <StatusDot state={state} size='12px' />
             <Typography sx={{
-                fontSize: '13px',
+                fontSize: '12px',
                 color: TextColors.OverviewContent
             }}>
                 {label}
@@ -79,7 +85,7 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
             }}
         >
             <Typography sx={{
-                fontSize: '13px',
+                fontSize: '14px',
                 fontWeight: 600,
                 color: TextColors.DarkThemeText
             }}>
@@ -90,8 +96,8 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
                 gridTemplateColumns: 'repeat(2, 1fr)',
                 gap: '10px',
             }}>
-                {LEGEND_CONFIG.map(({ label, color }) => (
-                <LegendRow key={label} label={label} color={color} />
+                {LEGEND_CONFIG.map(({ label, state }) => (
+                <LegendRow key={label} label={label} state={state} />
             ))}
             </Box>
             

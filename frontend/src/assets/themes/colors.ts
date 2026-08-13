@@ -27,9 +27,11 @@ export const shadows = {
   darkMode: '8px 8px 16px -4px rgba(255, 255, 255, 0.2)',
 };
 
-export const regionColors = {
-    active: BrandColors.MainPrimary,
-    available: BrandColors.MainSecondary,
-    unavailable: TextColors.DarkThemeGray,
-    offline: '#CC3333',
-}
+export const regionMarkerStates = {
+    active: {fill: BrandColors.MainPrimary, stroke: BackgroundColors.CardBackground},
+    available: {fill: BrandColors.MainSecondary, stroke: BrandColors.MainPrimary},
+    unavailable: {fill: TextColors.DarkThemeGray, stroke: TextColors.DarkThemeGray},
+    offline: {fill:'#CC3333', stroke: '#CC3333'},
+} as const;
+
+export type RegionMarkerState = keyof typeof regionMarkerStates;
