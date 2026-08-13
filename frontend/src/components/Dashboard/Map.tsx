@@ -142,6 +142,7 @@ export const RegionMap = ({ regions, servers }: RegionMapProps) => {
                 border: 'none',
                 boxShadow: 'none',
                 padding: 0,
+                fontFamily: 'Sora',
                 fontSize: '13px',
                 fontWeight: 600,
                 color: theme.palette.mode === 'dark' ? TextColors.OverviewContent : TextColors.LightThemeText,
