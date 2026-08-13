@@ -1,5 +1,5 @@
 import { Typography, Box, Stack, } from '@mui/material';
-import { BrandColors, BackgroundColors, TextColors, shadows } from '../../../assets/themes/colors';
+import { BrandColors, BackgroundColors, TextColors } from '../../../assets/themes/colors';
 
 import { useTheme, } from '@mui/material/styles'
 
@@ -15,11 +15,13 @@ export const LandingCards = ({ title, subtitle }: LandingCardProps) => {
         <Stack sx={{
             backgroundColor: BackgroundColors.CardBackground,
             borderRadius: '16px',
+            width: {xs: '100%', sm: '100%', lg: '280px'},
+            height: '155px',
             padding: '24px',
             gap: '8px',
-            width: {md: '280px'},
-            height: {md: '155px'},
-            boxShadow: theme.palette.mode === 'dark' ? shadows.darkMode : shadows.lightMode
+            alignItems: {xs: 'center', md: 'self-start'},
+            boxShadow: theme.custom.cardShadow,
+            transition: 'background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
         }}>
             <Box
                 sx={{
@@ -45,6 +47,7 @@ export const LandingCards = ({ title, subtitle }: LandingCardProps) => {
                 fontWeight: 400,
                 fontSize: '12px',
                 userSelect: 'none',
+                textAlign: {xs: 'center', md: 'left'},
             }}>
                 {subtitle}
             </Typography>

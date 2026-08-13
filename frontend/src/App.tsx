@@ -1,10 +1,27 @@
 // import { useState } from 'react'
+import { BrowserRouter, Navigate } from 'react-router'
+import { Routes, Route } from 'react-router'
+ 
 import './App.css'
 import LandingPage from './pages/landing/index.ts'
+import DashboardPage from './pages/dashboard/index.ts'
+import SandboxPage from './pages/sandbox/index.ts'
 
 function App() {
+
   return (
-    <LandingPage />
+    <BrowserRouter>
+      <Routes>
+        {import.meta.env.DEV && (
+          <Route path="/dev" element={<SandboxPage/>} />
+        )}
+
+        <Route path="/" element={<LandingPage/>} />
+        <Route path="/dashboard" element={<DashboardPage/>} />
+
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

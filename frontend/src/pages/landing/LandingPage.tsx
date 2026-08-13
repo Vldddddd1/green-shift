@@ -1,239 +1,135 @@
-import { Box, Button, Grid, Typography, Stack } from '@mui/material'
-
+import { useLayoutEffect, useState } from 'react';
+import { Box, Button, Typography, Stack } from '@mui/material'
+import { Link } from 'react-router';
 
 import { useTheme, } from '@mui/material/styles'
-import { useColorMode, } from '../../assets/themes/ThemeProvider'
 import { TextColors, } from '../../assets/themes/colors'
 
-import LogoDark from '../../assets/logos/mainLogoDark.svg?react';
-import LogoLight from '../../assets/logos/mainLogoLight.svg?react';
-
+import { Logo } from '../../components/Logo';
 import { LandingCardsSection } from '../../components/Landing/Cards/LandingCardsSection';
+import ThemeButton from '../../components/NavBar/ThemeButton';
 
 function LandingPage() {
-    const { toggleColorMode } = useColorMode();
     const theme = useTheme();
 
+    const titleColor = theme.palette.text.primary;
+    const bodyColor = theme.custom.landingBodyColor;
+    const footerColor = theme.custom.landingFooterColor;
+
+    // Tracks the cards grid's actual rendered width so the text block above
+    // it (eyebrow/headline/paragraph) can be sized to match exactly, instead
+    // of shrink-wrapping to its own content.
+    const [cardsEl, setCardsEl] = useState<HTMLDivElement | null>(null);
+    const [cardsWidth, setCardsWidth] = useState<number | null>(null);
+
+    useLayoutEffect(() => {
+        if (!cardsEl) return;
+
+        const observer = new ResizeObserver(([entry]) => {
+            setCardsWidth(entry.contentRect.width);
+        });
+        observer.observe(cardsEl);
+        return () => observer.disconnect();
+    }, [cardsEl]);
+
+    const textStackWidth = cardsWidth ? `${cardsWidth}px` : theme.fluid.elementMaxWidth;
+
     return (
-        theme.palette.mode === 'dark' ? (
-            <>
-                <Stack sx={{
-                    position: 'relative',
-                    width: '100%',
-                    minHeight: '100vh',
-                    justifyContent: 'center',
+        <Stack sx={{
+            position: 'relative',
+            width: '100%',
+            minHeight: { xs: 'auto', sm: '100dvh' },
+            justifyContent: 'center',
+            paddingTop: { xs: '5rem', sm: 0 },
+        }}>
+            <Stack sx={{
+                gap: theme.fluid.sectionGap,
+            }}>
+                <Box sx={{
+                    position: 'absolute',
+                    top: { xs: '3%', sm: theme.fluid.edgeOffset },
+                    left: { xs: '27%', sm: theme.fluid.edgeOffset },
+                    userSelect: 'none',
                 }}>
-                    <Box sx={{
-                        position: 'absolute',
-                        top: { xs: '16px', md: '32px' },
-                        left: { xs: '16px', md: '32px' },
-                        userSelect: 'none',
-                    }}>
-                        <LogoDark />
-                    </Box>
-                    <Stack sx={{
-                        gap: 4,
-                    }}>
-                        <Stack sx={{
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                            maxWidth: { md: '800px' },
-                            textAlign: 'center',
-                            gap: 3,
-                        }}>
-
-                            <Typography sx={{
-                                color: TextColors.MainGreen,
-                                fontFamily: 'Sora',
-                                fontSize: { md: '18px' },
-                                fontWeight: 'semi-bold',
-                                userSelect: 'none',
-                            }}>
-                                ECO-ROUTING CLOUD BALANCER
-                            </Typography>
-                            <Typography sx={{
-                                color: TextColors.DarkThemeText,
-                                fontFamily: 'Sora',
-                                fontSize: { md: '56px' },
-                                fontWeight: 'bold',
-                                userSelect: 'none',
-                            }}>
-                                Route traffic to the cleanest grid, automatically.
-                            </Typography>
-                            <Typography sx={{
-                                color: TextColors.DarkThemeWhite,
-                                fontSize: { md: '18px' },
-                                fontFamily: 'Sora',
-                                userSelect: 'none',
-                            }}>
-                                Green-Shift shifts simulated web traffic between regions in real time based on live carbon intensity scores - cutting cloud emissions without cutting performance.
-                            </Typography>
-                        </Stack>
-                        <Button variant="contained"
-                            sx={{
-                                alignSelf: 'center',
-                                width: { md: '320px' },
-                                height: { md: '48px' },
-                                borderRadius: '32px',
-                                userSelect: 'none',
-                            }}>
-                            View Live Dashboard →
-                        </Button>
-                        <Stack sx={{
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                        }}>
-                            <LandingCardsSection />
-                        </Stack>
-                    </Stack>
-                </Stack>
+                    <Logo />
+                </Box>
                 <Stack sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
+                    width: textStackWidth,
+                    maxWidth: '100%',
+                    alignSelf: 'center',
                     alignItems: 'center',
-                    width: '100%',
-                    bottom: { xs: '16px', md: '32px' },
+                    textAlign: 'center',
+                    gap: theme.fluid.elementGap,
                 }}>
+
                     <Typography sx={{
-                        position: 'absolute',
-                        bottom: { xs: '16px', md: '32px' },
-                        color: TextColors.DarkThemeWhite,
+                        color: TextColors.MainGreen,
                         fontFamily: 'Sora',
-                        fontSize: { md: '13px' },
-                        fontWeight: 300,
+                        fontSize: theme.fluid.textMd,
+                        fontWeight: 'semi-bold',
                         userSelect: 'none',
                     }}>
-                        Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
+                        ECO-ROUTING CLOUD BALANCER
+                    </Typography>
+                    <Typography sx={{
+                        color: titleColor,
+                        fontFamily: 'Sora',
+                        fontSize: theme.fluid.textXl,
+                        fontWeight: 'bold',
+                        userSelect: 'none',
+                    }}>
+                        Route traffic to the cleanest grid, automatically.
+                    </Typography>
+                    <Typography sx={{
+                        color: bodyColor,
+                        fontSize: theme.fluid.textMd,
+                        fontFamily: 'Sora',
+                        userSelect: 'none',
+                    }}>
+                        Green-Shift shifts simulated web traffic between regions in real time based on live carbon intensity scores - cutting cloud emissions without cutting performance.
                     </Typography>
                 </Stack>
-                <Stack sx={{
-                    display: 'flex',
-                    position: 'absolute',
-                    bottom: { xs: '16px', md: '128px' },
-                    left: { xs: '16px', md: '32px' },
-                }}>
-                    <Button variant="contained" onClick={toggleColorMode}
-                        sx={{
-                            position: 'absolute',
-                            width: { md: '80px' },
-                            height: { md: '32px' },
-                            borderRadius: '16px',
-                            userSelect: 'none',
-                        }}>
-                        Theme
-                    </Button>
-                </Stack>
-            </>
-        ) :
-            <>
-                <Stack sx={{
-                    position: 'relative',
-                    width: '100%',
-                    minHeight: '100vh',
-                    justifyContent: 'center',
-                }}>
-                    <Box sx={{
-                        position: 'absolute',
-                        top: { xs: '16px', md: '32px' },
-                        left: { xs: '16px', md: '32px' },
+                <Button variant="contained"
+                    component={Link} to="/dashboard"
+                    sx={{
+                        width: theme.fluid.ctaWidth,
+                        height: theme.fluid.ctaHeight,
+                        alignSelf: 'center',
+                        borderRadius: '32px',
                         userSelect: 'none',
                     }}>
-                        <LogoLight />
-                    </Box>
-                    <Stack sx={{
-                        gap: 4,
-                    }}>
-                        <Stack sx={{
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                            maxWidth: { md: '800px' },
-                            textAlign: 'center',
-                            gap: 3,
-                        }}>
-
-                            <Typography sx={{
-                                color: TextColors.MainGreen,
-                                fontFamily: 'Sora',
-                                fontSize: { md: '18px' },
-                                fontWeight: 'semi-bold',
-                                userSelect: 'none',
-                            }}>
-                                ECO-ROUTING CLOUD BALANCER
-                            </Typography>
-                            <Typography sx={{
-                                color: TextColors.LightThemeText,
-                                fontFamily: 'Sora',
-                                fontSize: { md: '56px' },
-                                fontWeight: 'bold',
-                                userSelect: 'none',
-                            }}>
-                                Route traffic to the cleanest grid, automatically.
-                            </Typography>
-                            <Typography sx={{
-                                color: TextColors.LightThemeGray,
-                                fontSize: { md: '18px' },
-                                fontFamily: 'Sora',
-                                userSelect: 'none',
-                            }}>
-                                Green-Shift shifts simulated web traffic between regions in real time based on live carbon intensity scores - cutting cloud emissions without cutting performance.
-                            </Typography>
-                        </Stack>
-                        <Button variant="contained"
-                            sx={{
-                                alignSelf: 'center',
-                                width: { md: '320px' },
-                                height: { md: '48px' },
-                                borderRadius: '32px',
-                                userSelect: 'none',
-                            }}>
-                            View Live Dashboard →
-                        </Button>
-                        <Stack sx={{
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                        }}>
-                            <LandingCardsSection />
-                        </Stack>
-                    </Stack>
-                </Stack>
-                <Stack sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
+                    View Live Dashboard →
+                </Button>
+                <Stack ref={setCardsEl} sx={{
+                    alignSelf: 'center',
                     alignItems: 'center',
                     width: '100%',
-                    bottom: { xs: '16px', md: '32px' },
+                    maxWidth: { xs: theme.fluid.cardsMaxWidth, sm: '100%', lg: theme.fluid.cardsMaxWidth },
                 }}>
-                    <Typography sx={{
-                        position: 'absolute',
-                        bottom: { xs: '16px', md: '32px' },
-                        color: TextColors.LightThemeGray,
-                        fontFamily: 'Sora',
-                        fontSize: { md: '13px' },
-                        fontWeight: 300,
-                        userSelect: 'none',
-                    }}>
-                        Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
-                    </Typography>
+                    <LandingCardsSection />
                 </Stack>
-                <Stack sx={{
-                    display: 'flex',
-                    position: 'absolute',
-                    bottom: { xs: '16px', md: '128px' },
-                    left: { xs: '16px', md: '32px' },
+                <Typography sx={{
+                    position: { xs: 'static', sm: 'absolute' },
+                    bottom: { xs: 'auto', sm: theme.fluid.edgeOffset },
+                    alignSelf: 'center',
+                    fontFamily: 'Sora',
+                    fontSize: theme.fluid.textSm,
+                    color: footerColor,
+                    fontWeight: 300,
+                    userSelect: 'none',
                 }}>
-                    <Button variant="contained" onClick={toggleColorMode}
-                        sx={{
-                            position: 'absolute',
-                            width: { md: '80px' },
-                            height: { md: '32px' },
-                            borderRadius: '16px',
-                            userSelect: 'none',
-                        }}>
-                        Theme
-                    </Button>
-                </Stack>
-            </>
-    )
+                    Green-Shift - Eco-Routing Cloud Balancer  -  Simplified demo build
+                </Typography>
+            </Stack>
+            <Stack sx={{
+                position: 'absolute',
+                top: theme.fluid.edgeOffset,
+                right: theme.fluid.edgeOffset,
+            }}>
+                <ThemeButton/>
+            </Stack>
+        </Stack>
+    );
 }
 
 export default LandingPage

@@ -1,7 +1,120 @@
 import { BrandColors, TextColors, BackgroundColors, shadows } from './colors.ts';
 import type { PaletteMode } from '@mui/material';
 
-export const getDesignTokens = (mode: PaletteMode) => ({
+// Fluid values: clamp(min, preferred, max)
+// See each key's usage in LandingPage.tsx for what it drives.
+export interface FluidTokens {
+    edgeOffset: string;
+    textSm: string;
+    textMd: string;
+    textXl: string;
+    elementMaxWidth: string;
+    cardsMaxWidth: string;
+    ctaWidth: string;
+    ctaHeight: string;
+    toggleWidth: string;
+    toggleHeight: string;
+    elementGap: string;
+    sectionGap: string;
+    navbarHeight: string;
+}
+
+// Values that differ by light/dark mode but aren't colors pulled straight
+// from the palette - things components used to re-derive themselves via a
+// `theme.palette.mode === 'dark' ? a : b` ternary.
+export interface CustomTokens {
+    navBorderGradient: string;
+    backIconColor: string;
+    themeIconColor: string;
+    mapTileUrl: string;
+    landingBodyColor: string;
+    landingFooterColor: string;
+    cardShadow: string;
+}
+
+declare module '@mui/material/styles' {
+    interface Theme {
+        fluid: FluidTokens;
+        custom: CustomTokens;
+    }
+    interface ThemeOptions {
+        fluid?: FluidTokens;
+        custom?: CustomTokens;
+    }
+}
+
+const fluid: FluidTokens = {
+    // Corner anchor. The logo sits this far from the top-left corner, the
+    // theme toggle this far from the top-right corner, and the same distance
+    // pulls the footer credit up from the bottom
+    // e.g. <Box sx={{ top: theme.fluid.edgeOffset, right: theme.fluid.edgeOffset }}>
+    edgeOffset: 'clamp(16px, calc(-24.35px + 4.18vw), 32px)',
+
+    // Smallest text on the page. Right now that's only the footer credit line
+    // ("Green-Shift - Eco-Routing Cloud Balancer - Simplified demo build").
+    textSm: 'clamp(11px, calc(5.96px + 0.52vw), 13px)',
+
+    // ("ECO-ROUTING CLOUD BALANCER") and the paragraph below the headline
+    textMd: 'clamp(14px, calc(3.91px + 1.04vw), 18px)',
+
+    // The headline itself - "Route traffic to the cleanest grid,
+    // automatically." The one thing on this page allowed to be huge.
+    textXl: 'clamp(32px, calc(-28.53px + 6.27vw), 56px)',
+
+    // e.g. the Stack wrapping the eyebrow/headline/paragraph, as `maxWidth`
+    elementMaxWidth: 'clamp(320px, calc(-890.65px + 125.33vw), 800px)',
+
+    // e.g. the Stack wrapping <LandingCardsSection />, as `maxWidth`
+    cardsMaxWidth: 'clamp(320px, calc(-890.65px + 125.33vw), 800px)',
+
+    // Width of the "View Live Dashboard" button.
+    ctaWidth: 'clamp(240px, calc(38.23px + 20.89vw), 320px)',
+
+    // Height of the "View Live Dashboard" button.
+    ctaHeight: 'clamp(40px, calc(19.82px + 2.09vw), 48px)',
+
+    // Width of the small "Theme" toggle button in the corner.
+    toggleWidth: 'clamp(64px, calc(23.65px + 4.18vw), 80px)',
+
+    // Height of the small "Theme" toggle button.
+    toggleHeight: 'clamp(28px, calc(17.91px + 1.04vw), 32px)',
+
+    // Gap between the eyebrow, headline and paragraph inside the text block.
+    // Tighter than sectionGap on purpose - these three lines are meant to
+    // read as one group, not three separate sections.
+    // e.g. the same Stack that uses elementMaxWidth, as `gap`
+    elementGap: 'clamp(12px, calc(-8.18px + 2.09vw), 20px)',
+
+    // Gap between the page's big sections - the text block, the CTA button,
+    // and the card grid.
+    // e.g. the outer Stack that holds all three, as `gap`
+    sectionGap: 'clamp(12px, calc(-38.44px + 5.22vw), 32px)',
+
+    navbarHeight: 'clamp(48px, calc(15.65px + 4.18vw), 64px)',
+};
+
+export const getDesignTokens = (mode: PaletteMode) => {
+    const custom: CustomTokens = mode === 'dark' ? {
+        navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.DarkThemeText} 100%)`,
+        backIconColor: TextColors.DarkThemeWhite,
+        themeIconColor: TextColors.DarkThemeWhite,
+        mapTileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        landingBodyColor: TextColors.DarkThemeWhite,
+        landingFooterColor: TextColors.DarkThemeText,
+        cardShadow: shadows.darkMode,
+    } : {
+        navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
+        backIconColor: TextColors.LightThemeText,
+        themeIconColor: TextColors.LightThemeText,
+        mapTileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        landingBodyColor: TextColors.LightThemeGray,
+        landingFooterColor: TextColors.LightThemeGray,
+        cardShadow: shadows.lightMode,
+    };
+
+    return {
+    fluid,
+    custom,
     palette: {
         mode,
         ...(mode === 'dark'
@@ -14,7 +127,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                 },
                 text: {
                     primary: TextColors.DarkThemeText,
-                    secondary: TextColors.DarkThemeGrey,
+                    secondary: TextColors.DarkThemeGray,
                 },
                 paper: {
                     backgroundColor: BackgroundColors.DarkThemeBackground,
@@ -53,13 +166,35 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             ].join(','),
     },
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                '*': {
+                    transition: 'background-color 0.5s ease, color 0.5s ease',
+                }
+            }
+        },
         MuiCard: {
             styleOverrides: {
                 root: {
-                    boxShadow: mode === 'dark' ? shadows.darkMode : shadows.lightMode,
+                    boxShadow: custom.cardShadow,
                     borderRadius: '8px',
+                    transition: 'background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
                 },
             },
-        }
+        },
+        MuiButtonBase: {
+            defaultProps: {
+                disableRipple: true,
+                disableTouchRipple: true,
+            },
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    transition: 'background-color 0.5s ease, color 0.5s ease',
+                },
+            },
+        },
     }
-});
+    };
+};

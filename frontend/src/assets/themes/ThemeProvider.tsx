@@ -7,11 +7,15 @@ interface ThemeContextType {
     mode: PaletteMode;
 }
 
-const ThemeContext = createContext<ThemeContextType>({ mode: 'dark', toggleColorMode: () => {}, });
+const ThemeContext = createContext<ThemeContextType>({ mode: 'dark', toggleColorMode: () => { }, });
 
 export const useColorMode = () => useContext(ThemeContext);
 
 export const AppThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    useEffect(() => {
+        document.documentElement.classList.remove('no-transitions');
+    }, []);
+
     const [mode, setMode] = useState<PaletteMode>(() => {
         return (localStorage.getItem('themeMode') as PaletteMode) || 'dark';
     });
@@ -20,7 +24,7 @@ export const AppThemeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         localStorage.setItem('themeMode', mode);
     }, [mode]);
 
-    const colorMode=  useMemo(() => ({
+    const colorMode = useMemo(() => ({
         toggleColorMode: () => {
             setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
         },

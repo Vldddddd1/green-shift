@@ -5,23 +5,33 @@ export const BrandColors = {
     AltSecondary: '#14461E',
 }
 
-export const TextColors = {
-    MainGreen: '#3A8005',
-    DarkThemeText: '#F5EEE0',
-    DarkThemeWhite: '#F6F6F6',
-    DarkThemeGrey: '#737373',
-    LightThemeText: '#202020',
-    LightThemeWhite: '#F5EEE0',
-    LightThemeGray: '#666666',
+export const BackgroundColors = {
+    DarkThemeBackground: BrandColors.LightSecondary,
+    LightThemeBackground: BrandColors.MainSecondary,
+    CardBackground: '#F6F6F6',
 }
 
-export const BackgroundColors = {
-    DarkThemeBackground: '#202020',
-    LightThemeBackground: '#F5EEE0',
-    CardBackground: '#F6F6F6',
+export const TextColors = {
+    MainGreen: BrandColors.MainPrimary,
+    DarkThemeText: BrandColors.MainSecondary,
+    DarkThemeWhite: BackgroundColors.CardBackground,
+    DarkThemeGray: '#737373',
+    LightThemeText: BrandColors.LightSecondary,
+    LightThemeWhite: BrandColors.MainSecondary,
+    LightThemeGray: '#666666',
+    OverviewContent: '#BFBFBF',
 }
 
 export const shadows = {
   lightMode: '8px 8px 16px -4px rgba(0, 0, 0, 0.2)',
   darkMode: '8px 8px 16px -4px rgba(255, 255, 255, 0.2)',
 };
+
+export const regionMarkerStates = {
+    active: {fill: BrandColors.MainPrimary, stroke: BackgroundColors.CardBackground},
+    available: {fill: BrandColors.MainSecondary, stroke: BrandColors.MainPrimary},
+    unavailable: {fill: TextColors.DarkThemeGray, stroke: TextColors.DarkThemeGray},
+    offline: {fill:'#CC3333', stroke: '#CC3333'},
+} as const;
+
+export type RegionMarkerState = keyof typeof regionMarkerStates;
