@@ -39,8 +39,8 @@ def update_load_after_request(selected_zone: str, selected_server: str):
         for server_name, data in servers.items():
             if server_name == selected_server:
                 data["current_load"] = min(100, data["current_load"] + 5)
-            else:
-                data["current_load"] = max(0, data["current_load"] - 1)
+            elif zone_name != selected_zone:
+                data["current_load"] = max(0, data["current_load"] - 2)
 
 
 
