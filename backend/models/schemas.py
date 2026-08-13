@@ -11,7 +11,7 @@ class ServerData(BaseModel):
     latency: int
     status: str
 
-class CarbonScoreResponse(BaseModel):
+class ServerResponse(BaseModel):
     zones: dict[str, dict[str, ServerData]]
 
 class UpdateCarbonScoreRequest(BaseModel):

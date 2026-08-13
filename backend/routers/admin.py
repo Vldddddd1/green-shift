@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from services.state_service import get_state, reset_state
 from services.routing_service import decide_route, update_load_after_request
 from services.forwarding_service import forward_to_region
+from services.stats_service import reset_stats
 from services.auth_service import verify_credentials, ADMIN_TOKEN, require_auth
 from models.schemas import (
     UpdateCarbonScoreRequest,
@@ -69,7 +70,7 @@ def simulate_requests(payload: SimulateRequest):
 @router.post("/reset", dependencies=[Depends(require_auth)])
 def reset_everything():
     reset_state()
-
+    reset_stats()
     return {"status": "reset"}
 
 
