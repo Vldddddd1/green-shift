@@ -1,16 +1,14 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { LandingCardsSection } from '../../frontend/src/components/Landing/Cards/LandingCardsSection'
-
-const theme = createTheme()
+import { AppThemeProvider } from '../../frontend/src/assets/themes/ThemeProvider'
+import { LandingCardsSection } from '../../frontend/src/components/Landing/LandingCardsSection'
 
 describe('LandingCardsSection', () => {
     it('renders all four feature cards', () => {
         render(
-            <ThemeProvider theme={theme}>
+            <AppThemeProvider>
                 <LandingCardsSection />
-            </ThemeProvider>
+            </AppThemeProvider>
         )
 
         expect(screen.getByText('Eco-Routing Engine')).toBeInTheDocument()

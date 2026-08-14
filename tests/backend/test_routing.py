@@ -5,7 +5,6 @@ from services.routing_service import (
     pick_zone,
     pick_server_in_zone,
     decide_route,
-    is_lower_carbon_zone,
     update_load_after_request,
 )
 from services.forwarding_service import forward_to_region
@@ -56,21 +55,7 @@ def test_decide_route_combines_zone_and_server_selection():
         assert server == "eu-west-1"
 
 
-def test_is_lower_carbon_zone_true_when_chosen_has_lowest_average():
-    zones = {
-        "eu-west": {
-            "eu-west-1": {"carbon_score": 20, "current_load": 0, "latency": 0},
-        },
-        "us-east": {
-            "us-east-1": {"carbon_score": 60, "current_load": 0, "latency": 0},
-        },
-    }
-
-    assert is_lower_carbon_zone(zones, "eu-west") is True
-    assert is_lower_carbon_zone(zones, "us-east") is False
-
-
-def test_update_load_after_request_increases_selected_and_decays_others():
+def test_update_load_after_request_boosts_selected_and_decays_other_zones():
     zones = {
         "eu-west": {
             "eu-west-1": {"carbon_score": 25, "current_load": 10, "latency": 20},
@@ -84,9 +69,9 @@ def test_update_load_after_request_increases_selected_and_decays_others():
     with patch("services.routing_service.get_state", return_value=zones):
         update_load_after_request("eu-west", "eu-west-1")
 
-    assert zones["eu-west"]["eu-west-1"]["current_load"] == 15
-    assert zones["eu-west"]["eu-west-2"]["current_load"] == 39
-    assert zones["us-east"]["us-east-1"]["current_load"] == 4
+    assert zones["eu-west"]["eu-west-1"]["current_load"] == 15  # selected server: +5
+    assert zones["eu-west"]["eu-west-2"]["current_load"] == 40  # same zone, not selected: unchanged
+    assert zones["us-east"]["us-east-1"]["current_load"] == 3   # other zone: -2
 
 
 def test_update_load_after_request_clamps_between_0_and_100():

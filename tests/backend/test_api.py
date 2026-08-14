@@ -12,7 +12,7 @@ def test_read_root():
     assert response.json() == {"status": "Green-Shift backend is alive"}
 
 
-def test_get_carbon_scores():
+def test_get_servers():
     mock_zones = {
         "eu-west": {
             "eu-west-1": {"carbon_score": 25, "current_load": 10, "latency": 20, "status": "online"},
@@ -23,48 +23,57 @@ def test_get_carbon_scores():
         },
     }
     with patch("routers.route.get_state", return_value=mock_zones):
-        response = client.get("/carbon")
+        response = client.get("/servers")
         assert response.status_code == 200
         assert response.json() == {"zones": mock_zones}
 
 
 def test_get_route_selects_eu_west():
+    mock_zones = {"eu-west": {"eu-west-1": {"carbon_score": 20}}}
     with patch("routers.route.decide_route", return_value=("eu-west", "eu-west-1")), \
          patch(
              "routers.route.forward_to_region",
              return_value={"server": "eu-west-1", "zone": "eu-west", "status": "ok"},
          ), \
-         patch("routers.route.get_state", return_value={}), \
-         patch("routers.route.is_lower_carbon_zone", return_value=True), \
-         patch("routers.route.record_carbon_saved"), \
-         patch("routers.route.get_carbon_saved_kg", return_value=0.15), \
-         patch("routers.route.update_load_after_request"):
+         patch("routers.route.get_state", return_value=mock_zones), \
+         patch("routers.route.update_load_after_request") as mock_update, \
+         patch("routers.route.record_request") as mock_record:
         response = client.get("/route")
         assert response.status_code == 200
         data = response.json()
         assert data["selected_zone"] == "eu-west"
         assert data["selected_server"] == "eu-west-1"
         assert data["server_response"] == {"server": "eu-west-1", "zone": "eu-west", "status": "ok"}
-        assert data["carbon_saved_kg"] == 0.15
-        assert data["savings_multiplier"] == 1.5
+        mock_update.assert_called_once_with("eu-west", "eu-west-1")
+        mock_record.assert_called_once_with("eu-west", "eu-west-1", 20)
 
 
 def test_get_route_reports_unreachable_server():
+    mock_zones = {"us-east": {"us-east-1": {"carbon_score": 42}}}
     with patch("routers.route.decide_route", return_value=("us-east", "us-east-1")), \
          patch(
              "routers.route.forward_to_region",
              return_value={"error": "us-east-1 server unreachable"},
          ), \
-         patch("routers.route.get_state", return_value={}), \
-         patch("routers.route.is_lower_carbon_zone", return_value=False), \
-         patch("routers.route.record_carbon_saved"), \
-         patch("routers.route.get_carbon_saved_kg", return_value=0.0), \
-         patch("routers.route.update_load_after_request"):
+         patch("routers.route.get_state", return_value=mock_zones), \
+         patch("routers.route.update_load_after_request"), \
+         patch("routers.route.record_request"):
         response = client.get("/route")
         assert response.status_code == 200
         data = response.json()
         assert data["selected_zone"] == "us-east"
         assert data["selected_server"] == "us-east-1"
         assert data["server_response"] == {"error": "us-east-1 server unreachable"}
-        assert data["carbon_saved_kg"] == 0.0
-        assert data["savings_multiplier"] == 1.0
+
+
+def test_get_stats():
+    mock_stats = {
+        "total_requests": 3,
+        "requests_per_zone": {"eu-west": 2, "us-east": 1},
+        "requests_per_server": {"eu-west-1": 2, "us-east-1": 1},
+        "co2_saved": 45.0,
+    }
+    with patch("routers.route.get_stats", return_value=mock_stats):
+        response = client.get("/stats")
+        assert response.status_code == 200
+        assert response.json() == mock_stats

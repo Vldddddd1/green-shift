@@ -10,9 +10,9 @@ BACKEND_DIR = Path(__file__).resolve().parents[2] / "backend"
 def test_read_carbon_scores_real_data_file():
     data = read_carbon_scores(str(BACKEND_DIR / "data" / "carbon_scores.json"))
 
-    assert set(data.keys()) == {"eu-west", "us-east"}
-    assert set(data["eu-west"].keys()) == {"eu-west-1", "eu-west-2"}
-    assert data["eu-west"]["eu-west-1"]["carbon_score"] == 25
+    assert "eu-west" in data
+    assert set(data["eu-west"].keys()) == {"eu-west-1", "eu-west-2", "eu-west-3", "eu-west-4"}
+    assert data["eu-west"]["eu-west-1"]["carbon_score"] == 20
 
 
 def test_read_carbon_scores_custom_file(tmp_path):
