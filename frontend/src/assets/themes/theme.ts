@@ -108,7 +108,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
         landingFooterColor: TextColors.DarkThemeText,
         cardShadow: shadows.darkMode,
         adminSidebarBackground: BackgroundColors.AdminSidebarDark,
-        adminSidebarBorder: 'rgba(255,255,255,0,08)',
+        adminSidebarBorder: 'rgba(255,255,255,0.08)',
         adminSidebarMutedText: TextColors.OverviewContent
     } : {
         navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
@@ -119,7 +119,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
         landingFooterColor: TextColors.LightThemeGray,
         cardShadow: shadows.lightMode,
         adminSidebarBackground: BackgroundColors.CardBackground,
-        adminSidebarBorder: 'rgba(0,0,0,0,08)',
+        adminSidebarBorder: 'rgba(0,0,0,0.08)',
         adminSidebarMutedText: TextColors.LightThemeGray
     };
 

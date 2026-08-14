@@ -8,7 +8,7 @@ import BackButton from '../BackButton';
 import ThemeButton from '../ThemeButton';
 
 import { BrandColors, regionMarkerStates } from '../../assets/themes/colors';
-import { use } from 'react';
+import { useLiveMetricsContext } from '../../hooks/liveMetrics';
 
 interface NavItem {
     label: string;
@@ -91,8 +91,9 @@ function SidebarNavItem({ label, to }: NavItem) {
 
 function AdminNavbar() {
     const theme = useTheme();
-
-    const apiStatus: 'online' | 'offline' = 'online';
+    
+    const { connected } = useLiveMetricsContext();
+    const apiStatus: 'online' | 'offline' = connected ? 'online' : 'offline';
 
     return (
         <Stack

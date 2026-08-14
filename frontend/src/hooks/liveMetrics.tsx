@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, } from 'react';
+import { useEffect, useRef, useState, createContext, useContext} from 'react';
 
 const API_BASE = 'http://127.0.0.1:8000';
 const POLL_INTERVAL_MS = 3000;
@@ -12,6 +12,8 @@ export interface ServerStatus{
     online: boolean;
     isActive: boolean;
     carbonIntensity: number | null; //gCO2/kWh
+    requests: number | null;
+    percent: number | null;
 }
 
 export interface RouteSwitch{
@@ -27,6 +29,9 @@ export interface LiveMetricsPayload{
     apiHealth: APIStatus | null;
     lastUpdate: string | null;
     recentSwitches: RouteSwitch[];
+    totalRequests: number | null;
+    averageLatencyMs: number | null;
+    carbonReductionPercent: number | null;
 }
 
 export interface LiveMetrics{
@@ -37,6 +42,9 @@ export interface LiveMetrics{
     apiHealth: APIStatus | null;
     lastUpdate: string | null;
     recentSwitches: RouteSwitch[];
+    totalRequests: number | null;
+    averageLatencyMs: number | null;
+    carbonReductionPercent: number | null;
 }
 
 const INITIAL_METRICS: LiveMetrics = {
@@ -47,6 +55,9 @@ const INITIAL_METRICS: LiveMetrics = {
     apiHealth: null,
     lastUpdate: null,
     recentSwitches: [],
+    totalRequests: null,
+    averageLatencyMs: null,
+    carbonReductionPercent: null,
 }
 
 
@@ -62,6 +73,9 @@ function toLiveMetrics(payload: LiveMetricsPayload) : LiveMetrics {
         apiHealth: payload.apiHealth,
         lastUpdate: payload.lastUpdate,
         recentSwitches: payload.recentSwitches,
+        totalRequests: payload.totalRequests,
+        averageLatencyMs: payload.averageLatencyMs,
+        carbonReductionPercent: payload.carbonReductionPercent,
     };
 }
 
@@ -96,8 +110,17 @@ export function serversFromCarbonResponse(carbonData: CarbonZonesResponse, selec
             online: data.status === 'online',
             isActive: serverId === selectedServer,
             carbonIntensity: data.carbon_score,
+            requests: null,
+            percent: null,
         }))
     );
+}
+
+export function onlineAzCountByRegion(servers: ServerStatus[]): Record<string, number>{
+    return servers.reduce<Record<string, number>>(( acc,s ) => {
+        if(s.online) acc[s.region] = (acc[s.region] ?? 0) + 1;
+        return acc;
+    }, {});
 }
 
 export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
@@ -156,6 +179,9 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
                 apiHealth: 'healthy',
                 lastUpdate: formatTime(new Date()),
                 recentSwitches: switchesRef.current,
+                totalRequests: null, // null - nu sunt trimise de backend inca
+                averageLatencyMs: null,
+                carbonReductionPercent: null
             }));
             setConnected(true);
         };
@@ -170,4 +196,21 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
     }, []);
 
     return {metrics, connected, };
+}
+
+const LiveMetricsContext = createContext<{ metrics: LiveMetrics; connected: boolean } | null>(null);
+
+export function LiveMetricsProvider({ children }: { children : React.ReactNode }){
+    const value = useLiveMetrics();
+    return(
+        <LiveMetricsContext.Provider value = {value}>
+            {children}
+        </LiveMetricsContext.Provider>
+    );
+}
+
+export function useLiveMetricsContext(){
+    const ctx = useContext(LiveMetricsContext);
+    if(!ctx) throw new Error('useLiveMetricsContext must be used within a LiveMetricsProvider');
+    return ctx;
 }

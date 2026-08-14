@@ -14,7 +14,7 @@ const DEFAULT_POSITION = { x: 20, y: 20 } //CAN BE ADJUSTED
 
 const NA = 'N/A';
 
-const API_STATUS_CONFIG: Record<APIStatus, { label: string; color: string }> = {
+export const API_STATUS_CONFIG: Record<APIStatus, { label: string; color: string }> = {
     healthy: { label: 'Healthy', color: BrandColors.MainPrimary },
     degraded: { label: 'Degraded', color: '#E0A800' },
     offline: { label: 'Offline', color: '#C0392B' },
@@ -46,7 +46,7 @@ function display(value: string | number | null | undefined): string {
     return String(value);
 }
 
-function MetricRow({ label, value, valueColor }: { label: string; value: ReactNode; valueColor?: string }) {
+export function MetricRow({ label, value, valueColor }: { label: string; value: ReactNode; valueColor?: string }) {
     const isNA = value === NA;
 
     return (
