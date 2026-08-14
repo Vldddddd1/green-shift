@@ -9,6 +9,7 @@ def calculate_score(server_data: dict) -> float:
 
 def pick_zone(zones: dict) -> str:
 
+<<<<<<< HEAD
     zone_avg_carbon = {}
     for zone_name, servers in zones.items():
         online_servers = {name: data for name, data in servers.items() if data["status"] == "online"}
@@ -20,6 +21,11 @@ def pick_zone(zones: dict) -> str:
 
     if not zone_avg_carbon:
         raise RuntimeError("No online servers available in any zone")
+=======
+    zone_avg_carbon = { zone_name: sum(s["carbon_score"] for s in servers.values()) / len(servers) 
+                       + 0.3 * (sum(s["current_load"] for s in servers.values()) / len(servers))
+                       for zone_name, servers in zones.items()}
+>>>>>>> 39355409c52e75a89790b2caf0515c12d2d71f14
     
     return min(zone_avg_carbon, key=zone_avg_carbon.get)
 

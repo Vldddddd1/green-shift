@@ -4,6 +4,8 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
 
   eu-west-1:
     build: ./server
@@ -17,6 +19,84 @@ services:
       SERVER_NAME: eu-west-2
       ZONE: eu-west
 
+  eu-west-3:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-west-3
+      ZONE: eu-west
+
+  eu-west-4:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-west-4
+      ZONE: eu-west
+
+  us-west-1:
+    build: ./server
+    environment:
+      SERVER_NAME: us-west-1
+      ZONE: us-west
+
+  us-west-2:
+    build: ./server
+    environment:
+      SERVER_NAME: us-west-2
+      ZONE: us-west
+
+  us-west-3:
+    build: ./server
+    environment:
+      SERVER_NAME: us-west-3
+      ZONE: us-west
+
+  us-west-4:
+    build: ./server
+    environment:
+      SERVER_NAME: us-west-4
+      ZONE: us-west
+
+  eu-east-1:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-east-1
+      ZONE: eu-east
+
+  eu-east-2:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-east-2
+      ZONE: eu-east
+
+  eu-east-3:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-east-3
+      ZONE: eu-east
+
+  eu-east-4:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-east-4
+      ZONE: eu-east
+
+  africa-1:
+    build: ./server
+    environment:
+      SERVER_NAME: africa-1
+      ZONE: africa
+
+  africa-2:
+    build: ./server
+    environment:
+      SERVER_NAME: africa-2
+      ZONE: africa
+
+  africa-3:
+    build: ./server
+    environment:
+      SERVER_NAME: africa-3
+      ZONE: africa
+
   us-east-1:
     build: ./server
     environment:
@@ -28,3 +108,63 @@ services:
     environment:
       SERVER_NAME: us-east-2
       ZONE: us-east
+
+  us-east-3:
+    build: ./server
+    environment:
+      SERVER_NAME: us-east-3
+      ZONE: us-east
+
+  us-east-4:
+    build: ./server
+    environment:
+      SERVER_NAME: us-east-4
+      ZONE: us-east
+
+  asia-south-1:
+    build: ./server
+    environment:
+      SERVER_NAME: asia-south-1
+      ZONE: asia-south
+
+  asia-south-2:
+    build: ./server
+    environment:
+      SERVER_NAME: asia-south-2
+      ZONE: asia-south
+
+  asia-south-3:
+    build: ./server
+    environment:
+      SERVER_NAME: asia-south-3
+      ZONE: asia-south
+
+  australia-1:
+    build: ./server
+    environment:
+      SERVER_NAME: australia-1
+      ZONE: australia
+
+  australia-2:
+    build: ./server
+    environment:
+      SERVER_NAME: australia-2
+      ZONE: australia
+
+  asia-east-1:
+    build: ./server
+    environment:
+      SERVER_NAME: asia-east-1
+      ZONE: asia-east
+
+  asia-east-2:
+    build: ./server
+    environment:
+      SERVER_NAME: asia-east-2
+      ZONE: asia-east
+
+  asia-east-3:
+    build: ./server
+    environment:
+      SERVER_NAME: asia-east-3
+      ZONE: asia-east
