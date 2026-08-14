@@ -4,8 +4,31 @@ import httpx
 REGION_URLS = {
     "eu-west-1": "http://eu-west-1:8000",
     "eu-west-2": "http://eu-west-2:8000",
+    "eu-west-3": "http://eu-west-3:8000",
+    "eu-west-4": "http://eu-west-4:8000",
+    "eu-central-1": "http://eu-central-1:8000",
+    "eu-central-2": "http://eu-central-2:8000",
+    "eu-central-3": "http://eu-central-3:8000",
+    "eu-central-4": "http://eu-central-4:8000",
+    "af-south-1": "http://af-south-1:8000",
+    "af-south-2": "http://af-south-2:8000",
+    "af-south-3": "http://af-south-3:8000",
     "us-east-1": "http://us-east-1:8000",
-    "us-east-2": "http://us-east-2:8000"
+    "us-east-2": "http://us-east-2:8000",
+    "us-east-3": "http://us-east-3:8000",
+    "us-east-4": "http://us-east-4:8000",
+    "us-west-1": "http://us-west-1:8000",
+    "us-west-2": "http://us-west-2:8000",
+    "us-west-3": "http://us-west-3:8000",
+    "us-west-4": "http://us-west-4:8000",
+    "ap-south-1": "http://ap-south-1:8000",
+    "ap-south-2": "http://ap-south-2:8000",
+    "ap-south-3": "http://ap-south-3:8000",
+    "ap-southeast-1": "http://ap-southeast-1:8000", #australia
+    "ap-southeast-2": "http://ap-southeast-2:8000",
+    "ap-northeast-1": "http://ap-northeast-1:8000",
+    "ap-northeast-2": "http://ap-northeast-2:8000",
+    "ap-northeast-3": "http://ap-northeast-3:8000"
 }
 
 def forward_to_region(server: str) -> dict:

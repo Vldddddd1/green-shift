@@ -17,6 +17,7 @@ export interface FluidTokens {
     elementGap: string;
     sectionGap: string;
     navbarHeight: string;
+    sidebarWidth: string;
 }
 
 // Values that differ by light/dark mode but aren't colors pulled straight
@@ -30,6 +31,9 @@ export interface CustomTokens {
     landingBodyColor: string;
     landingFooterColor: string;
     cardShadow: string;
+    adminSidebarBackground: string;
+    adminSidebarBorder: string;
+    adminSidebarMutedText: string;
 }
 
 declare module '@mui/material/styles' {
@@ -91,6 +95,7 @@ const fluid: FluidTokens = {
     sectionGap: 'clamp(12px, calc(-38.44px + 5.22vw), 32px)',
 
     navbarHeight: 'clamp(48px, calc(15.65px + 4.18vw), 64px)',
+    sidebarWidth: '280px',
 };
 
 export const getDesignTokens = (mode: PaletteMode) => {
@@ -102,6 +107,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         landingBodyColor: TextColors.DarkThemeWhite,
         landingFooterColor: TextColors.DarkThemeText,
         cardShadow: shadows.darkMode,
+        adminSidebarBackground: BackgroundColors.AdminSidebarDark,
+        adminSidebarBorder: 'rgba(255,255,255,0.08)',
+        adminSidebarMutedText: TextColors.OverviewContent
     } : {
         navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
         backIconColor: TextColors.LightThemeText,
@@ -110,6 +118,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         landingBodyColor: TextColors.LightThemeGray,
         landingFooterColor: TextColors.LightThemeGray,
         cardShadow: shadows.lightMode,
+        adminSidebarBackground: BackgroundColors.CardBackground,
+        adminSidebarBorder: 'rgba(0,0,0,0.08)',
+        adminSidebarMutedText: TextColors.LightThemeGray
     };
 
     return {

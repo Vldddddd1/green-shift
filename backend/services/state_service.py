@@ -13,3 +13,4 @@ def reset_state() -> dict:
 
     global _state
     _state = read_carbon_scores()
+    return _state

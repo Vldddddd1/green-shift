@@ -1,6 +1,6 @@
 import { forwardRef, } from 'react';
 
-import { Stack, Box, Typography, useTheme } from '@mui/material';
+import { Stack, Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { TextColors, regionMarkerStates } from '../../assets/themes/colors';
 
 import type { RegionMarkerState } from '../../assets/themes/colors';
@@ -33,7 +33,7 @@ function StatusDot({ state, size = '12px' }: { state: RegionMarkerState; size?: 
     )
 }
 
-function LegendRow({ label, state }: { label: string; state: RegionMarkerState; }) {
+function LegendRow({ label, state, dotSize }: { label: string; state: RegionMarkerState; dotSize: string;}) {
     return (
         <Stack direction='row' sx={{
             alignItems: 'center',
@@ -42,7 +42,7 @@ function LegendRow({ label, state }: { label: string; state: RegionMarkerState; 
         }}>
             <StatusDot state={state} size='12px' />
             <Typography sx={{
-                fontSize: '12px',
+                fontSize: {xs: '10px', md: '12px'},
                 color: TextColors.OverviewContent
             }}>
                 {label}
@@ -53,7 +53,8 @@ function LegendRow({ label, state }: { label: string; state: RegionMarkerState; 
 
 export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top, left, }, ref) => {
     const theme = useTheme();
-
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    
     return (
         <Stack
             ref = {ref}
@@ -63,9 +64,9 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
                 left: `${left}px`,
                 zIndex: 900,
 
-                gap: '10px',
-                width: '360px',
-                padding: '16px 18px',
+                gap: {xs: '8px', md: '10px'},
+                width: {xs:'240px', md:'360px'},
+                padding: {xs: '10px 12px', md: '16px 18px'},
                 borderRadius: '18px',
                 boxShadow: '0px 10px 24px 0px rgba(0,0,0,0.25)',
 
@@ -85,7 +86,7 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
             }}
         >
             <Typography sx={{
-                fontSize: '14px',
+                fontSize: {xs:'12px', md: '14px'},
                 fontWeight: 600,
                 color: TextColors.DarkThemeText
             }}>
@@ -93,11 +94,11 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
             </Typography>
             <Box sx={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '10px',
+                gridTemplateColumns: {xs: '1fr', md: 'repeat(2, 1fr)'},
+                gap: {xs: '6px', md: '10px'},
             }}>
                 {LEGEND_CONFIG.map(({ label, state }) => (
-                <LegendRow key={label} label={label} state={state} />
+                <LegendRow key={label} label={label} state={state} dotSize={isMobile ? '9px' : '12px'} />
             ))}
             </Box>
             

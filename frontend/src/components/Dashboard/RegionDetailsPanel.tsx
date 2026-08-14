@@ -111,7 +111,7 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     }}>
                         Region Details
                     </Typography>
-                    <Badge label = 'Available' color = {BrandColors.MainPrimary}/>
+                    <Badge label = {state.toUpperCase()} color = {BrandColors.MainPrimary}/>
                 </Stack>
 
                 <Stack direction = 'row' sx={{

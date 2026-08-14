@@ -9,6 +9,7 @@ export const BackgroundColors = {
     DarkThemeBackground: BrandColors.LightSecondary,
     LightThemeBackground: BrandColors.MainSecondary,
     CardBackground: '#F6F6F6',
+    AdminSidebarDark: '#171717',
 }
 
 export const TextColors = {

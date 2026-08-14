@@ -1,12 +1,47 @@
 {
   "zones": {
     "eu-west": {
-      "eu-west-1": {"carbon_score": 25, "current_load": 10, "latency": 20, "status": "online"},
-      "eu-west-2": {"carbon_score": 27, "current_load": 40, "latency": 22, "status": "online"}
+      "eu-west-1": {"carbon_score": 20, "current_load": 9, "latency": 16, "status": "online"},
+      "eu-west-2": {"carbon_score": 21, "current_load": 6, "latency": 17, "status": "online"},
+      "eu-west-3": {"carbon_score": 23, "current_load": 8, "latency": 12, "status": "online"},
+      "eu-west-4": {"carbon_score": 24, "current_load": 6, "latency": 16, "status": "online"}
+    },
+    "eu-central": {
+      "eu-central-1": {"carbon_score": 34, "current_load": 18, "latency": 14, "status": "online"},
+      "eu-central-2": {"carbon_score": 35, "current_load": 8, "latency": 13, "status": "online"},
+      "eu-central-3": {"carbon_score": 37, "current_load": 6, "latency": 16, "status": "online"},
+      "eu-central-4": {"carbon_score": 38, "current_load": 17, "latency": 22, "status": "online"}
+    },
+    "af-south": {
+      "af-south-1": {"carbon_score": 38, "current_load": 12, "latency": 35, "status": "online"},
+      "af-south-2": {"carbon_score": 40, "current_load": 9, "latency": 35, "status": "online"},
+      "af-south-3": {"carbon_score": 42, "current_load": 18, "latency": 39, "status": "online"}
     },
     "us-east": {
-      "us-east-1": {"carbon_score": 35, "current_load": 5, "latency": 15, "status": "online"},
-      "us-east-2": {"carbon_score": 33, "current_load": 60, "latency": 18, "status": "online"}
+      "us-east-1": {"carbon_score": 42, "current_load": 8, "latency": 17, "status": "online"},
+      "us-east-2": {"carbon_score": 43, "current_load": 14, "latency": 24, "status": "online"},
+      "us-east-3": {"carbon_score": 45, "current_load": 10, "latency": 23, "status": "online"},
+      "us-east-4": {"carbon_score": 46, "current_load": 11, "latency": 16, "status": "online"}
+    },
+    "us-west": {
+      "us-west-1": {"carbon_score": 28, "current_load": 11, "latency": 25, "status": "online"},
+      "us-west-2": {"carbon_score": 29, "current_load": 7, "latency": 17, "status": "online"},
+      "us-west-3": {"carbon_score": 31, "current_load": 18, "latency": 23, "status": "online"},
+      "us-west-4": {"carbon_score": 32, "current_load": 12, "latency": 18, "status": "online"}
+    },
+    "ap-south": {
+      "ap-south-1": {"carbon_score": 46, "current_load": 8, "latency": 34, "status": "online"},
+      "ap-south-2": {"carbon_score": 48, "current_load": 7, "latency": 37, "status": "online"},
+      "ap-south-3": {"carbon_score": 50, "current_load": 6, "latency": 38, "status": "online"}
+    },
+    "ap-southeast": {
+      "ap-southeast-1": {"carbon_score": 50, "current_load": 11, "latency": 49, "status": "online"},
+      "ap-southeast-2": {"carbon_score": 54, "current_load": 18, "latency": 47, "status": "online"}
+    },
+    "ap-northeast": {
+      "ap-northeast-1": {"carbon_score": 54, "current_load": 19, "latency": 30, "status": "online"},
+      "ap-northeast-2": {"carbon_score": 56, "current_load": 19, "latency": 34, "status": "online"},
+      "ap-northeast-3": {"carbon_score": 58, "current_load": 14, "latency": 30, "status": "online"}
     }
   }
 }
