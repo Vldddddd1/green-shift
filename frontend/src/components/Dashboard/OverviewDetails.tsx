@@ -212,11 +212,11 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                 />
                 <MetricRow
                     label="Carbon Emissions Saved"
-                    value={display(metrics.carbonSavedKg !== null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO2` : NA)}
+                    value={display(metrics.carbonSavedKg != null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO2` : NA)}
                 />
                 <MetricRow
                     label="Savings Multiplier"
-                    value={display(metrics.savingsMultiplier !== null ? `${metrics.savingsMultiplier.toFixed(1)}` : NA)}
+                    value={display(metrics.savingsMultiplier != null ? `${metrics.savingsMultiplier.toFixed(1)}` : NA)}
                 />
                 {metrics.apiHealth === null ? (
                     <MetricRow label="API Connection" value={NA} valueColor={TextColors.DarkThemeGray} />

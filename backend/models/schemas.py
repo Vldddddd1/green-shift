@@ -4,12 +4,15 @@ class RouteResponse(BaseModel):
     selected_zone: str
     selected_server: str
     server_response: dict
+    carbon_saved_kg: float
+    savings_multiplier: float
 
 class ServerData(BaseModel):
     carbon_score: int
     current_load: int
     latency: int
     status: str
+    last_selected: str | None = None
 
 class ServerResponse(BaseModel):
     zones: dict[str, dict[str, ServerData]]
