@@ -88,13 +88,6 @@ function toLiveMetrics(payload: LiveMetricsPayload): LiveMetrics {
     };
 }
 
-interface ServerData {
-    carbon_score: number;
-    current_load: number;
-    latency: number;
-    status: string;
-}
-
 interface CarbonZonesResponse {
     zones: Record<string, Record<string, ServerData>>;
 }
@@ -223,16 +216,7 @@ export function useLiveMetrics(): { metrics: LiveMetrics; connected: boolean } {
     return { metrics, connected, };
 }
 
-const LiveMetricsContext = createContext<{ metrics: LiveMetrics; connected: boolean } | null>(null);
-
-export function LiveMetricsProvider({ children }: { children: React.ReactNode }) {
-    const value = useLiveMetrics();
-    return (
-        <LiveMetricsContext.Provider value={value}>
-            {children}
-        </LiveMetricsContext.Provider>
-    );
-}
+export const LiveMetricsContext = createContext<{ metrics: LiveMetrics; connected: boolean } | null>(null);
 
 export function useLiveMetricsContext() {
     const ctx = useContext(LiveMetricsContext);
