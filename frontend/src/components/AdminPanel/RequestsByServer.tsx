@@ -1,9 +1,12 @@
+import { useMemo, useState } from 'react';
+
 import { Stack, Box, Typography, useTheme, } from '@mui/material';
 import { BrandColors, TextColors } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
 
 export interface ServerRequestStat {
     id: string;
+    region: string
     requests: number;
     percent: number; // 0 -> 100
 }
@@ -37,7 +40,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                     fontWeight: 600,
                     color: TextColors.DarkThemeText,
                 }}>
-                    {`${requests} req &#183 ${percent}%`}
+                    {`${requests} req - ${percent}%`}
                 </Typography>
             </Stack>
 
@@ -53,16 +56,58 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                     width: `${percent}%`,
                     borderRadius: '4px',
                     backgroundColor: BrandColors.MainPrimary,
-                }}/>
+                }} />
             </Box>
         </Stack>
     );
 }
 
-function RequestsByServer( {servers} : RequestsByServerProps) {
-    const theme = useTheme();
+interface RegionFilterPillProps {
+    label: string;
+    active: boolean;
+    onClick: () => void;
+}
 
-    return(
+function RegionFilterPill({ label, active, onClick }: RegionFilterPillProps) {
+    return (
+        <Box
+            component='button'
+            onClick={onClick}
+            sx={{
+                cursor: 'pointer',
+                padding: '6px 14px',
+                borderRadius: '20px',
+                fontSize: '12px',
+                fontWeight: 600,
+                fontFamily: 'Sora',
+                border: `1px solid ${active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.15)'}`,
+                backgroundColor: active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.04)',
+                color: active ? TextColors.DarkThemeWhite : TextColors.OverviewContent,
+                transition: 'background-color 0.15s ease, border-color 0.15s ease',
+                '&:hover': {
+                    borderColor: BrandColors.MainPrimary
+                }
+            }}
+        >
+            {label}
+        </Box>
+    )
+}
+
+function RequestsByServer({ servers }: RequestsByServerProps) {
+    const theme = useTheme();
+    const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+
+    const regions = useMemo(
+        () => Array.from(new Set(servers.map(s => s.region))).sort().reverse(),
+        [servers]
+    );
+
+    const visibleServers = selectedRegion
+        ? servers.filter(s => s.region === selectedRegion)
+        : servers;
+
+    return (
         <Stack sx={{
             ...adminCardSx(theme),
             gap: '20px',
@@ -82,7 +127,36 @@ function RequestsByServer( {servers} : RequestsByServerProps) {
                     No request data available yet.
                 </Typography>
             ) : (
-                servers.map(server => <ServerRow key = {server.id} {...server}/>)
+                <>
+                    <Stack 
+                        direction = 'row'
+                        sx={{
+                            gap: '8px',
+                            flexWrap: 'wrap',
+                        }}
+                    >
+                        <RegionFilterPill
+                            label = 'All'
+                            active = {selectedRegion === null}
+                            onClick={() => setSelectedRegion(null)}
+                        />
+                        {regions.map(region => (
+                            <RegionFilterPill
+                                key = {region}
+                                label = {region}
+                                active = {selectedRegion === region}
+                                onClick={() => setSelectedRegion(prev => prev === region ? null : region)}
+                            />
+                        ))}
+                    </Stack>
+
+                    <Stack sx={{
+                        gap: '20px'
+                    }}>
+                        {visibleServers.map(server => <ServerRow key={server.id} {...server} />)}
+                    </Stack>
+                </>
+
             )}
         </Stack>
     );

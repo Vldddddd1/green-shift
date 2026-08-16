@@ -24,7 +24,7 @@ function buildRegionCatalog(): RegionCatalogEntry[]{
         }
     }
 
-    return Array.from(byRegion, ([id, {location, azCount}]) => ({id, location, azCount}));
+    return Array.from(byRegion, ([id, {location, azCount}]) => ({id, location, azCount})).sort();
 }
 
 export const REGION_CATALOG: RegionCatalogEntry[] = buildRegionCatalog();

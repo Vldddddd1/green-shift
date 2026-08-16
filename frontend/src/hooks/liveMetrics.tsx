@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, createContext, useContext} from 'react';
+import { useEffect, useRef, useState, createContext, useContext } from 'react';
 
 const API_BASE = 'http://127.0.0.1:8000';
 const POLL_INTERVAL_MS = 3000;
@@ -6,7 +6,15 @@ const MAX_RECENT_SWITCHES = 5;
 
 export type APIStatus = 'healthy' | 'degraded' | 'offline';
 
-export interface ServerStatus{
+interface ServerData {
+    carbon_score: number;
+    current_load: number;
+    latency: number;
+    status: string;
+    last_selected: string | null;
+}
+
+export interface ServerStatus {
     id: string;
     region: string;
     online: boolean;
@@ -14,15 +22,16 @@ export interface ServerStatus{
     carbonIntensity: number | null; //gCO2/kWh
     requests: number | null;
     percent: number | null;
+    lastSelected: string | null;
 }
 
-export interface RouteSwitch{
+export interface RouteSwitch {
     id: string;
     time: string; // "hh:mm"
     region: string;
 }
 
-export interface LiveMetricsPayload{
+export interface LiveMetricsPayload {
     servers: ServerStatus[];
     carbonSavedKg: number | null;
     savingsMultiplier: number | null;
@@ -34,7 +43,7 @@ export interface LiveMetricsPayload{
     carbonReductionPercent: number | null;
 }
 
-export interface LiveMetrics{
+export interface LiveMetrics {
     activeRegion: string | null;
     servers: ServerStatus[];
     carbonSavedKg: number | null;
@@ -62,7 +71,7 @@ const INITIAL_METRICS: LiveMetrics = {
 
 
 //SINGLE SOURCE OF TRUTH - ONLY PLACE LOGIC LIVES!!
-function toLiveMetrics(payload: LiveMetricsPayload) : LiveMetrics {
+function toLiveMetrics(payload: LiveMetricsPayload): LiveMetrics {
     const active = payload.servers.find(server => server.isActive);
 
     return {
@@ -79,13 +88,6 @@ function toLiveMetrics(payload: LiveMetricsPayload) : LiveMetrics {
     };
 }
 
-interface ServerData {
-    carbon_score: number;
-    current_load: number;
-    latency: number;
-    status: string;
-}
-
 interface CarbonZonesResponse {
     zones: Record<string, Record<string, ServerData>>;
 }
@@ -98,32 +100,45 @@ interface RouteApiResponse {
     savings_multiplier: number;
 }
 
+interface StatsApiResponse {
+    total_requests: number;
+    requests_per_zone: Record<string, number>;
+    requests_per_server: Record<string, number>;
+    co2_saved: number;
+    average_latency_ms: number | null;
+    carbon_reduction_percent: number | null;
+}
+
 function formatTime(date: Date): string {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function serversFromCarbonResponse(carbonData: CarbonZonesResponse, selectedServer: string): ServerStatus[] {
+export function serversFromCarbonResponse(carbonData: CarbonZonesResponse, selectedServer: string, requestsPerServer: Record<string, number> = {}, totalRequests: number = 0): ServerStatus[] {
     return Object.entries(carbonData.zones).flatMap(([zoneName, zoneServers]) =>
-        Object.entries(zoneServers).map(([serverId, data]) => ({
-            id: serverId,
-            region: zoneName,
-            online: data.status === 'online',
-            isActive: serverId === selectedServer,
-            carbonIntensity: data.carbon_score,
-            requests: null,
-            percent: null,
-        }))
+        Object.entries(zoneServers).map(([serverId, data]) => {
+            const requests = requestsPerServer[serverId] ?? 0;
+            return {
+                id: serverId,
+                region: zoneName,
+                online: data.status === 'online',
+                isActive: serverId === selectedServer,
+                carbonIntensity: data.carbon_score,
+                requests,
+                percent: totalRequests > 0 ? Math.round((requests / totalRequests) * 1000) / 10 : 0,
+                lastSelected: data.last_selected ? formatTime(new Date(data.last_selected)) : null,
+            };
+        })
     );
 }
 
-export function onlineAzCountByRegion(servers: ServerStatus[]): Record<string, number>{
-    return servers.reduce<Record<string, number>>(( acc,s ) => {
-        if(s.online) acc[s.region] = (acc[s.region] ?? 0) + 1;
+export function onlineAzCountByRegion(servers: ServerStatus[]): Record<string, number> {
+    return servers.reduce<Record<string, number>>((acc, s) => {
+        if (s.online) acc[s.region] = (acc[s.region] ?? 0) + 1;
         return acc;
     }, {});
 }
 
-export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
+export function useLiveMetrics(): { metrics: LiveMetrics; connected: boolean } {
     const [metrics, setMetrics] = useState<LiveMetrics>(INITIAL_METRICS);
     const [connected, setConnected] = useState(false);
 
@@ -136,11 +151,13 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
         const poll = async () => {
             let carbonRes: Response;
             let routeRes: Response;
+            let statsRes: Response;
 
             try {
-                [carbonRes, routeRes] = await Promise.all([
-                    fetch(`${API_BASE}/carbon`),
+                [carbonRes, routeRes, statsRes] = await Promise.all([
+                    fetch(`${API_BASE}/servers`),
                     fetch(`${API_BASE}/route`),
+                    fetch(`${API_BASE}/stats`),
                 ]);
             } catch {
                 if (cancelled) return;
@@ -151,7 +168,7 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
 
             if (cancelled) return;
 
-            if (!carbonRes.ok || !routeRes.ok) {
+            if (!carbonRes.ok || !routeRes.ok || !statsRes.ok) {
                 setConnected(false);
                 setMetrics(prev => ({ ...prev, apiHealth: 'degraded' }));
                 return;
@@ -159,10 +176,11 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
 
             const carbonData: CarbonZonesResponse = await carbonRes.json();
             const routeData: RouteApiResponse = await routeRes.json();
+            const statsData: StatsApiResponse = await statsRes.json();
 
             if (cancelled) return;
 
-            const servers = serversFromCarbonResponse(carbonData, routeData.selected_server);
+            const servers = serversFromCarbonResponse(carbonData, routeData.selected_server, statsData.requests_per_server, statsData.total_requests);
 
             if (lastZoneRef.current !== null && lastZoneRef.current !== routeData.selected_zone) {
                 switchesRef.current = [
@@ -179,9 +197,9 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
                 apiHealth: 'healthy',
                 lastUpdate: formatTime(new Date()),
                 recentSwitches: switchesRef.current,
-                totalRequests: null, // null - nu sunt trimise de backend inca
-                averageLatencyMs: null,
-                carbonReductionPercent: null
+                totalRequests: statsData.total_requests, // null - nu sunt trimise de backend inca
+                averageLatencyMs: statsData.average_latency_ms,
+                carbonReductionPercent: statsData.carbon_reduction_percent,
             }));
             setConnected(true);
         };
@@ -195,22 +213,13 @@ export function useLiveMetrics(): {metrics: LiveMetrics; connected: boolean} {
         };
     }, []);
 
-    return {metrics, connected, };
+    return { metrics, connected, };
 }
 
-const LiveMetricsContext = createContext<{ metrics: LiveMetrics; connected: boolean } | null>(null);
+export const LiveMetricsContext = createContext<{ metrics: LiveMetrics; connected: boolean } | null>(null);
 
-export function LiveMetricsProvider({ children }: { children : React.ReactNode }){
-    const value = useLiveMetrics();
-    return(
-        <LiveMetricsContext.Provider value = {value}>
-            {children}
-        </LiveMetricsContext.Provider>
-    );
-}
-
-export function useLiveMetricsContext(){
+export function useLiveMetricsContext() {
     const ctx = useContext(LiveMetricsContext);
-    if(!ctx) throw new Error('useLiveMetricsContext must be used within a LiveMetricsProvider');
+    if (!ctx) throw new Error('useLiveMetricsContext must be used within a LiveMetricsProvider');
     return ctx;
 }

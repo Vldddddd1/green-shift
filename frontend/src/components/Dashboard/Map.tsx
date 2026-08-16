@@ -5,7 +5,7 @@ import { regionMarkerStates, TextColors } from '../../assets/themes/colors';
 import type { RegionMarkerState } from '../../assets/themes/colors';
 
 import L from 'leaflet';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useLayoutEffect } from 'react';
 import type { ServerStatus } from '../../hooks/liveMetrics';
 import { RegionDetailsPanel } from './RegionDetailsPanel';
 
@@ -52,7 +52,7 @@ const PANEL_OFFSET_X = 24;
 const PANEL_OFFSET_Y = -40;
 
 function stateForRegion(region: Region, servers: ServerStatus[]): RegionMarkerState {
-    const match = servers.find(s => s.id === region.name)
+    const match = servers.find(s => s.id === region.id)
     if (!match) return 'unavailable';
     if (match.isActive) return 'active';
     return match.online ? 'available' : 'offline';
@@ -92,7 +92,11 @@ export const RegionMap = ({ regions, servers }: RegionMapProps) => {
     const [panelPos, setPanelPos] = useState<{ x: number; y: number } | null>(null);
 
     const panelRef = useRef<HTMLDivElement | null>(null);
-    const panelHeight = panelRef.current?.offsetHeight ?? 300;
+    const [ panelHeight, setPanelHeight ] = useState(300);
+
+    useLayoutEffect(() => {
+        setPanelHeight(panelRef.current?.offsetHeight ?? 300);
+    }, [selected, panelPos]);
 
     const closePanel = useCallback(() => {
         setSelected(null);
@@ -206,7 +210,7 @@ export const RegionMap = ({ regions, servers }: RegionMapProps) => {
             </MapContainer>
 
             {selected && panelPos && (() => {
-                const match = servers.find(s => s.id === selected.name);
+                const match = servers.find(s => s.id === selected.id);
 
                 return (
                     <RegionDetailsPanel
@@ -217,6 +221,7 @@ export const RegionMap = ({ regions, servers }: RegionMapProps) => {
                         onClose={closePanel}
                         state={stateForRegion(selected, servers)}
                         carbonIntensity={match?.carbonIntensity ?? null}
+                        lastRoutingDecision={match?.lastSelected ?? undefined}
                     />
                 )
             })()}

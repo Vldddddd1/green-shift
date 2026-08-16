@@ -3,7 +3,17 @@ from routers import route
 from routers import admin
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+import asyncio
+from contextlib import asynccontextmanager
+from services.health_service import health_check_loop
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(health_check_loop())
+    yield
+    task.cancel()
+
+app = FastAPI(lifespan = lifespan)
 
 app.add_middleware(
     CORSMiddleware,

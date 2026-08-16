@@ -28,6 +28,8 @@ describe('serversFromCarbonResponse', () => {
             online: true,
             isActive: true,
             carbonIntensity: 25,
+            requests: null,
+            percent: null,
         })
         expect(servers).toContainEqual({
             id: 'eu-west-2',
@@ -35,6 +37,8 @@ describe('serversFromCarbonResponse', () => {
             online: false,
             isActive: false,
             carbonIntensity: 27,
+            requests: null,
+            percent: null,
         })
         expect(servers).toContainEqual({
             id: 'us-east-1',
@@ -42,6 +46,8 @@ describe('serversFromCarbonResponse', () => {
             online: true,
             isActive: false,
             carbonIntensity: 70,
+            requests: null,
+            percent: null,
         })
     })
 })

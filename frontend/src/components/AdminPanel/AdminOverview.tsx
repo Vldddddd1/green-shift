@@ -93,7 +93,7 @@ function AdminOverview(){
                     width: '100%',
                     flexWrap: 'wrap',
                 }}>
-                    {/* Stays N/A untill /carbon /route are connected */}
+                    {/* Stays N/A untill /servers /route are connected */}
                     <StatCard label = "TOTAL REQUESTS" value = {metrics.totalRequests} helperText='Simulated this session'/>
                     <StatCard
                         label = "REGIONS LIVE"
@@ -123,10 +123,10 @@ function AdminOverview(){
                     <Box sx={{
                         flex: '2 1 640px'
                     }}>
-                        {/* Stays EMPTY untill /carbon /route are connected */}
+                        {/* Stays EMPTY untill /servers /route are connected */}
                         <RequestsByServer servers = {metrics.servers
                             .filter(s => s.requests !== null && s.percent !== null)
-                            .map(s => ({id : s.id, requests: s.requests!, percent: s.percent! }))}
+                            .map(s => ({id : s.id, region: s.region, requests: s.requests!, percent: s.percent! }))}
                         />
                     </Box>
                     <Stack sx={{
