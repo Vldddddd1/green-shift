@@ -10,6 +10,7 @@ import SandboxPage from './pages/sandbox/index.ts'
 import AdminPage from './pages/admin/index.ts'
 import AdminSectionPlaceholder from './pages/admin/AdminSectionPlaceholder'
 import AdminOverview from './components/AdminPanel/AdminOverview.tsx'
+import AdminRegions from './components/AdminPanel/AdminRegions.tsx'
 import AdminSettings from './components/AdminPanel/AdminSettings.tsx'
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
 
         <Route path="/admin" element={<AdminPage/>}>
           <Route index element={<AdminOverview/>} />
-          <Route path="regions" element={<AdminSectionPlaceholder title="Regions" />} />
+          <Route path="regions" element={<AdminRegions/>} />
           <Route path="simulation" element={<AdminSectionPlaceholder title="Simulation" />} />
           <Route path="settings" element={<AdminSettings/>} />
         </Route>

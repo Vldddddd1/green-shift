@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Stack, Box, Typography, useTheme, } from '@mui/material';
 import { BrandColors, TextColors } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
+import FilterPill from './FilterPill';
 
 export interface ServerRequestStat {
     id: string;
@@ -62,38 +63,6 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
     );
 }
 
-interface RegionFilterPillProps {
-    label: string;
-    active: boolean;
-    onClick: () => void;
-}
-
-function RegionFilterPill({ label, active, onClick }: RegionFilterPillProps) {
-    return (
-        <Box
-            component='button'
-            onClick={onClick}
-            sx={{
-                cursor: 'pointer',
-                padding: '6px 14px',
-                borderRadius: '20px',
-                fontSize: '12px',
-                fontWeight: 600,
-                fontFamily: 'Sora',
-                border: `1px solid ${active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.15)'}`,
-                backgroundColor: active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.04)',
-                color: active ? TextColors.DarkThemeWhite : TextColors.OverviewContent,
-                transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                '&:hover': {
-                    borderColor: BrandColors.MainPrimary
-                }
-            }}
-        >
-            {label}
-        </Box>
-    )
-}
-
 function RequestsByServer({ servers }: RequestsByServerProps) {
     const theme = useTheme();
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -135,13 +104,13 @@ function RequestsByServer({ servers }: RequestsByServerProps) {
                             flexWrap: 'wrap',
                         }}
                     >
-                        <RegionFilterPill
+                        <FilterPill
                             label = 'All'
                             active = {selectedRegion === null}
                             onClick={() => setSelectedRegion(null)}
                         />
                         {regions.map(region => (
-                            <RegionFilterPill
+                            <FilterPill
                                 key = {region}
                                 label = {region}
                                 active = {selectedRegion === region}

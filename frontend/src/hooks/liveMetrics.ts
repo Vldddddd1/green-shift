@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, createContext, useContext } from 'react';
 
-const API_BASE = 'http://127.0.0.1:8000';
+export const API_BASE = 'http://127.0.0.1:8000';
 const POLL_INTERVAL_MS = 3000;
 const MAX_RECENT_SWITCHES = 5;
 
@@ -20,6 +20,8 @@ export interface ServerStatus {
     online: boolean;
     isActive: boolean;
     carbonIntensity: number | null; //gCO2/kWh
+    currentLoad: number | null;
+    latencyMs: number | null;
     requests: number | null;
     percent: number | null;
     lastSelected: string | null;
@@ -69,25 +71,6 @@ const INITIAL_METRICS: LiveMetrics = {
     carbonReductionPercent: null,
 }
 
-
-//SINGLE SOURCE OF TRUTH - ONLY PLACE LOGIC LIVES!!
-function toLiveMetrics(payload: LiveMetricsPayload): LiveMetrics {
-    const active = payload.servers.find(server => server.isActive);
-
-    return {
-        activeRegion: active?.region ?? null,
-        servers: payload.servers,
-        carbonSavedKg: payload.carbonSavedKg,
-        savingsMultiplier: payload.savingsMultiplier,
-        apiHealth: payload.apiHealth,
-        lastUpdate: payload.lastUpdate,
-        recentSwitches: payload.recentSwitches,
-        totalRequests: payload.totalRequests,
-        averageLatencyMs: payload.averageLatencyMs,
-        carbonReductionPercent: payload.carbonReductionPercent,
-    };
-}
-
 interface CarbonZonesResponse {
     zones: Record<string, Record<string, ServerData>>;
 }
@@ -113,6 +96,24 @@ function formatTime(date: Date): string {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+//SINGLE SOURCE OF TRUTH - ONLY PLACE LOGIC LIVES!!
+function toLiveMetrics(payload: LiveMetricsPayload): LiveMetrics {
+    const active = payload.servers.find(server => server.isActive);
+
+    return {
+        activeRegion: active?.region ?? null,
+        servers: payload.servers,
+        carbonSavedKg: payload.carbonSavedKg,
+        savingsMultiplier: payload.savingsMultiplier,
+        apiHealth: payload.apiHealth,
+        lastUpdate: payload.lastUpdate,
+        recentSwitches: payload.recentSwitches,
+        totalRequests: payload.totalRequests,
+        averageLatencyMs: payload.averageLatencyMs,
+        carbonReductionPercent: payload.carbonReductionPercent,
+    };
+}
+
 export function serversFromCarbonResponse(carbonData: CarbonZonesResponse, selectedServer: string, requestsPerServer: Record<string, number> = {}, totalRequests: number = 0): ServerStatus[] {
     return Object.entries(carbonData.zones).flatMap(([zoneName, zoneServers]) =>
         Object.entries(zoneServers).map(([serverId, data]) => {
@@ -123,6 +124,8 @@ export function serversFromCarbonResponse(carbonData: CarbonZonesResponse, selec
                 online: data.status === 'online',
                 isActive: serverId === selectedServer,
                 carbonIntensity: data.carbon_score,
+                currentLoad: data.current_load,
+                latencyMs: data.latency,
                 requests,
                 percent: totalRequests > 0 ? Math.round((requests / totalRequests) * 1000) / 10 : 0,
                 lastSelected: data.last_selected ? formatTime(new Date(data.last_selected)) : null,
@@ -136,6 +139,27 @@ export function onlineAzCountByRegion(servers: ServerStatus[]): Record<string, n
         if (s.online) acc[s.region] = (acc[s.region] ?? 0) + 1;
         return acc;
     }, {});
+}
+
+export function regionAverages(servers: ServerStatus[]): Record<string, { avgCarbon: number; avgLatency: number }> {
+    const byRegion = new Map<string, { carbon: number; latency: number; count: number}>();
+
+    for(const s of servers){
+        if(!s.online || s.carbonIntensity === null || s.latencyMs === null) continue;
+        const entry = byRegion.get(s.region) ?? { carbon: 0, latency: 0, count: 0};
+        entry.carbon += s.carbonIntensity;
+        entry.latency += s.latencyMs;
+        entry.count += 1;
+        byRegion.set(s.region, entry);
+    }
+
+    return Object.fromEntries(
+        Array.from(byRegion, ([region, { carbon, latency, count}]) => [
+            region,
+            { avgCarbon: Math.round(carbon / count), avgLatency: Math.round(latency / count)},
+        ])
+    );
+
 }
 
 export function useLiveMetrics(): { metrics: LiveMetrics; connected: boolean } {
