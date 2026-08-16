@@ -1,5 +1,5 @@
 import { Stack, Box, Typography, useTheme, alpha, } from '@mui/material';
-import { BrandColors, TextColors, } from '../../assets/themes/colors';
+import { BrandColors, } from '../../assets/themes/colors';
 
 import { onlineAzCountByRegion, useLiveMetricsContext } from '../../hooks/liveMetrics';
 import { REGION_CATALOG } from './regionCatalog';
@@ -11,7 +11,9 @@ import RecentSimulations from './RecentSimulations';
 import AllRegionsGrid from './AllRegionsGrid';
 
 function LivePill({ connected, lastUpdate, }: { connected: boolean; lastUpdate: string | null }) {
-    const dotColor = connected ? BrandColors.MainPrimary : TextColors.DarkThemeGray;
+    const theme = useTheme();
+    
+    const dotColor = connected ? BrandColors.MainPrimary : theme.palette.text.secondary;
     const label = connected ? `Last updated ${lastUpdate ?? 'just now'}` : 'Not connected';
 
     return (
@@ -22,8 +24,8 @@ function LivePill({ connected, lastUpdate, }: { connected: boolean; lastUpdate: 
                 gap: '8px',
                 padding: '8px 14px',
                 borderRadius: '20px',
-                border: `1px solid ${connected ? BrandColors.MainPrimary : 'rgba(255,255,255,0.15)'}`,
-                backgroundColor: connected ? alpha(BrandColors.MainPrimary, 0.14) : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${connected ? BrandColors.MainPrimary : theme.custom.adminSidebarBorder}`,
+                backgroundColor: connected ? alpha(BrandColors.MainPrimary, 0.14) : theme.custom.adminMutedSurface,
             }}>
                 <Box sx={{
                     width: '7px',
@@ -34,7 +36,7 @@ function LivePill({ connected, lastUpdate, }: { connected: boolean; lastUpdate: 
                 <Typography sx={{
                     fontSize: '12px',
                     fontWeight: 600,
-                    color: connected ? TextColors.DarkThemeGray : TextColors.OverviewContent,
+                    color: connected ? theme.palette.text.secondary : theme.palette.text.secondary,
                 }}>
                     {label}
                 </Typography>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
-import { BackgroundColors, BrandColors, TextColors, regionMarkerStates } from "../../assets/themes/colors";
+import { BrandColors, regionMarkerStates } from "../../assets/themes/colors";
 import { adminCardSx, adminCardTitleSx } from "./cardStyles";
 import { REGION_CATALOG } from "./regionCatalog";
 import { deriveRegionStatus } from "./regionStatus";
@@ -12,7 +12,11 @@ import { updateCarbonScore } from "../../services/adminApi";
 
 import type { ServerStatus } from "../../hooks/liveMetrics";
 
+
+
+
 function ServerEditRow({ server }: {server: ServerStatus}){
+    const theme = useTheme();
     const [editing, setEditing] = useState(false);
     const [value, setValue] = useState(String(server.carbonIntensity ?? 0));
     const [saving, setSaving] = useState(false);
@@ -38,7 +42,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 gap: '24px',
                 padding: '16px 20px',
                 borderRadius: '12px',
-                backgroundColor: 'rgba(255,255,255,0.03)',
+                backgroundColor: theme.custom.adminMutedSurface,
         }}>
             <Stack sx={{
                 width: '220px',
@@ -48,7 +52,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                     fontFamily: 'Sora',
                     fontWeight: 600,
                     fontSize: '17px',
-                    color: TextColors.DarkThemeText
+                    color: theme.palette.text.primary
                 }}>
                     {server.id}
                 </Typography>
@@ -64,12 +68,12 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                         width: '7px',
                         height: '7px',
                         borderRadius: '50%',
-                        backgroundColor: server.online ? BrandColors.MainPrimary : TextColors.DarkThemeGray
+                        backgroundColor: server.online ? BrandColors.MainPrimary : theme.palette.text.secondary
                     }}/>
                     
                     <Typography sx={{
                         fontSize: '12px',
-                        color: TextColors.OverviewContent
+                        color: theme.palette.text.secondary
                     }}>
                         {server.online ? 'online' : 'offline'}
                     </Typography>
@@ -83,7 +87,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 <Typography sx={{
                     fontSize: '10px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeGray
+                    color: theme.palette.text.secondary
                 }}>
                     Carbon Score
                 </Typography>
@@ -106,9 +110,9 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                                 width: '70px',
                                 padding: '4px 10px',
                                 borderRadius: '8px',
-                                backgroundColor: 'rgba(0,0,0,0.25)',
-                                border: '1px solid rgba(255,255,255,0.15)',
-                                color: TextColors.DarkThemeText,
+                                backgroundColor: theme.custom.adminInputBackground,
+                                border: `1px solid ${theme.custom.adminSidebarBorder}`,
+                                color: theme.palette.text.primary,
                                 fontFamily: 'Sora',
                                 fontWeight: 700,
                                 fontSize: '18px',           
@@ -118,14 +122,14 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                         <Box sx={{
                             padding: '4px 10px',
                             borderRadius: '8px',
-                            backgroundColor: 'rgba(0,0,0,0.25)',
-                            border: '1px solid rgba(255,255,255,0.15)'
+                            backgroundColor: theme.custom.adminInputBackground,
+                            border: `1px solid ${theme.custom.adminSidebarBorder}`
                         }}>
                             <Typography sx={{
                                 fontFamily: 'Sora',
                                 fontWeight: 700,
                                 fontSize: '18px',
-                                color: TextColors.DarkThemeText,
+                                color: theme.palette.text.primary,
                             }}>
                                 {server.carbonIntensity ?? '-'} gCO2
                             </Typography>
@@ -158,7 +162,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 <Typography sx={{
                     fontSize: '10px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeGray
+                    color: theme.palette.text.secondary
                 }}>
                     Current Load
                 </Typography>
@@ -166,7 +170,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 <Typography sx={{
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeText
+                    color: theme.palette.text.primary
                 }}>
                     {server.currentLoad ?? 0}%
                 </Typography>
@@ -175,7 +179,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                     height: '8px',
                     width: '100%',
                     borderRadius: '4px',
-                    backgroundColor: 'rgba(255,255,255,0.08)',
+                    backgroundColor: theme.custom.adminSidebarBorder,
                     overflow: 'hidden'
                 }}>
                     <Box sx={{
@@ -194,7 +198,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 <Typography sx={{
                     fontSize: '10px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeGray,
+                    color: theme.palette.text.secondary,
                 }}>
                     Latency
                 </Typography>
@@ -203,7 +207,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                     fontFamily: 'Sora',
                     fontWeight: 600,
                     fontSize: '17px',
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     {server.latencyMs !== null ? `${server.latencyMs}ms`: 'N/A'}
                 </Typography>
@@ -213,6 +217,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
 }
 
 function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zoneId: string; location: string; azCount: number; onlineAzCount: number | null; avg: {avgCarbon: number; avgLatency: number} | undefined; servers: ServerStatus[];}) {
+    const theme = useTheme();
     const [expanded, setExpanded] = useState(false);
     const { state, label } = deriveRegionStatus(onlineAzCount, azCount);
     const {fill} = regionMarkerStates[state];
@@ -234,7 +239,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     alignItems: 'center',
                     padding: '12px 18px',
                     borderRadius: '10px',
-                    backgroundColor: BackgroundColors.AdminSidebarDark,
+                    backgroundColor: theme.custom.adminSidebarBackground,
                     border: 'none',
                     width: '100%'
                 }}>
@@ -246,13 +251,13 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                             fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
-                            color: TextColors.DarkThemeText
+                            color: theme.palette.text.primary
                         }}>
                             {zoneId}
                         </Typography>
                         <Typography sx={{
                             fontSize: '11px',
-                            color: TextColors.DarkThemeGray
+                            color: theme.palette.text.secondary
                         }}>
                             {location}
                         </Typography>
@@ -262,7 +267,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                         width: '70px',
                         fontSize: '12px',
                         fontWeight: 600,
-                        color: TextColors.OverviewContent,
+                        color: theme.palette.text.secondary,
                     }}>
                         {azCount} AZs
                     </Typography>
@@ -276,7 +281,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                             gap: '6px',
                             borderRadius: '10px',
                             padding: '4px 10px',
-                            backgroundColor: 'rgba(255,255,255,0.06)',
+                            backgroundColor: theme.custom.adminMutedSurface,
                             alignSelf: 'flex-start',
                         }}>
                             <Box sx={{
@@ -289,7 +294,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                             <Typography sx={{
                                 fontSize: '11px',
                                 fontWeight: 600,
-                                color: TextColors.OverviewContent,
+                                color: theme.palette.text.secondary,
                             }}>
                                 {label}
                             </Typography>
@@ -301,7 +306,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     }}>
                         <Typography sx={{
                             fontSize: '10px',
-                            color: TextColors.DarkThemeGray,
+                            color: theme.palette.text.secondary,
                         }}>
                             Avg. Carbon
                         </Typography>
@@ -310,7 +315,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                             fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
-                            color: TextColors.DarkThemeText,
+                            color: theme.palette.text.primary,
                         }}>
                             {avg ? `${avg.avgCarbon} gCO2` : 'N/A'}
                         </Typography>
@@ -322,7 +327,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     }}>
                         <Typography sx={{
                             fontSize: '10px',
-                            color: TextColors.DarkThemeGray,
+                            color: theme.palette.text.secondary,
                         }}>
                             Avg. Latency
                         </Typography>
@@ -331,7 +336,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                             fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
-                            color: TextColors.DarkThemeText,
+                            color: theme.palette.text.primary,
                         }}>
                             {avg ? `${avg.avgLatency}ms` : 'N/A'}
                         </Typography>
@@ -410,13 +415,13 @@ function AdminRegions() {
                                 width: '7px',
                                 height: '7px',
                                 borderRadius: '50%',
-                                backgroundColor: connected ? BrandColors.MainPrimary : TextColors.DarkThemeGray,
+                                backgroundColor: connected ? BrandColors.MainPrimary : theme.palette.text.secondary,
                             }}/>
 
                             <Typography sx={{
                                 fontSize: '12px',
                                 fontWeight: 600,
-                                color: TextColors.DarkThemeText,
+                                color: theme.palette.text.primary,
                             }}>
                                 {connected ? `${onlineRegionCount} /  ${REGION_CATALOG.length} live` : 'Not Connected'}
                             </Typography>
@@ -475,12 +480,12 @@ function AdminRegions() {
                                     <Box sx={{
                                         padding: '6px 12px',
                                         borderRadius: '20px',
-                                        backgroundColor: 'rgba(255,255,255,0.06)',
+                                        backgroundColor: theme.custom.adminMutedSurface,
                                     }}>
                                         <Typography sx={{
                                             fontSize: '12px',
                                             fontWeight: 600,
-                                            color: TextColors.OverviewContent,
+                                            color: theme.palette.text.secondary,
                                         }}>
                                             {regions.length} region{regions.length === 1 ? ' ' : 's'}
                                         </Typography>

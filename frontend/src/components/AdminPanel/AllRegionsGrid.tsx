@@ -1,6 +1,6 @@
 import { Stack, Box, Typography, useTheme, } from '@mui/material';
 import { Link } from 'react-router';
-import { regionMarkerStates, TextColors } from '../../assets/themes/colors';
+import { regionMarkerStates, } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
 import { REGION_CATALOG } from './regionCatalog'
 
@@ -16,6 +16,8 @@ interface RegionChipProps extends RegionCatalogEntry{
 }
 
 function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
+    const theme = useTheme();
+    
     const { state, label } = deriveRegionStatus(onlineAzCount, azCount);
     const { fill } = regionMarkerStates[state];
 
@@ -25,22 +27,22 @@ function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
             gap: '6px',
             padding: '14px',
             borderRadius: '10px',
-            backgroundColor: 'rgba(255,255,255,0.03)',
+            backgroundColor: theme.custom.adminMutedSurface,
         }}>
             <Typography sx={{
                 fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '13px',
-                color: TextColors.DarkThemeGray,
+                color: theme.palette.text.secondary,
             }}>
                 {id}
             </Typography>
 
             <Typography sx={{
                 fontSize: '10px',
-                color: TextColors.DarkThemeGray,
+                color: theme.palette.text.secondary,
             }}>
-                {`${location} · ${azCount} AZs`}
+                {`${location} - ${azCount} AZs`}
             </Typography>
             <Stack 
                 direction = 'row'
@@ -59,7 +61,7 @@ function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
                 <Typography sx={{
                     fontSize: '10px',
                     fontWeight: 600,
-                    color: TextColors.OverviewContent
+                    color: theme.palette.text.secondary
                 }}>
                     {label}
                 </Typography>

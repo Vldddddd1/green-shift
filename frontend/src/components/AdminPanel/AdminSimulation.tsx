@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
-import { BackgroundColors, BrandColors, regionMarkerStates, TextColors } from "../../assets/themes/colors";
+import { BrandColors, regionMarkerStates, TextColors, } from "../../assets/themes/colors";
 import { adminCardSx, adminCardTitleSx } from "./cardStyles";
 import { REGION_CATALOG } from "./regionCatalog";
 import StatCard from "./StatCard";
@@ -126,9 +126,9 @@ function AdminSimulation(){
                             width: '80px',
                             padding: '8px 12px',
                             borderRadius: '8px',
-                            backgroundColor: 'rgba(0,0,0,0.25)',
-                            border: '1px solid rgba(255,255,255,0.15)',
-                            color: TextColors.DarkThemeWhite,
+                            backgroundColor: theme.custom.adminInputBackground,
+                            border: `1px solid ${theme.custom.adminSidebarBorder}`,
+                            color: theme.palette.text.primary,
                             fontFamily: 'Sora',
                             fontWeight: 700,
                             fontSize: '18px',
@@ -144,7 +144,7 @@ function AdminSimulation(){
                         fontFamily: 'Sora',
                         fontWeight: 600,
                         fontSize: '11px',
-                        color: TextColors.DarkThemeGray
+                        color: theme.palette.text.secondary
                     }}>
                         Target Region
                     </Typography>
@@ -156,10 +156,10 @@ function AdminSimulation(){
                         sx = {{
                             width: '100%',
                             padding: '12px 16px',
-                            borderRadius: '10px',
-                            backgroundColor: 'rgba(0,0,0,0.2)',
-                            border: '1px solid rgba(255,255,255,0.12)',
-                            color: TextColors.DarkThemeText,
+                            borderRadius: '17px',
+                            backgroundColor: theme.custom.adminSidebarBackground,
+                            border: `1px solid ${theme.custom.adminSidebarBorder}`,
+                            color: theme.palette.text.primary,
                             fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
@@ -186,7 +186,7 @@ function AdminSimulation(){
                         border: 'none',
                         backgroundColor: BrandColors.MainPrimary,
                         opacity: submitting ? 0.6 : 1,
-                        color: BackgroundColors.CardBackground,
+                        color: TextColors.DarkThemeWhite,
                         fontFamily: 'Sora',
                         fontWeight: 600,
                         fontSize: '15px',
@@ -263,7 +263,7 @@ function AdminSimulation(){
             ) : (
                 <Typography sx={{
                     fontSize: '13px',
-                    color: TextColors.DarkThemeGray,
+                    color: theme.palette.text.secondary,
                 }}>
                     Run a simulation to see results
                 </Typography>

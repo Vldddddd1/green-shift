@@ -86,6 +86,7 @@ function AdminSettings(){
     const [resetDone, setResetDone] = useState(false);
 
     const handleResetAll = async () => {
+        if(!window.confirm("ARE YOU SURE you want to reset all simulation data?")) return;
         setResetting(true);
         setResetError(null);
         setResetDone(false);

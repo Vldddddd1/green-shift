@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { BrandColors, TextColors } from "../../assets/themes/colors";
 
 interface FilterPillProps {
@@ -8,6 +8,8 @@ interface FilterPillProps {
 }
 
 function FilterPill({ label, active, onClick }: FilterPillProps) {
+    const theme = useTheme();
+    
     return (
         <Box
             component='button'
@@ -19,9 +21,9 @@ function FilterPill({ label, active, onClick }: FilterPillProps) {
                 fontSize: '12px',
                 fontWeight: 600,
                 fontFamily: 'Sora',
-                border: `1px solid ${active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.15)'}`,
-                backgroundColor: active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.04)',
-                color: active ? TextColors.DarkThemeWhite : TextColors.OverviewContent,
+                border: `1px solid ${active ? BrandColors.MainPrimary : theme.custom.adminSidebarBorder}`,
+                backgroundColor: active ? BrandColors.MainPrimary : theme.custom.adminMutedSurface,
+                color: active ? TextColors.DarkThemeWhite : theme.palette.text.secondary,
                 transition: 'background-color 0.15s ease, border-color 0.15s ease',
                 '&:hover': {
                     borderColor: BrandColors.MainPrimary

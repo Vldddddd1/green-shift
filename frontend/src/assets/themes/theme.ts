@@ -34,6 +34,8 @@ export interface CustomTokens {
     adminSidebarBackground: string;
     adminSidebarBorder: string;
     adminSidebarMutedText: string;
+    adminMutedSurface: string;
+    adminInputBackground: string;
 }
 
 declare module '@mui/material/styles' {
@@ -109,7 +111,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         cardShadow: shadows.darkMode,
         adminSidebarBackground: BackgroundColors.AdminSidebarDark,
         adminSidebarBorder: 'rgba(255,255,255,0.08)',
-        adminSidebarMutedText: TextColors.OverviewContent
+        adminSidebarMutedText: TextColors.OverviewContent,
+        adminMutedSurface: 'rgba(255,255,255,0.03)',
+        adminInputBackground: 'rgba(0,0,0,0.25)'
     } : {
         navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
         backIconColor: TextColors.LightThemeText,
@@ -120,7 +124,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         cardShadow: shadows.lightMode,
         adminSidebarBackground: BackgroundColors.CardBackground,
         adminSidebarBorder: 'rgba(0,0,0,0.08)',
-        adminSidebarMutedText: TextColors.LightThemeGray
+        adminSidebarMutedText: TextColors.LightThemeGray,
+        adminMutedSurface: 'rgba(0,0,0,0.03)',
+        adminInputBackground: 'rgba(255,255,255,255.25)'
     };
 
     return {

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import { Stack, Box, Typography, useTheme, } from '@mui/material';
-import { BrandColors, TextColors } from '../../assets/themes/colors';
+import { BrandColors, } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
 import FilterPill from './FilterPill';
 
@@ -17,6 +17,8 @@ interface RequestsByServerProps {
 }
 
 function ServerRow({ id, requests, percent }: ServerRequestStat) {
+    const theme = useTheme();
+    
     return (
         <Stack sx={{
             gap: '8px',
@@ -31,7 +33,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                 <Typography sx={{
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     {id}
                 </Typography>
@@ -39,7 +41,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                 <Typography sx={{
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     {`${requests} req - ${percent}%`}
                 </Typography>
@@ -49,7 +51,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                 height: '8px',
                 width: '100%',
                 borderRadius: '4px',
-                backgroundColor: 'rgba(255,255,255,0.08)',
+                backgroundColor: theme.custom.adminSidebarBorder,
                 overflow: 'hidden',
             }}>
                 <Box sx={{
@@ -91,7 +93,7 @@ function RequestsByServer({ servers }: RequestsByServerProps) {
             {servers.length === 0 ? (
                 <Typography sx={{
                     fontSize: '13px',
-                    color: TextColors.DarkThemeGray,
+                    color: theme.palette.text.secondary,
                 }}>
                     No request data available yet.
                 </Typography>

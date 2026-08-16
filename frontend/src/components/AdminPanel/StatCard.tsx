@@ -1,5 +1,4 @@
 import { Stack, Typography, useTheme, } from '@mui/material';
-import { TextColors } from '../../assets/themes/colors';
 import { display } from './placeholders';
 
 interface StatCardProps{
@@ -26,7 +25,7 @@ function StatCard({ label, value, helperText, }: StatCardProps){
                 fontSize: '11px',
                 fontWeight: 600,
                 letterSpacing: '1px',
-                color: TextColors.DarkThemeGray,
+                color: theme.palette.text.secondary,
             }}>
                 {label}
             </Typography>
@@ -42,7 +41,7 @@ function StatCard({ label, value, helperText, }: StatCardProps){
 
             <Typography sx={{
                 fontSize: '12px',
-                color: TextColors.OverviewContent,
+                color: theme.palette.text.secondary,
             }}>
                 {helperText}
             </Typography>

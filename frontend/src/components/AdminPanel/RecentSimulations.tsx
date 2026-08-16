@@ -1,5 +1,4 @@
 import { Stack, Typography, useTheme, } from '@mui/material';
-import { TextColors } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
 
 export interface SimulationLogEntry{
@@ -29,7 +28,7 @@ function RecentSimulations({ simulations }: RecentSimulationsProps){
             {simulations.length === 0 ? (
                 <Typography sx={{
                     fontSize: '12px',
-                    color: TextColors.DarkThemeGray
+                    color: theme.palette.text.secondary
                 }}>
                     No simulations recorded yet.
                 </Typography>
@@ -39,7 +38,7 @@ function RecentSimulations({ simulations }: RecentSimulationsProps){
                         key = {entry.id}
                         sx = {{
                             fontSize: '12px',
-                            color: TextColors.DarkThemeGray,
+                            color: theme.palette.text.secondary,
                         }}
                     >
                         {entry.summary}
