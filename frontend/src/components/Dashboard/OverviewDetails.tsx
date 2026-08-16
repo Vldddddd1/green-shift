@@ -225,7 +225,7 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                 />
                 <MetricRow
                     label="Savings Multiplier"
-                    value={display(metrics.savingsMultiplier != null ? `${metrics.savingsMultiplier.toFixed(1)}` : NA)}
+                    value={display(metrics.savingsMultiplier != null ? `${metrics.savingsMultiplier.toFixed(1)}x` : NA)}
                 />
                 {metrics.apiHealth === null ? (
                     <MetricRow label="API Connection" value={NA} valueColor={TextColors.DarkThemeGray} />

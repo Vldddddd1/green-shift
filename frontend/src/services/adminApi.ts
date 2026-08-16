@@ -16,6 +16,33 @@ export async function getAdminToken(): Promise<string> {
     return cachedToken!;
 }
 
+async function postAdmin<T>(path: string, body: unknown): Promise<T> {
+    const token = await getAdminToken();
+    const res = await fetch(`${API_BASE}/admin/${path}`,{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+    });
+    if(!res.ok) throw new Error(`Failed to POST ${path}`);
+    return res.json();
+}
+
+export interface SimulateResult{
+    simulated: number;
+    results: {zone: string; server: string}[];
+}
+
+export function simulateRequests(count: number, zone: string): Promise<SimulateResult>{
+    return postAdmin('simulate', {count, zone});
+}
+
+export function resetSimulation(): Promise<{status: string}> {
+    return postAdmin('reset', {});
+}
+
 async function patchAdmin(path: string, body: unknown): Promise<void> {
     const token = await getAdminToken();
     const res = await fetch(`${API_BASE}/admin/${path}`,{

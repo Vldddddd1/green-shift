@@ -11,7 +11,10 @@ function AdminPage(){
     return(
         <LiveMetricsProvider>
             <AdminNavbar/>
-            <Box sx={{ marginLeft: theme.fluid.sidebarWidth}}>
+            <Box sx={{ 
+                minHeight: '100svh',
+                marginLeft: theme.fluid.sidebarWidth,
+            }}>
                 <Outlet/>
             </Box>
         </LiveMetricsProvider>

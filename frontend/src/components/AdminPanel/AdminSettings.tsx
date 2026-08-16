@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
 import { BrandColors, regionMarkerStates } from "../../assets/themes/colors";
@@ -5,19 +6,20 @@ import { adminCardSx, adminCardTitleSx } from "./cardStyles";
 
 import { API_STATUS_CONFIG } from "../../assets/apiStatus";
 import { useLiveMetricsContext } from "../../hooks/liveMetrics";
+import { resetSimulation } from "../../services/adminApi";
 
 const GRAFANA_URL = ''; //TODO LINK GRAFANA
 
-function ActionPill({label, color, href, onClick} : { label: string, color: string, href?: string, onClick?: () => void}){
-    const clickable = Boolean(href || onClick);
+function ActionPill({label, color, href, onClick, disabled} : { label: string, color: string, href?: string, onClick?: () => void, disabled?: boolean}){
+    const clickable = Boolean((href || onClick) && !disabled);
 
     return(
         <Box
             component = {href ? 'a' : 'div'}
-            href = {href}
+            href = {disabled ? undefined : href}
             target = {href ? '_blank' : undefined}
             rel = {href ? 'noopener noreferrer' : undefined}
-            onClick = {onClick}
+            onClick = {disabled ? undefined : onClick}
             sx = {{
                 display: 'flex',
                 alignItems: 'center',
@@ -79,9 +81,25 @@ function AdminSettings(){
     const { metrics } = useLiveMetricsContext();
     const apiHealth = metrics.apiHealth;
 
-    const handleResetAll = () => {
-        //TODO wire reset dupa ce se face pe backend endpoint ul
-        console.log("RESET ALL SIMULATION DATA REQUESTED");
+    const [resetting, setResetting] = useState(false);
+    const [resetError, setResetError] = useState<string | null>(null);
+    const [resetDone, setResetDone] = useState(false);
+
+    const handleResetAll = async () => {
+        setResetting(true);
+        setResetError(null);
+        setResetDone(false);
+
+        try{
+            await resetSimulation();
+            setResetDone(true);
+        }
+        catch{
+            setResetError("Reset failed - check backend");
+        } 
+        finally{
+            setResetting(false);
+        }
     };
 
     return(
@@ -161,8 +179,27 @@ function AdminSettings(){
                                 label = "Reset All"
                                 color = {regionMarkerStates.offline.fill}
                                 onClick={handleResetAll} 
+                                disabled = {resetting}
                             />}
                 />
+
+                {resetError && 
+                    <Typography sx={{
+                        fontSize: '13px',
+                        color: regionMarkerStates.offline.fill,
+                    }}>
+                        {resetError}
+                    </Typography>
+                }
+
+                {resetDone && !resetError &&
+                    <Typography sx={{
+                        fontSize: '13px',
+                        color: theme.palette.text.secondary,
+                    }}>
+                        Reset done
+                    </Typography>
+                }
             </Stack>
         </Stack>
     );

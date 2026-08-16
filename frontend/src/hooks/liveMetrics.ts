@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, createContext, useContext } from 'react';
 
 export const API_BASE = 'http://127.0.0.1:8000';
-const POLL_INTERVAL_MS = 3000;
+const POLL_INTERVAL_MS = 1500;
 const MAX_RECENT_SWITCHES = 5;
 
 export type APIStatus = 'healthy' | 'degraded' | 'offline';
@@ -206,6 +206,9 @@ export function useLiveMetrics(): { metrics: LiveMetrics; connected: boolean } {
 
             const servers = serversFromCarbonResponse(carbonData, routeData.selected_server, statsData.requests_per_server, statsData.total_requests);
 
+            const offlineServerCount = servers.filter((s) => !s.online).length;
+            const apiHealth: APIStatus = offlineServerCount === 0 ? 'healthy' : 'degraded';
+
             if (lastZoneRef.current !== null && lastZoneRef.current !== routeData.selected_zone) {
                 switchesRef.current = [
                     { id: `${Date.now()}`, time: formatTime(new Date()), region: routeData.selected_zone },
@@ -218,7 +221,7 @@ export function useLiveMetrics(): { metrics: LiveMetrics; connected: boolean } {
                 servers,
                 carbonSavedKg: routeData.carbon_saved_kg,
                 savingsMultiplier: routeData.savings_multiplier,
-                apiHealth: 'healthy',
+                apiHealth,
                 lastUpdate: formatTime(new Date()),
                 recentSwitches: switchesRef.current,
                 totalRequests: statsData.total_requests, // null - nu sunt trimise de backend inca
