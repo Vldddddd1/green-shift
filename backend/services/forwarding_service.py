@@ -34,7 +34,7 @@ REGION_URLS = {
 def forward_to_region(server: str) -> dict:
     url = REGION_URLS[server]
     try: 
-        response = httpx.get(url, timeout=3.0)
+        response = httpx.get(url, timeout=1.5) #timeout ul la care se trimite raspuns
         response.raise_for_status()
         return response.json()
     except httpx.ConnectError:

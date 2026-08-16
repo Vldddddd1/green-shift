@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class RouteResponse(BaseModel):
     selected_zone: str
@@ -39,7 +39,8 @@ class UpdateStatusRequest(BaseModel):
     status: str
 
 class SimulateRequest(BaseModel):
-    count: int
+    count: int = Field(..., ge = 1, le = 300)
+    zone: str | None = None
 
 class LoginRequest(BaseModel):
     username: str

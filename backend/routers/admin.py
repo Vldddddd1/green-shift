@@ -57,14 +57,18 @@ def update_status(payload: UpdateStatusRequest):
 
 @router.post("/simulate", dependencies=[Depends(require_auth)])
 def simulate_requests(payload: SimulateRequest):
+    if payload.zone is not None and payload.zone not in get_state():
+        raise HTTPException(status_code=404, detail="Unknown zone")
+
     results = []
     for _ in range(payload.count):
-        zone, server = decide_route()
+        zone, server = decide_route(payload.zone)
         forward_to_region(server)
         update_load_after_request(zone, server)
 
         carbon_score = get_state()[zone][server]["carbon_score"]
-        record_request(zone, server, carbon_score)
+        latency = get_state()[zone][server]["latency"]
+        record_request(zone, server, carbon_score, latency)
 
         results.append({"zone": zone, "server": server})
 

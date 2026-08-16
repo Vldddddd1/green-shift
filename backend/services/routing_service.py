@@ -29,9 +29,13 @@ def pick_server_in_zone(servers: dict) -> str:
 
     return min(server_score, key = server_score.get)
 
-def decide_route() -> tuple[str, str]:
-
+def decide_route(target_zone: str | None = None) -> tuple[str, str]:
     zones = get_state()
+
+    if target_zone is not None:
+        if target_zone not in zones:
+            raise ValueError(f"Unknown zone {target_zone}")
+        zones = {target_zone: zones[target_zone]}
 
     best_zone = pick_zone(zones)
     best_server = pick_server_in_zone(zones[best_zone])
