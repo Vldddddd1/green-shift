@@ -26,3 +26,5 @@ def reset_stats():
     stats["requests_per_server"] = {}
     stats["requests_per_zone"] = {}
     stats["co2_saved"] = 0
+
+

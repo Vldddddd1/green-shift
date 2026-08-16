@@ -1,5 +1,5 @@
 from services.carbon_reader import read_carbon_scores
-from services.state_service import get_state
+from services.state_service import get_state, increment_and_check_batch
 
 
 
@@ -35,14 +35,14 @@ def decide_route() -> tuple[str, str]:
 def update_load_after_request(selected_zone: str, selected_server: str):
 
     zones = get_state()
-    for zone_name, servers in zones.items():
-        for server_name, data in servers.items():
-            if server_name == selected_server:
-                data["current_load"] = min(100, data["current_load"] + 5)
-            elif zone_name != selected_zone:
-                data["current_load"] = max(0, data["current_load"] - 2)
+    winner_data = zones[selected_zone][selected_server]
+    winner_data["current_load"] = min(100, winner_data["current_load"] + 5)
 
-
+    if increment_and_check_batch(50):
+        for zone_name, servers in zones.items():
+            for server_name, data in servers.items():
+                if server_name != selected_server:
+                    data["current_load"] = max(0, data["current_load"] - 2)
 
 if __name__ == "__main__": 
     print(decide_route())

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from services.state_service import get_state, reset_state
 from services.routing_service import decide_route, update_load_after_request
 from services.forwarding_service import forward_to_region
-from services.stats_service import reset_stats
+from services.stats_service import reset_stats, record_request
 from services.auth_service import verify_credentials, ADMIN_TOKEN, require_auth
 from models.schemas import (
     UpdateCarbonScoreRequest,
@@ -62,6 +62,10 @@ def simulate_requests(payload: SimulateRequest):
         zone, server = decide_route()
         forward_to_region(server)
         update_load_after_request(zone, server)
+
+        carbon_score = get_state()[zone][server]["carbon_score"]
+        record_request(zone, server, carbon_score)
+
         results.append({"zone": zone, "server": server})
 
     return {"simulated": payload.count, "results": results}
