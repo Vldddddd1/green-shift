@@ -1,7 +1,7 @@
 import { Stack, Box, Typography, useTheme, } from '@mui/material';
 import { Link } from 'react-router';
 import { regionMarkerStates, } from '../../assets/themes/colors';
-import { adminCardSx, adminCardTitleSx } from './cardStyles';
+import { adminCardSx, adminCardTitleSx, adminHeaderRowSx } from './cardStyles';
 import { REGION_CATALOG } from './regionCatalog'
 
 import type { RegionCatalogEntry } from './regionCatalog'
@@ -79,11 +79,10 @@ function AllRegionsGrid({ onlineAzCounts}: AllRegionsGridProps){
             gap: '16px',
         }}>
             <Stack
-                direction = 'row'
-                sx = {{
-                    alignItems: 'center',
-                    width: '100%',
-                }}>
+                direction = {{xs: 'column', sm: 'row'}}
+                sx = {
+                    adminHeaderRowSx
+            }>
                     <Typography sx={{
                         ...adminCardTitleSx,
                         flex: '1 0 0 ',

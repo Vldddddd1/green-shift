@@ -13,7 +13,8 @@ function AdminPage(){
             <AdminNavbar/>
             <Box sx={{ 
                 minHeight: '100svh',
-                marginLeft: theme.fluid.sidebarWidth,
+                marginLeft: {xs: 0, sm: theme.fluid.sidebarWidth},
+                paddingTop: {xs: theme.fluid.navbarHeight, sm: 0},
             }}>
                 <Outlet/>
             </Box>

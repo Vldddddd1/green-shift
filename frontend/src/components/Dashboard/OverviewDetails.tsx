@@ -52,10 +52,12 @@ export function MetricRow({ label, value, valueColor }: { label: string; value: 
             }}>
                 {label}
             </Typography>
-            <Typography sx={{
-                fontSize: {xs: '12px', md: '15px'},
-                fontWeight: 600,
-                color: isNA ? TextColors.DarkThemeGray : (valueColor ?? TextColors.DarkThemeText)
+            <Typography 
+                component = 'span'
+                sx={{
+                    fontSize: {xs: '12px', md: '15px'},
+                    fontWeight: 600,
+                    color: isNA ? TextColors.DarkThemeGray : (valueColor ?? TextColors.DarkThemeText)
             }}>
                 {value}
             </Typography>
@@ -276,10 +278,12 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                         {NA}
                     </Typography>
                 ) : (
-                    <Stack sx={{
-                        gap: '6px',
-                        maxHeight: {xs: '90px', md: 'none'},
-                        overflowY: {xs: 'none', md: 'visible'},
+                    <Stack 
+                        onPointerDown = {(e) => e.stopPropagation()}
+                        sx={{
+                            gap: '6px',
+                            maxHeight: {xs: '150px', md: 'none'},
+                            overflowY: {xs: 'auto', md: 'visible'},
                     }}>
                         {metrics.recentSwitches.map(s => (
                         <Typography key={s.id}

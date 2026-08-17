@@ -109,6 +109,9 @@ function Navbar({ onToggleOverview }: NavbarProps) {
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={closeMenu}
+                    sx = {{
+                        zIndex: 10000,
+                    }}
                     slotProps={{
                         paper: {
                             sx: {
@@ -122,7 +125,7 @@ function Navbar({ onToggleOverview }: NavbarProps) {
                                 backgroundClip: 'padding-box, border-box',
                                 boxShadow: theme.custom.cardShadow,
                                 borderRadius: '12px',
-                                transition: 'background-color 0.5s ease, color 0.5s ease'
+                                transition: 'background-color 0.5s ease, color 0.5s ease',
                             }
                         }
                     }}>

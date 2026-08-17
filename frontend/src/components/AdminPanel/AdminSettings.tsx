@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
 import { BrandColors, regionMarkerStates } from "../../assets/themes/colors";
-import { adminCardSx, adminCardTitleSx } from "./cardStyles";
+import { adminCardSx, adminCardTitleSx, adminHeaderRowSx, adminPageSx } from "./cardStyles";
 
 import { API_STATUS_CONFIG } from "../../assets/apiStatus";
 import { useLiveMetricsContext } from "../../hooks/liveMetrics";
@@ -46,12 +46,10 @@ function ActionPill({label, color, href, onClick, disabled} : { label: string, c
 function SettingsRow({ title, description, action}: { title: string, description: string, action: React.ReactNode}) {
     return(
         <Stack
-            direction = 'row'
-            sx = {{
-                alignItems: 'center',
-                width: '100%',
-            }} 
-        >
+            direction = {{xs: 'column', sm: 'row'}}
+            sx = {
+                adminHeaderRowSx
+        }>
             <Stack sx={{
                 flex: '1 0 0',
                 gap: '4px',
@@ -104,11 +102,9 @@ function AdminSettings(){
     };
 
     return(
-        <Stack sx={{
-            gap: '28px',
-            padding: '40px',
-            width: '100%',
-        }}>
+        <Stack sx={
+            adminPageSx
+        }>
             <Stack sx={{
                 gap: '4px',
             }}>

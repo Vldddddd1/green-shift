@@ -17,3 +17,15 @@ export const adminCardTitleSx = {
     fontWeight: 600,
     fontSize: '17px',
 }
+
+export const adminPageSx: SxProps<Theme> = {
+    gap: {xs: '20px', sm: '28px'},
+    padding: {xs: '20px', sm: '28px', md: '40px'},
+    width: '100%',
+}
+
+export const adminHeaderRowSx: SxProps<Theme> = {
+    alignItems: {xs: 'flex-start', sm: 'center'},
+    gap: {xs: '12px', sm: 0},
+    width: '100%',
+}

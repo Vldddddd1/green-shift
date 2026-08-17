@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
 import { BrandColors, regionMarkerStates } from "../../assets/themes/colors";
-import { adminCardSx, adminCardTitleSx } from "./cardStyles";
+import { adminCardSx, adminCardTitleSx, adminHeaderRowSx, adminPageSx } from "./cardStyles";
 import { REGION_CATALOG } from "./regionCatalog";
 import { deriveRegionStatus } from "./regionStatus";
 import {CONTINENTS, getContinent, type Continent} from "./continents"
@@ -36,16 +36,16 @@ function ServerEditRow({ server }: {server: ServerStatus}){
 
     return(
         <Stack
-            direction = 'row'
+            direction = {{xs: 'column', sm: 'row'}}
             sx = {{
-                alignItems: 'center',
-                gap: '24px',
+                alignItems: {xs: 'flex-start', sm: 'center'},
+                gap: {xs: '14px', sm: '24px'},
                 padding: '16px 20px',
                 borderRadius: '12px',
                 backgroundColor: theme.custom.adminMutedSurface,
         }}>
             <Stack sx={{
-                width: '220px',
+                width: {xs: '100%', sm: '220px'},
                 gap: '6px',
             }}>
                 <Typography sx={{
@@ -81,7 +81,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
             </Stack>
 
             <Stack sx={{
-                width: '300px',
+                width: {xs: '100%', sm: '300px'},
                 gap: '6px',
             }}>
                 <Typography sx={{
@@ -156,7 +156,8 @@ function ServerEditRow({ server }: {server: ServerStatus}){
             </Stack>
 
             <Stack sx={{
-                flex: '1 0 0',
+                width: {xs: '100%', sm: 'auto'},
+                flex: {sm: '1 0 0'},
                 gap: '6px',
             }}>
                 <Typography sx={{
@@ -192,7 +193,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
             </Stack>
 
             <Stack sx={{
-                width: '140px',
+                width: {xs: '100%', sm: '140px'},
                 gap: '6px'
             }}>
                 <Typography sx={{
@@ -230,13 +231,13 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
             <Stack
                 component = "button"
                 onClick = {() => setExpanded((e) => !e)}
-                direction = "row"
+                direction = {{xs: 'column', sm: 'row'}}
                 sx = {{
                     cursor: 'pointer',
                     textAlign: 'left',
-                    gap: '20px',
-                    height: '60px',
-                    alignItems: 'center',
+                    gap: {xs: '10px', sm: '20px'},
+                    height: {xs: 'auto', sm: '60px'},
+                    alignItems: {xs: 'flex-start', sm: 'center'},
                     padding: '12px 18px',
                     borderRadius: '10px',
                     backgroundColor: theme.custom.adminSidebarBackground,
@@ -244,7 +245,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     width: '100%'
                 }}>
                     <Stack sx={{
-                        width: '220px',
+                        width: {xs: '100%', sm: '220px'},
                         gap: '2px',
                     }}>
                         <Typography sx={{
@@ -264,7 +265,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     </Stack>
 
                     <Typography sx={{
-                        width: '70px',
+                        width: {xs: 'auto', sm: '70px'},
                         fontSize: '12px',
                         fontWeight: 600,
                         color: theme.palette.text.secondary,
@@ -275,7 +276,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     <Stack
                         direction = "row"
                         sx = {{
-                            width: '150px',
+                            width: {xs: 'auto', sm: '150px'},
                             height: '100%',
                             alignItems: 'center',
                             gap: '6px',
@@ -301,7 +302,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     </Stack>
 
                     <Stack sx={{
-                        width: '140px',
+                        width: {xs: '100%', sm: '140px'},
                         gap: '2px',
                     }}>
                         <Typography sx={{
@@ -322,7 +323,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                     </Stack>
 
                     <Stack sx={{
-                        width: '100px',
+                        width: {xs: '100%', sm: '100px'},
                         gap: '2px',
                     }}>
                         <Typography sx={{
@@ -369,17 +370,14 @@ function AdminRegions() {
     const visibleContinents = activeContinent ? [activeContinent] : CONTINENTS;
 
     return(
-        <Stack sx={{
-            gap: '28px',
-            padding: '40px',
-            width: '100%',
-        }}>
+        <Stack sx = {
+            adminPageSx
+        }>
             <Stack
-                direction = "row"
-                sx = {{
-                    alignItems: 'center',
-                    width: '100%',
-                }}>
+                direction = {{xs: 'column', sm: 'row'}}
+                sx = {
+                    adminHeaderRowSx
+            }>
                     <Stack sx={{
                         flex: '1 0 0',
                         gap: '4px',
@@ -462,9 +460,9 @@ function AdminRegions() {
                             gap: '10px',
                         }}>
                             <Stack
-                                direction = "row"
+                                direction = {{xs: 'column', sm: 'row'}}
                                 sx = {{
-                                    alignItems: 'center',
+                                    alignItems: {xs: 'flex-start', sm: 'center'},
                                     gap: '12px',
                                     width: '100%',
                                 }}>

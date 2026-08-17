@@ -4,6 +4,7 @@ import { BrandColors, } from '../../assets/themes/colors';
 import { onlineAzCountByRegion, useLiveMetricsContext } from '../../hooks/liveMetrics';
 import { REGION_CATALOG } from './regionCatalog';
 
+import { adminHeaderRowSx, adminPageSx } from './cardStyles';
 import StatCard from './StatCard';
 import RequestsByServer from './RequestsByServer';
 import PerformancePanel from './PerformancePanel';
@@ -55,17 +56,14 @@ function AdminOverview(){
     const onlineAzCounts = onlineAzCountByRegion(metrics.servers)
 
     return(
-        <Stack sx={{
-            gap: '28px',
-            padding: '40px',
-            width: '100%',
-        }}>
+        <Stack sx = {
+            adminPageSx
+        }>
             <Stack 
-                direction = 'row'
-                sx ={{
-                    alignItems: 'center',
-                    width: '100%',
-                }}>
+                direction = {{xs: 'column', sm: 'row'}}
+                sx = {
+                    adminHeaderRowSx
+                }>
                     <Stack sx={{
                         flex: '1 0 0',
                         gap: '4px',
@@ -104,7 +102,7 @@ function AdminOverview(){
                     />
                     <StatCard
                         label = "CARBON SAVED"
-                        value = {metrics.carbonSavedKg !== null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO₂` : null}
+                        value = {metrics.carbonSavedKg !== null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO2` : null}
                         helperText = "vs. static routing"
                     />
                     <StatCard

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
 import { BrandColors, regionMarkerStates, TextColors, } from "../../assets/themes/colors";
-import { adminCardSx, adminCardTitleSx } from "./cardStyles";
+import { adminCardSx, adminCardTitleSx, adminPageSx } from "./cardStyles";
 import { REGION_CATALOG } from "./regionCatalog";
 import StatCard from "./StatCard";
 import { useLiveMetricsContext } from "../../hooks/liveMetrics";
@@ -67,11 +67,9 @@ function AdminSimulation(){
     }
 
     return(
-        <Stack sx={{
-            gap: '28px',
-            padding: '40px',
-            width: '100%',
-        }}>
+        <Stack sx={
+            adminPageSx
+        }>
             <Stack sx={{
                 gap: '4px',
             }}>
@@ -97,9 +95,10 @@ function AdminSimulation(){
                 gap: '24px',
             }}>
                 <Stack
-                    direction = "row"
+                    direction = {{xs: 'column', sm: 'row' }}
                     sx = {{
-                        alignItems: 'center',
+                        alignItems: {xs: 'flex-start', sm: 'center'},
+                        gap: {xs: '12px', sm: 0},
                         width: '100%',
                 }}>
                     <Typography sx={{
@@ -123,7 +122,7 @@ function AdminSimulation(){
                             setCount(Math.min(MAX_SIM_REQUESTS, Math.max(1,next)));
                         }}
                         sx = {{
-                            width: '80px',
+                            width: {xs: '100%', sm: '80px'},
                             padding: '8px 12px',
                             borderRadius: '8px',
                             backgroundColor: theme.custom.adminInputBackground,
