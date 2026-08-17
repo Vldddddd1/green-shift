@@ -68,6 +68,7 @@ def simulate_requests(payload: SimulateRequest):
 
         carbon_score = get_state()[zone][server]["carbon_score"]
         latency = get_state()[zone][server]["latency"]
+
         record_request(zone, server, carbon_score, latency)
 
         results.append({"zone": zone, "server": server})
