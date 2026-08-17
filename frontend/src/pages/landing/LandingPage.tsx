@@ -64,7 +64,6 @@ function LandingPage() {
 
                     <Typography sx={{
                         color: TextColors.MainGreen,
-                        fontFamily: 'Sora',
                         fontSize: theme.fluid.textMd,
                         fontWeight: 'semi-bold',
                         userSelect: 'none',
@@ -73,7 +72,6 @@ function LandingPage() {
                     </Typography>
                     <Typography sx={{
                         color: titleColor,
-                        fontFamily: 'Sora',
                         fontSize: theme.fluid.textXl,
                         fontWeight: 'bold',
                         userSelect: 'none',
@@ -83,7 +81,6 @@ function LandingPage() {
                     <Typography sx={{
                         color: bodyColor,
                         fontSize: theme.fluid.textMd,
-                        fontFamily: 'Sora',
                         userSelect: 'none',
                     }}>
                         Green-Shift shifts simulated web traffic between regions in real time based on live carbon intensity scores - cutting cloud emissions without cutting performance.
@@ -112,7 +109,6 @@ function LandingPage() {
                     position: { xs: 'static', sm: 'absolute' },
                     bottom: { xs: 'auto', sm: theme.fluid.edgeOffset },
                     alignSelf: 'center',
-                    fontFamily: 'Sora',
                     fontSize: theme.fluid.textSm,
                     color: footerColor,
                     fontWeight: 300,

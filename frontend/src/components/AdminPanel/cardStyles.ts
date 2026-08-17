@@ -13,7 +13,6 @@ export function adminCardSx(theme: Theme): SxProps<Theme> {
 }
 
 export const adminCardTitleSx = {
-    fontFamily: 'Sora',
     fontWeight: 600,
     fontSize: '17px',
 }

@@ -1,7 +1,9 @@
-import { Typography, Box, Stack, } from '@mui/material';
+import { Typography, Stack, } from '@mui/material';
 import { BrandColors, BackgroundColors, TextColors } from '../../assets/themes/colors';
 
 import { useTheme, } from '@mui/material/styles'
+
+import StatusDot from '../StatusDot';
 
 interface LandingCardProps {
     title: string;
@@ -23,27 +25,23 @@ export const LandingCards = ({ title, subtitle }: LandingCardProps) => {
             boxShadow: theme.custom.cardShadow,
             transition: 'background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease',
         }}>
-            <Box
-                sx={{
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '50%',
-                    backgroundColor: BrandColors.MainPrimary,
-                    userSelect: 'none',
-                }}
+
+            <StatusDot
+                color = {BrandColors.MainPrimary}
+                size = "10px"
             />
+
             <Typography sx={{
                 color: TextColors.LightThemeText,
-                fontFamily: 'Sora',
                 fontWeight: 'bold',
                 fontSize: '16px',
                 userSelect: 'none',
             }}>
                 {title}
             </Typography>
+
             <Typography sx={{
                 color: TextColors.LightThemeGray,
-                fontFamily: 'Sora',
                 fontWeight: 400,
                 fontSize: '12px',
                 userSelect: 'none',
@@ -51,6 +49,7 @@ export const LandingCards = ({ title, subtitle }: LandingCardProps) => {
             }}>
                 {subtitle}
             </Typography>
+
         </Stack>
     )
 }

@@ -7,6 +7,7 @@ import { REGION_CATALOG } from "./regionCatalog";
 import StatCard from "./StatCard";
 import { useLiveMetricsContext } from "../../hooks/liveMetrics";
 import { simulateRequests, resetSimulation, type SimulateResult, } from "../../services/adminApi"
+import AdminPageHeader from "./AdminPageHeader";
 
 const MAX_SIM_REQUESTS = 300;
 const DEFAULT_REQUEST_COUNT = 25;
@@ -70,25 +71,10 @@ function AdminSimulation(){
         <Stack sx={
             adminPageSx
         }>
-            <Stack sx={{
-                gap: '4px',
-            }}>
-                <Typography sx={{
-                    fontFamily: 'Sora',
-                    fontWeight: 800,
-                    fontSize: '30px',
-                    color: theme.palette.text.primary
-                }}>
-                    Simulation
-                </Typography>
-
-                <Typography sx={{
-                    fontSize: '14px',
-                    color: theme.palette.text.secondary,
-                }}>
-                    Send simulated traffic and watch it route to the cleanest region
-                </Typography>
-            </Stack>
+            <AdminPageHeader
+                title = "Simulation"
+                subtitle = "Send simulated traffic and watch it route to the cleanest region"
+            />
 
             <Stack sx={{
                 ...adminCardSx(theme),
@@ -128,7 +114,6 @@ function AdminSimulation(){
                             backgroundColor: theme.custom.adminInputBackground,
                             border: `1px solid ${theme.custom.adminSidebarBorder}`,
                             color: theme.palette.text.primary,
-                            fontFamily: 'Sora',
                             fontWeight: 700,
                             fontSize: '18px',
                             textAlign: 'center',
@@ -140,7 +125,6 @@ function AdminSimulation(){
                     width: '100%',
                 }}>
                     <Typography sx={{
-                        fontFamily: 'Sora',
                         fontWeight: 600,
                         fontSize: '11px',
                         color: theme.palette.text.secondary
@@ -159,7 +143,6 @@ function AdminSimulation(){
                             backgroundColor: theme.custom.adminSidebarBackground,
                             border: `1px solid ${theme.custom.adminSidebarBorder}`,
                             color: theme.palette.text.primary,
-                            fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
                     }}>
@@ -186,7 +169,6 @@ function AdminSimulation(){
                         backgroundColor: BrandColors.MainPrimary,
                         opacity: submitting ? 0.6 : 1,
                         color: TextColors.DarkThemeWhite,
-                        fontFamily: 'Sora',
                         fontWeight: 600,
                         fontSize: '15px',
                 }}>
@@ -205,7 +187,6 @@ function AdminSimulation(){
             </Stack>
 
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '17px',
                 color: theme.palette.text.primary,
@@ -252,7 +233,6 @@ function AdminSimulation(){
                             border: `1px solid ${regionMarkerStates.offline.fill}`,
                             backgroundColor: alpha(regionMarkerStates.offline.fill, 0.1),
                             color: regionMarkerStates.offline.fill,
-                            fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '14px',
                     }}>

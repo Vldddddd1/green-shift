@@ -1,16 +1,19 @@
 import { Stack, Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState, useLayoutEffect } from 'react';
-import type { ReactNode } from 'react';
+
+import StatusDot from '../StatusDot';
 
 import { BrandColors, TextColors, } from '../../assets/themes/colors';
+import { floatingPanelSx } from '../../assets/themes/sharedStyles';
 
 import { useLiveMetrics } from '../../hooks/liveMetrics';
 import { RegionStatus } from './RegionStatus';
 import { API_STATUS_CONFIG } from '../../assets/apiStatus';
 
-const DEFAULT_POSITION = { x: 20, y: 20 } //CAN BE ADJUSTED
+import { NA, display } from '../../assets/format';
+import { MetricRow } from '../MetricRow';
 
-const NA = 'N/A';
+const DEFAULT_POSITION = { x: 20, y: 20 } //CAN BE ADJUSTED
 
 interface PanelPosition {
     x: number;
@@ -19,50 +22,6 @@ interface PanelPosition {
 
 interface OverviewDetailsProps{
     visible?: boolean;
-}
-
-function StatusDot({ color, size }: { color: string; size?: string }) {
-    return (
-        <Box sx={{
-            width: size,
-            height: size,
-            borderRadius: '50%',
-            backgroundColor: color,
-            flexShrink: 0,
-        }} />
-    )
-}
-
-function display(value: string | number | null | undefined): string {
-    if (value === null || value === undefined || value === '') return NA;
-    return String(value);
-}
-
-export function MetricRow({ label, value, valueColor }: { label: string; value: ReactNode; valueColor?: string }) {
-    const isNA = value === NA;
-
-    return (
-        <Stack direction='row' sx={{
-            justifyContent: 'space-between',
-            width: '100%',
-        }}>
-            <Typography sx={{
-                fontSize: {xs: '11px', md: '13px'},
-                color: TextColors.OverviewContent
-            }}>
-                {label}
-            </Typography>
-            <Typography 
-                component = 'span'
-                sx={{
-                    fontSize: {xs: '12px', md: '15px'},
-                    fontWeight: 600,
-                    color: isNA ? TextColors.DarkThemeGray : (valueColor ?? TextColors.DarkThemeText)
-            }}>
-                {value}
-            </Typography>
-        </Stack>
-    );
 }
 
 export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
@@ -161,26 +120,10 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                     top: `${position.y}px`,
                     left: `${position.x}px`,
                     zIndex: 9000,
-
                     gap: {xs: '10px', md: '16px'},
                     width: {xs: '240px', md: '360px'},
                     padding: {xs: '14px 16px', md: '22px 24px'},
-                    borderRadius: '18px',
-                    boxShadow: '0px 10px 24px 0px rgba(0,0,0,0.25)',
-
-                    borderTop: '3.5px solid transparent',
-                    borderLeft: '3.5px solid transparent',
-                    borderRight: '3.5px solid transparent',
-                    borderBottom: '3.5px solid transparent',
-                    backgroundImage: `linear-gradient(rgba(32, 32, 32, 0.8), rgba(32, 32, 32, 0.8)), ${theme.custom.navBorderGradient}`,
-                    backgroundOrigin: 'border-box',
-                    backgroundClip: 'padding-box, border-box',
-                    transition: 'background-color 0.5s ease, color 0.5s ease',
-
-                    userSelect: 'none',
-                    touchAction: 'none',
-                    cursor: 'grab',
-                    '&:active': { cursor: 'grabbing' }
+                    ...floatingPanelSx(theme),
                 }}>
                 <Stack
                     direction='row'

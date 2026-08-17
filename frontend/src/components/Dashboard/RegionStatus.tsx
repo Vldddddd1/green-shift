@@ -1,7 +1,9 @@
 import { forwardRef, } from 'react';
 
 import { Stack, Box, Typography, useTheme, useMediaQuery } from '@mui/material';
-import { TextColors, regionMarkerStates } from '../../assets/themes/colors';
+import { regionMarkerStates, TextColors, } from '../../assets/themes/colors';
+import { floatingPanelSx } from '../../assets/themes/sharedStyles';
+import StatusDot from '../StatusDot';
 
 import type { RegionMarkerState } from '../../assets/themes/colors';
 
@@ -17,30 +19,16 @@ interface RegionStatusProps {
     left: number;
 }
 
-function StatusDot({ state, size = '12px' }: { state: RegionMarkerState; size?: string }) {
-    const { fill, stroke } = regionMarkerStates[state];
-    
-    return (
-        <Box sx={{
-            width: size,
-            height: size,
-            borderRadius: '50%',
-            backgroundColor: fill,
-            border: `2px solid ${stroke}`,
-            boxSizing: 'border-box',
-            flexShrink: 0,
-        }} />
-    )
-}
-
 function LegendRow({ label, state, dotSize }: { label: string; state: RegionMarkerState; dotSize?: string;}) {
+    const {fill, stroke} = regionMarkerStates[state];
+    
     return (
         <Stack direction='row' sx={{
             alignItems: 'center',
             width: '100%',
             gap: '10px',
         }}>
-            <StatusDot state={state} size={dotSize} />
+            <StatusDot color = {fill} stroke = {stroke} size={dotSize} />
             <Typography sx={{
                 fontSize: {xs: '10px', md: '12px'},
                 color: TextColors.OverviewContent
@@ -67,24 +55,9 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
                 gap: {xs: '8px', md: '10px'},
                 width: {xs:'240px', md:'360px'},
                 padding: {xs: '10px 12px', md: '16px 18px'},
-                borderRadius: '18px',
-                boxShadow: '0px 10px 24px 0px rgba(0,0,0,0.25)',
+                ...floatingPanelSx(theme),
+        }}>
 
-                borderTop: '3.5px solid transparent',
-                borderLeft: '3.5px solid transparent',
-                borderRight: '3.5px solid transparent',
-                borderBottom: '3.5px solid transparent',
-                backgroundImage: `linear-gradient(rgba(32, 32, 32, 0.8), rgba(32, 32, 32, 0.8)), ${theme.custom.navBorderGradient}`,
-                backgroundOrigin: 'border-box',
-                backgroundClip: 'padding-box, border-box',
-                transition: 'background-color 0.5s ease, color 0.5s ease',
-
-                userSelect: 'none',
-                touchAction: 'none',
-                cursor: 'grab',
-                '&:active': { cursor: 'grabbing' }
-            }}
-        >
             <Typography sx={{
                 fontSize: {xs:'12px', md: '14px'},
                 fontWeight: 600,
@@ -92,6 +65,7 @@ export const RegionStatus = forwardRef<HTMLDivElement, RegionStatusProps>(({ top
             }}>
                 REGION STATUS
             </Typography>
+            
             <Box sx={{
                 display: 'grid',
                 gridTemplateColumns: {xs: '1fr', md: 'repeat(2, 1fr)'},

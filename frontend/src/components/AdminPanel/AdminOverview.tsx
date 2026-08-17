@@ -1,52 +1,17 @@
-import { Stack, Box, Typography, useTheme, alpha, } from '@mui/material';
-import { BrandColors, } from '../../assets/themes/colors';
-
+import { Stack, Box, } from '@mui/material';
 import { onlineAzCountByRegion, useLiveMetricsContext } from '../../hooks/liveMetrics';
 import { REGION_CATALOG } from './regionCatalog';
 
-import { adminHeaderRowSx, adminPageSx } from './cardStyles';
+import { adminPageSx } from './cardStyles';
 import StatCard from './StatCard';
 import RequestsByServer from './RequestsByServer';
 import PerformancePanel from './PerformancePanel';
 import RecentSimulations from './RecentSimulations';
 import AllRegionsGrid from './AllRegionsGrid';
-
-function LivePill({ connected, lastUpdate, }: { connected: boolean; lastUpdate: string | null }) {
-    const theme = useTheme();
-    
-    const dotColor = connected ? BrandColors.MainPrimary : theme.palette.text.secondary;
-    const label = connected ? `Last updated ${lastUpdate ?? 'just now'}` : 'Not connected';
-
-    return (
-        <Stack
-            direction='row'
-            sx={{
-                alignItems: 'center',
-                gap: '8px',
-                padding: '8px 14px',
-                borderRadius: '20px',
-                border: `1px solid ${connected ? BrandColors.MainPrimary : theme.custom.adminSidebarBorder}`,
-                backgroundColor: connected ? alpha(BrandColors.MainPrimary, 0.14) : theme.custom.adminMutedSurface,
-            }}>
-                <Box sx={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    backgroundColor: dotColor,
-                }}/>
-                <Typography sx={{
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: connected ? theme.palette.text.secondary : theme.palette.text.secondary,
-                }}>
-                    {label}
-                </Typography>
-        </Stack>
-    );
-}
+import StatusPill from '../StatusPill';
+import AdminPageHeader from './AdminPageHeader';
 
 function AdminOverview(){
-    const theme = useTheme();
     const { metrics, connected } = useLiveMetricsContext();
 
     const onlineRegionCount = new Set(
@@ -59,32 +24,11 @@ function AdminOverview(){
         <Stack sx = {
             adminPageSx
         }>
-            <Stack 
-                direction = {{xs: 'column', sm: 'row'}}
-                sx = {
-                    adminHeaderRowSx
-                }>
-                    <Stack sx={{
-                        flex: '1 0 0',
-                        gap: '4px',
-                    }}>
-                        <Typography sx={{
-                            fontFamily: 'Sora',
-                            fontWeight: 800,
-                            fontSize: '30px',
-                            color: theme.palette.text.primary,
-                        }}>
-                            Overview
-                        </Typography>
-                        <Typography sx={{
-                            fontSize: '14px',
-                            color: theme.palette.text.secondary,
-                        }}>
-                            Live traffic simulation across all configured regions.
-                        </Typography>
-                    </Stack>
-                    <LivePill connected = {connected} lastUpdate = {metrics.lastUpdate}/>
-            </Stack>
+            <AdminPageHeader
+                title = "Overview"
+                subtitle = "Live traffic simulation across all configured regions"
+                action = {<StatusPill active = {connected} label = {connected ? `Last updated ${metrics.lastUpdate ?? 'just now'}` : 'Not connected'}/>}
+            />
 
             <Stack
                 direction = 'row'
@@ -98,7 +42,7 @@ function AdminOverview(){
                     <StatCard
                         label = "REGIONS LIVE"
                         value = {connected ? `${onlineRegionCount} / ${REGION_CATALOG.length}` : null}
-                        helperText = {connected ? 'Live from /carbon' : 'Awaiting live data'}
+                        helperText = {connected ? 'Live from /servers' : 'Awaiting live data'}
                     />
                     <StatCard
                         label = "CARBON SAVED"
@@ -108,7 +52,7 @@ function AdminOverview(){
                     <StatCard
                         label = "SAVINGS MULTIPLIER"
                         value = {metrics.savingsMultiplier !== null ? `x${metrics.savingsMultiplier.toFixed(1)}`: null}
-                        helperText = "cleaner-grid efficiency"
+                        helperText = "Cleaner-grid efficiency"
                     />
             </Stack>
 

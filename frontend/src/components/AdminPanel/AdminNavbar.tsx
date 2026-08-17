@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Stack, Box, Typography, IconButton, Drawer } from '@mui/material';
+import { Stack, Box, Typography, Drawer } from '@mui/material';
 import { useTheme, alpha } from '@mui/material';
 import { NavLink } from 'react-router';
 
@@ -12,6 +12,9 @@ import MenuIcon from "../../assets/icons/menu.svg?react";
 
 import { BrandColors, regionMarkerStates } from '../../assets/themes/colors';
 import { useLiveMetricsContext } from '../../hooks/liveMetrics';
+import RoundedIconButton from '../RoundedIconButton';
+import { gradientTopBarSx } from '../../assets/themes/sharedStyles';
+import StatusDot from '../StatusDot';
 
 interface NavItem {
     label: string;
@@ -34,7 +37,6 @@ function SectionLabel({ children }: { children: string }) {
     return (
         <Typography sx={{
             width: '100%',
-            fontFamily: 'Sora',
             fontWeight: 600,
             fontSize: '11px',
             letterSpacing: '1px',
@@ -81,7 +83,6 @@ function SidebarNavItem({ label, to, onNavigate }: NavItem & { onNavigate?: () =
                 })
             } />
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '16px',
                 color: theme.custom.adminSidebarMutedText,
@@ -136,7 +137,6 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
             <Typography sx={{
                 width: '100%',
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '11px',
                 letterSpacing: '1.2px',
@@ -196,20 +196,20 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                     gap: '8px',
                 }}
             >
-                <Box sx={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: apiStatus === 'online' ? regionMarkerStates.active.fill : regionMarkerStates.offline.fill
-                }} />
+                <StatusDot
+                    color = {apiStatus === 'online' ? regionMarkerStates.active.fill : regionMarkerStates.offline.fill}
+                    size = '8px'
+                />
+
                 <Typography sx={{
-                    fontFamily: 'Sora',
                     fontSize: '12px',
                     color: theme.custom.adminSidebarMutedText
                 }}>
                     API connection {apiStatus === 'online' ? 'healthy' : 'unavailable'}
                 </Typography>
+
             </Stack>
+            
         </Stack>
     );
 }
@@ -248,16 +248,8 @@ function AdminNavbar() {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     paddingX: theme.fluid.edgeOffset,
-                    borderLeft: '3.5px solid transparent',
-                    borderRight: '3.5px solid transparent',
-                    borderBottom: '3.5px solid transparent',
-                    backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}), ${theme.custom.navBorderGradient}`,
-                    backgroundOrigin: 'border-box',
-                    backgroundClip: 'padding-box, border-box',
-                    transition: 'background-color 0.5s ease, color 0.5s ease',
-                    borderBottomLeftRadius: '32px',
-                    borderBottomRightRadius: '32px',
                     zIndex: 9000,
+                    ...gradientTopBarSx(theme),
                 }}>
                 <BackButton />
 
@@ -271,22 +263,11 @@ function AdminNavbar() {
                     <Logo />
                 </Box>
 
-                <IconButton
+                <RoundedIconButton
                     onClick={() => setMobileOpen(true)}
-                    sx={{
-                        backgroundColor: BrandColors.MainPrimary,
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                    }}>
-                    <MenuIcon
-                        width={16}
-                        height={16}
-                        style={{
-                            color: theme.custom.themeIconColor,
-                        }}
-                    />
-                </IconButton>
+                    icon = {<MenuIcon width={16} height={16} style={{ color: theme.custom.themeIconColor,}} />}
+                />
+
             </Stack>
 
             <Drawer

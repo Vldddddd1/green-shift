@@ -7,6 +7,7 @@ import { adminCardSx, adminCardTitleSx, adminHeaderRowSx, adminPageSx } from "./
 import { API_STATUS_CONFIG } from "../../assets/apiStatus";
 import { useLiveMetricsContext } from "../../hooks/liveMetrics";
 import { resetSimulation } from "../../services/adminApi";
+import AdminPageHeader from "./AdminPageHeader";
 
 const GRAFANA_URL = ''; //TODO LINK GRAFANA
 
@@ -32,7 +33,6 @@ function ActionPill({label, color, href, onClick, disabled} : { label: string, c
             }}
         >
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '14px',
                 color
@@ -55,7 +55,6 @@ function SettingsRow({ title, description, action}: { title: string, description
                 gap: '4px',
             }}>
                 <Typography sx={{
-                    fontFamily: 'Sora',
                     fontWeight: 600,
                     fontSize: '16px',
                 }}>
@@ -105,26 +104,10 @@ function AdminSettings(){
         <Stack sx={
             adminPageSx
         }>
-            <Stack sx={{
-                gap: '4px',
-            }}>
-                <Typography sx={{
-                    fontFamily: 'Sora',
-                    fontWeight: 800,
-                    fontSize: '30px',
-                    color: theme.palette.text.primary
-                }}>
-                    Settings
-                </Typography>
-
-                <Typography sx={{
-                    fontSize: '14px',
-                    color: theme.palette.text.secondary
-                }}>
-                    Observability links and system controls
-                </Typography>
-
-            </Stack>
+            <AdminPageHeader
+                title = "Settings"
+                subtitle = "Observability links and system controls"
+            />
 
             <Stack sx={{
                 ...adminCardSx(theme),

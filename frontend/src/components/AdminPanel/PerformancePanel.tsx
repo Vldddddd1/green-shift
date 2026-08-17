@@ -1,11 +1,12 @@
 import { Stack, Typography, useTheme, } from '@mui/material';
 import { BrandColors, } from '../../assets/themes/colors';
-import { display } from './placeholders';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
-import { MetricRow, } from '../Dashboard/OverviewDetails';
+import { MetricRow, } from '../MetricRow';
 import { API_STATUS_CONFIG } from '../../assets/apiStatus';
 
 import type { APIStatus } from '../../hooks/liveMetrics';
+
+import { display } from '../../assets/format';
 
 interface PerformancePanelProps {
     averageLatencyMs: number | null;

@@ -1,4 +1,4 @@
-import { Stack, Box, Typography, useTheme, } from '@mui/material';
+import { Stack, Typography, useTheme, } from '@mui/material';
 import { Link } from 'react-router';
 import { regionMarkerStates, } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx, adminHeaderRowSx } from './cardStyles';
@@ -6,6 +6,7 @@ import { REGION_CATALOG } from './regionCatalog'
 
 import type { RegionCatalogEntry } from './regionCatalog'
 import { deriveRegionStatus } from './regionStatus';
+import StatusDot from '../StatusDot';
 
 interface AllRegionsGridProps{
     onlineAzCounts: Record<string, number>; // key = region.id; missing = unavailable
@@ -30,7 +31,6 @@ function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
             backgroundColor: theme.custom.adminMutedSurface,
         }}>
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '13px',
                 color: theme.palette.text.secondary,
@@ -51,13 +51,8 @@ function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
                     gap: '5px',
                 }}
             >
-                <Box sx={{
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    backgroundColor: fill,
-                    flexShrink: 0,
-                }}/>
+                <StatusDot color = {fill} size = '6px'/>
+
                 <Typography sx={{
                     fontSize: '10px',
                     fontWeight: 600,

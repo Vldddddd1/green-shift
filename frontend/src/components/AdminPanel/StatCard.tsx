@@ -1,5 +1,6 @@
 import { Stack, Typography, useTheme, } from '@mui/material';
-import { display } from './placeholders';
+import { display } from '../../assets/format';
+import { adminCardSx } from './cardStyles';
 
 interface StatCardProps{
     label: string;
@@ -12,13 +13,11 @@ function StatCard({ label, value, helperText, }: StatCardProps){
 
     return(
         <Stack sx={{
+            ...adminCardSx(theme),
             flex: '1 1 220px',
             minWidth: 0,
-            gap: '10px',
             padding: '20px',
-            borderRadius: '16px',
-            backgroundColor: theme.palette.background.default,
-            border: `1px solid ${theme.custom.adminSidebarBorder}`,
+            gap: '10px',
             boxShadow: '0px 8px 10px rgba(0,0,0,0.15)',
         }}>
             <Typography sx={{
@@ -31,7 +30,6 @@ function StatCard({ label, value, helperText, }: StatCardProps){
             </Typography>
 
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 700,
                 fontSize: '32px',
                 color: theme.palette.text.primary,

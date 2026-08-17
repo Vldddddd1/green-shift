@@ -45,17 +45,8 @@ export interface LiveMetricsPayload {
     carbonReductionPercent: number | null;
 }
 
-export interface LiveMetrics {
+export interface LiveMetrics extends LiveMetricsPayload{
     activeRegion: string | null;
-    servers: ServerStatus[];
-    carbonSavedKg: number | null;
-    savingsMultiplier: number | null;
-    apiHealth: APIStatus | null;
-    lastUpdate: string | null;
-    recentSwitches: RouteSwitch[];
-    totalRequests: number | null;
-    averageLatencyMs: number | null;
-    carbonReductionPercent: number | null;
 }
 
 const INITIAL_METRICS: LiveMetrics = {

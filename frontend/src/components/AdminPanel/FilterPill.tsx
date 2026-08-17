@@ -20,7 +20,6 @@ function FilterPill({ label, active, onClick }: FilterPillProps) {
                 borderRadius: '20px',
                 fontSize: '12px',
                 fontWeight: 600,
-                fontFamily: 'Sora',
                 border: `1px solid ${active ? BrandColors.MainPrimary : theme.custom.adminSidebarBorder}`,
                 backgroundColor: active ? BrandColors.MainPrimary : theme.custom.adminMutedSurface,
                 color: active ? TextColors.DarkThemeWhite : theme.palette.text.secondary,

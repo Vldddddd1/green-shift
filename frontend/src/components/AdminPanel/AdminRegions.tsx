@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Stack, Box, Typography, useTheme, alpha } from "@mui/material";
 
 import { BrandColors, regionMarkerStates } from "../../assets/themes/colors";
-import { adminCardSx, adminCardTitleSx, adminHeaderRowSx, adminPageSx } from "./cardStyles";
+import { adminCardSx, adminCardTitleSx, adminPageSx } from "./cardStyles";
 import { REGION_CATALOG } from "./regionCatalog";
 import { deriveRegionStatus } from "./regionStatus";
 import {CONTINENTS, getContinent, type Continent} from "./continents"
@@ -11,9 +11,9 @@ import { useLiveMetricsContext, onlineAzCountByRegion, regionAverages } from "..
 import { updateCarbonScore } from "../../services/adminApi";
 
 import type { ServerStatus } from "../../hooks/liveMetrics";
-
-
-
+import StatusDot from "../StatusDot";
+import StatusPill from "../StatusPill";
+import AdminPageHeader from "./AdminPageHeader";
 
 function ServerEditRow({ server }: {server: ServerStatus}){
     const theme = useTheme();
@@ -49,7 +49,6 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 gap: '6px',
             }}>
                 <Typography sx={{
-                    fontFamily: 'Sora',
                     fontWeight: 600,
                     fontSize: '17px',
                     color: theme.palette.text.primary
@@ -64,12 +63,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                         gap: '6px',
                     }}
                 >
-                    <Box sx = {{
-                        width: '7px',
-                        height: '7px',
-                        borderRadius: '50%',
-                        backgroundColor: server.online ? BrandColors.MainPrimary : theme.palette.text.secondary
-                    }}/>
+                    <StatusDot color = {server.online ? BrandColors.MainPrimary : theme.palette.text.secondary} size = '7px'/>
                     
                     <Typography sx={{
                         fontSize: '12px',
@@ -113,7 +107,6 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                                 backgroundColor: theme.custom.adminInputBackground,
                                 border: `1px solid ${theme.custom.adminSidebarBorder}`,
                                 color: theme.palette.text.primary,
-                                fontFamily: 'Sora',
                                 fontWeight: 700,
                                 fontSize: '18px',           
                         }}
@@ -126,7 +119,6 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                             border: `1px solid ${theme.custom.adminSidebarBorder}`
                         }}>
                             <Typography sx={{
-                                fontFamily: 'Sora',
                                 fontWeight: 700,
                                 fontSize: '18px',
                                 color: theme.palette.text.primary,
@@ -205,7 +197,6 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                 </Typography>
 
                 <Typography sx={{
-                    fontFamily: 'Sora',
                     fontWeight: 600,
                     fontSize: '17px',
                     color: theme.palette.text.primary,
@@ -249,7 +240,6 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                         gap: '2px',
                     }}>
                         <Typography sx={{
-                            fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
                             color: theme.palette.text.primary
@@ -285,12 +275,7 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                             backgroundColor: theme.custom.adminMutedSurface,
                             alignSelf: 'flex-start',
                         }}>
-                            <Box sx={{
-                                width: '6px',
-                                height: '6px',
-                                borderRadius: '50%',
-                                backgroundColor: fill
-                            }}/>
+                            <StatusDot color = {fill} size = '6px'/>
 
                             <Typography sx={{
                                 fontSize: '11px',
@@ -313,7 +298,6 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                         </Typography>
 
                         <Typography sx={{
-                            fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
                             color: theme.palette.text.primary,
@@ -334,7 +318,6 @@ function ZoneRow({ zoneId, location, azCount, onlineAzCount, avg, servers}: { zo
                         </Typography>
 
                         <Typography sx={{
-                            fontFamily: 'Sora',
                             fontWeight: 600,
                             fontSize: '15px',
                             color: theme.palette.text.primary,
@@ -373,59 +356,12 @@ function AdminRegions() {
         <Stack sx = {
             adminPageSx
         }>
-            <Stack
-                direction = {{xs: 'column', sm: 'row'}}
-                sx = {
-                    adminHeaderRowSx
-            }>
-                    <Stack sx={{
-                        flex: '1 0 0',
-                        gap: '4px',
-                    }}>
-                        <Typography sx={{
-                            fontFamily: 'Sora',
-                            fontWeight: 800,
-                            fontSize: '30px',
-                            color: theme.palette.text.primary,
-                        }}>
-                            Regions
-                        </Typography>
-
-                        <Typography sx={{
-                            fontSize: '14px',
-                            color: theme.palette.text.secondary,
-                        }}>
-                            ALL {REGION_CATALOG.length} regions tracked by Green-Shift
-                        </Typography>
-                    </Stack>
-
-                    <Stack
-                        direction = "row"
-                        sx = {{
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '8px 14px',
-                            borderRadius: '20px',
-                            border: `1px solid ${BrandColors.MainPrimary}`,
-                            backgroundColor: alpha(BrandColors.MainPrimary, 0.14),
-                        }}>
-                            <Box sx={{
-                                width: '7px',
-                                height: '7px',
-                                borderRadius: '50%',
-                                backgroundColor: connected ? BrandColors.MainPrimary : theme.palette.text.secondary,
-                            }}/>
-
-                            <Typography sx={{
-                                fontSize: '12px',
-                                fontWeight: 600,
-                                color: theme.palette.text.primary,
-                            }}>
-                                {connected ? `${onlineRegionCount} /  ${REGION_CATALOG.length} live` : 'Not Connected'}
-                            </Typography>
-                    </Stack>
-            </Stack>
-
+            <AdminPageHeader
+                title = "Regions"
+                subtitle= {`ALL ${REGION_CATALOG.length} regions tracked by Green-Shift`}
+                action = {<StatusPill active = {connected} label = {connected ? `${onlineRegionCount} /  ${REGION_CATALOG.length} live` : 'Not Connected'}/>}
+            />
+            
             <Stack
                 direction = "row"
                 sx={{
