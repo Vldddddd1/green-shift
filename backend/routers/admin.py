@@ -52,7 +52,17 @@ def update_status(payload: UpdateStatusRequest):
         raise HTTPException(status_code=404, detail="Zone or server not found")
 
     zones[payload.zone][payload.server]["status"] = payload.status
+    zones[payload.zone][payload.server]["manual_override"] = True
     return {"status": "updated"}
+
+@router.post("/release-override", dependencies=[Depends(require_auth)])
+def release_override(payload: UpdateStatusRequest):
+    zones = get_state()
+    if payload.zone not in zones or payload.server not in zones[payload.zone]:
+        raise HTTPException(status_code=404, detail="Zone or server not found")
+
+    zones[payload.zone][payload.server]["manual_override"] = False
+    return {"status": "override released"}
 
 
 @router.post("/simulate", dependencies=[Depends(require_auth)])
