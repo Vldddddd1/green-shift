@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, createContext, useContext } from 'react';
 
-export const API_BASE = 'http://127.0.0.1:8000';
+export const API_BASE = '/api';
 const POLL_INTERVAL_MS = 1500;
 const MAX_RECENT_SWITCHES = 5;
 

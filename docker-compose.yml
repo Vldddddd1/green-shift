@@ -10,10 +10,23 @@ services:
   frontend:
     build: ./frontend
     ports:
+      - "4173:4173"
+    environment:
+      API_PROXY_TARGET: http://backend:8000
+    depends_on:
+      - backend
+
+  frontend-dev:
+    build: 
+      context: ./frontend
+      target: dev
+    ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      API_PROXY_TARGET: http://backend:8000
 
   eu-west-1:
     build: ./server
@@ -176,3 +189,15 @@ services:
     environment:
       SERVER_NAME: ap-northeast-3
       ZONE: ap-northeast
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command:
+      - "http"
+      - "--url=https://epilogue-chihuahua-dramatize.ngrok-free.dev"
+      - "frontend:4173"
+    depends_on:
+      - frontend

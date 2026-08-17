@@ -33,14 +33,14 @@ function StatusDot({ state, size = '12px' }: { state: RegionMarkerState; size?: 
     )
 }
 
-function LegendRow({ label, state, dotSize }: { label: string; state: RegionMarkerState; dotSize: string;}) {
+function LegendRow({ label, state, dotSize }: { label: string; state: RegionMarkerState; dotSize?: string;}) {
     return (
         <Stack direction='row' sx={{
             alignItems: 'center',
             width: '100%',
             gap: '10px',
         }}>
-            <StatusDot state={state} size='12px' />
+            <StatusDot state={state} size={dotSize} />
             <Typography sx={{
                 fontSize: {xs: '10px', md: '12px'},
                 color: TextColors.OverviewContent

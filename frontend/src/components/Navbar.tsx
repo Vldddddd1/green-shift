@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Stack, Box, IconButton, Menu, MenuItem } from "@mui/material";
-import { useTheme, alpha } from "@mui/material/styles";
+import { useTheme, } from "@mui/material/styles";
 
 import { Link } from "react-router";
 
@@ -10,7 +10,7 @@ import BackButton from "../components/BackButton";
 import ThemeButton from "./ThemeButton";
 import AdminButton from "./AdminButton";
 
-import { BackgroundColors, BrandColors } from "../assets/themes/colors";
+import { BrandColors } from "../assets/themes/colors";
 
 import { Logo } from "./Logo";
 import MenuIcon from '../assets/icons/menu.svg?react';
@@ -30,14 +30,14 @@ function Navbar({ onToggleOverview }: NavbarProps) {
         setAnchorEl(prev => (prev ? null : e.currentTarget));
     };
 
-    const menuItemSx = {
-        fontFamily: 'Sora',
-        fontSize: '14px',
-        color: theme.palette.text.primary,
-        borderRadius: '8px',
-        margin: '4px',
-        '&:hover': { backgroundColor: alpha(BrandColors.MainPrimary, 0.14) },
-    }
+    // const menuItemSx = {
+    //     fontFamily: 'Sora',
+    //     fontSize: '14px',
+    //     color: theme.palette.text.primary,
+    //     borderRadius: '8px',
+    //     margin: '4px',
+    //     '&:hover': { backgroundColor: alpha(BrandColors.MainPrimary, 0.14) },
+    // }
 
     return (
         <Stack direction="row" sx={{

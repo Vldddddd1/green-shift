@@ -99,7 +99,7 @@ function AdminNavbar() {
         <Stack
             sx={{
                 width: theme.fluid.sidebarWidth,
-                height: '100svh',
+                height: '100dvh',
                 position: 'fixed',
                 top: 0,
                 left: 0,
