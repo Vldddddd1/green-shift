@@ -16,6 +16,9 @@ async def _check_server(client: httpx.AsyncClient, zone: str, server:str) -> Non
     url = REGION_URLS[server]
     data = get_state()[zone][server]
 
+    if data.get("manual_override", False):
+        return
+
     try:
         response = await client.get(url, timeout=CHECK_TIMEOUT)
         response.raise_for_status()

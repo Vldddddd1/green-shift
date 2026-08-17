@@ -25,6 +25,9 @@ def pick_zone(zones: dict) -> str:
 
 def pick_server_in_zone(servers: dict) -> str:
     online_servers = {name: data for name, data in servers.items() if data["status"] == "online"}
+    if not online_servers:
+        return None 
+    
     server_score = {  name: calculate_score(data) for name, data in online_servers.items()}
 
     return min(server_score, key = server_score.get)
@@ -39,6 +42,10 @@ def decide_route(target_zone: str | None = None) -> tuple[str, str]:
 
     best_zone = pick_zone(zones)
     best_server = pick_server_in_zone(zones[best_zone])
+
+    if best_server is None:
+        raise RuntimeError(f"No online servers available in zone {best_zone}")
+    
     
     return best_zone, best_server
 
