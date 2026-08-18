@@ -14,6 +14,7 @@ function AdminPage(){
                 display: {xs: 'block', sm: 'flex'},
                 height: '100svh',
                 overflow: 'hidden',
+                userSelect: 'none',
             }}>
                 <AdminNavbar/>
                 <Box sx={{ 
