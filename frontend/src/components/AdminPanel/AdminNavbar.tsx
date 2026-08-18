@@ -228,7 +228,6 @@ function AdminNavbar() {
                 height: '100%',
                 width: theme.fluid.sidebarWidth,
                 flexShrink: 0,
-                overflowY: 'auto',
                 touchAction: 'none',
                 zIndex: 9000,
                 borderRight: `1px solid ${theme.custom.adminSidebarBorder}`,

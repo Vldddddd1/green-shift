@@ -30,8 +30,8 @@ function ActionPill({label, color, href, onClick, disabled} : { label: string, c
                 backgroundColor: alpha(color, 0.12),
                 textDecoration: 'none',
                 cursor: clickable ? 'pointer' : 'default',
-            }}
-        >
+                touchAction: 'none',
+        }}>
             <Typography sx={{
                 fontWeight: 600,
                 fontSize: '14px',

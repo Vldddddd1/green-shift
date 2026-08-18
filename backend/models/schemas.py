@@ -13,6 +13,7 @@ class ServerData(BaseModel):
     latency: int
     status: str
     last_selected: str | None = None
+    manual_override: bool = False
 
 class ServerResponse(BaseModel):
     zones: dict[str, dict[str, ServerData]]

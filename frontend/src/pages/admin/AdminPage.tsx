@@ -13,6 +13,7 @@ function AdminPage(){
             <Box sx={{
                 display: {xs: 'block', sm: 'flex'},
                 height: '100svh',
+                overflow: 'hidden',
             }}>
                 <AdminNavbar/>
                 <Box sx={{ 

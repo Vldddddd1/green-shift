@@ -48,3 +48,19 @@ async function patchAdmin(path: string, body: unknown): Promise<void> {
 export function updateCarbonScore(zone: string, server: string, carbon_score: number) {
     return patchAdmin('carbon-score', { zone, server, carbon_score });
 }
+
+export function updateLoad(zone: string, server: string, current_load: number) {
+    return patchAdmin('load', { zone, server, current_load });
+}
+
+export function updateLatency(zone: string, server: string, latency: number) {
+    return patchAdmin('latency', { zone, server, latency });
+}
+
+export function updateStatus(zone: string, server: string, status: string) {
+    return patchAdmin('status', { zone, server, status });
+}
+
+export function releaseOverride(zone: string, server: string, status: string): Promise<{status: string}> {
+    return postAdmin('release-override', { zone, server, status });
+}

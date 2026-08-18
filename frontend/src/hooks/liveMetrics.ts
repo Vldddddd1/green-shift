@@ -12,6 +12,7 @@ interface ServerData {
     latency: number;
     status: string;
     last_selected: string | null;
+    manual_override: boolean;
 }
 
 export interface ServerStatus {
@@ -25,6 +26,7 @@ export interface ServerStatus {
     requests: number | null;
     percent: number | null;
     lastSelected: string | null;
+    manualOverride: boolean;
 }
 
 export interface RouteSwitch {
@@ -120,6 +122,7 @@ export function serversFromCarbonResponse(carbonData: CarbonZonesResponse, selec
                 requests,
                 percent: totalRequests > 0 ? Math.round((requests / totalRequests) * 1000) / 10 : 0,
                 lastSelected: data.last_selected ? formatTime(new Date(data.last_selected)) : null,
+                manualOverride: data.manual_override,
             };
         })
     );

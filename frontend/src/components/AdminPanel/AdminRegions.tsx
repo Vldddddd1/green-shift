@@ -8,25 +8,34 @@ import { deriveRegionStatus } from "./regionStatus";
 import {CONTINENTS, getContinent, type Continent} from "./continents"
 import FilterPill from "./FilterPill";
 import { useLiveMetricsContext, onlineAzCountByRegion, regionAverages } from "../../hooks/liveMetrics";
-import { updateCarbonScore } from "../../services/adminApi";
+import { updateCarbonScore, updateLoad, updateLatency, updateStatus, releaseOverride } from "../../services/adminApi";
 
 import type { ServerStatus } from "../../hooks/liveMetrics";
 import StatusDot from "../StatusDot";
 import StatusPill from "../StatusPill";
 import AdminPageHeader from "./AdminPageHeader";
 
-function ServerEditRow({ server }: {server: ServerStatus}){
+interface EditableMetricFieldProps{
+    label: string;
+    value: number;
+    displayValue: string;
+    flexBasis: string;
+    onSave: (value: number) => Promise<void>;
+    children?: React.ReactNode;
+}
+
+function EditableMetricField({ label, value, displayValue, flexBasis, onSave, children}: EditableMetricFieldProps){
     const theme = useTheme();
     const [editing, setEditing] = useState(false);
-    const [value, setValue] = useState(String(server.carbonIntensity ?? 0));
+    const [draft, setDraft] = useState(String(value));
     const [saving, setSaving] = useState(false);
-
-    async function save(){
-        const parsed = Number(value);
+    
+     async function save(){
+        const parsed = Number(draft);
         if(Number.isNaN(parsed)) return setEditing(false);
         setSaving(true);
         try{
-            await updateCarbonScore(server.region, server.id, parsed);
+            await onSave(parsed);
         }
         finally{
             setSaving(false);
@@ -35,47 +44,9 @@ function ServerEditRow({ server }: {server: ServerStatus}){
     }
 
     return(
-        <Stack
-            direction = {{xs: 'column', sm: 'row'}}
-            sx = {{
-                alignItems: {xs: 'flex-start', sm: 'center'},
-                gap: {xs: '14px', sm: '24px'},
-                padding: '16px 20px',
-                borderRadius: '12px',
-                backgroundColor: theme.custom.adminMutedSurface,
-        }}>
-            <Stack sx={{
-                width: {xs: '100%', sm: '220px'},
-                gap: '6px',
-            }}>
-                <Typography sx={{
-                    fontWeight: 600,
-                    fontSize: '17px',
-                    color: theme.palette.text.primary
-                }}>
-                    {server.id}
-                </Typography>
-
-                <Stack
-                    direction = 'row'
-                    sx = {{
-                        alignItems: 'center',
-                        gap: '6px',
-                    }}
-                >
-                    <StatusDot color = {server.online ? BrandColors.MainPrimary : theme.palette.text.secondary} size = '7px'/>
-                    
-                    <Typography sx={{
-                        fontSize: '12px',
-                        color: theme.palette.text.secondary
-                    }}>
-                        {server.online ? 'online' : 'offline'}
-                    </Typography>
-                </Stack>
-            </Stack>
-
-            <Stack sx={{
-                width: {xs: '100%', sm: '300px'},
+        <Stack sx={{
+                width: {xs: '100%', sm: 'auto'},
+                flex: {xs: 'unset', sm: `1 1 ${flexBasis}`},
                 gap: '6px',
             }}>
                 <Typography sx={{
@@ -83,7 +54,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                     fontWeight: 600,
                     color: theme.palette.text.secondary
                 }}>
-                    Carbon Score
+                    {label}
                 </Typography>
                 
                 <Stack
@@ -96,8 +67,8 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                         <Box
                             component = "input"
                             autoFocus
-                            value = {value}
-                            onChange={(e) => setValue(e.target.value)}
+                            value = {draft}
+                            onChange={(e) => setDraft(e.target.value)}
                             onBlur = {save}
                             onKeyDown={(e) => e.key === 'Enter' && save()}
                             sx={{
@@ -123,7 +94,7 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                                 fontSize: '18px',
                                 color: theme.palette.text.primary,
                             }}>
-                                {server.carbonIntensity ?? '-'} gCO2
+                                {displayValue}
                             </Typography>
                         </Box>
                     )}
@@ -145,29 +116,138 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                             {saving  ? '...' : 'EDIT'}
                     </Box>
                 </Stack>
-            </Stack>
 
+                {children}
+
+            </Stack>
+    );
+}
+
+function StatusEditor({ server }: { server: ServerStatus}) {
+    const theme = useTheme();
+    const [updating, setUpdating] = useState(false);
+
+    async function handleChange(next: string){
+        setUpdating(true);
+        try{
+            await updateStatus(server.region, server.id, next);
+        }
+        finally{
+            setUpdating(false);
+        }
+    }
+
+    async function handleAutoMode(){
+        setUpdating(true);
+        try{
+            await releaseOverride(server.region, server.id, server.online ? 'online': 'offline');
+        }
+        finally{
+            setUpdating(false);
+        }
+    }
+
+    return(
+        <Stack
+            direction = 'row'
+            sx = {{
+                alignItems: 'center',
+                gap: '8px',
+                flexWrap: 'wrap',
+        }}>
+            <StatusDot color = {server.online ? BrandColors.MainPrimary : theme.palette.text.secondary} size = '7px'/>
+
+            <Box
+                component = 'select'
+                value = {server.online ? 'online' : 'offline'}
+                disabled = {updating}
+                onChange={(e) => handleChange(e.target.value)}
+                sx = {{
+                    padding: '4px 8px',
+                    borderRadius: '8px',
+                    backgroundColor: theme.custom.adminInputBackground,
+                    border: `1px solid ${theme.custom.adminSidebarBorder}`,
+                    color: theme.palette.text.primary,
+                    fontSize: '12px',
+                    fontWeight: 600,
+            }}>
+                <option value = "online">
+                    online
+                </option>
+
+                <option value = "offline">
+                    offline
+                </option>
+
+            </Box>
+
+            {server.manualOverride && (
+                <Box 
+                    component = "button"
+                    disabled = {updating}
+                    onClick = {handleAutoMode}
+                    sx = {{
+                        cursor: 'pointer',
+                        padding: '4px 10px',
+                        borderRadius: '20px',
+                        border: `1px solid ${theme.custom.adminSidebarBorder}`,
+                        backgroundColor: 'transparent',
+                        color: theme.palette.text.secondary,
+                        fontSize: '11px',
+                        fontWeight: 600, 
+                }}>
+                    Auto Mode
+                </Box>
+            )}
+        </Stack>
+    )
+}
+ 
+function ServerEditRow({ server }: {server: ServerStatus}){
+    const theme = useTheme();
+
+    return(
+        <Stack
+            direction = {{xs: 'column', sm: 'row'}}
+            sx = {{
+                alignItems: {xs: 'flex-start', sm: 'center'},
+                gap: {xs: '14px', sm: '24px'},
+                padding: '16px 20px',
+                flexWrap: 'wrap',
+                borderRadius: '12px',
+                backgroundColor: theme.custom.adminMutedSurface,
+        }}>
             <Stack sx={{
                 width: {xs: '100%', sm: 'auto'},
-                flex: {sm: '1 0 0'},
+                flex: {xs: 'unset', sm: '1 1 200px'},
                 gap: '6px',
             }}>
                 <Typography sx={{
-                    fontSize: '10px',
                     fontWeight: 600,
-                    color: theme.palette.text.secondary
-                }}>
-                    Current Load
-                </Typography>
-
-                <Typography sx={{
-                    fontSize: '13px',
-                    fontWeight: 600,
+                    fontSize: '17px',
                     color: theme.palette.text.primary
                 }}>
-                    {server.currentLoad ?? 0}%
+                    {server.id}
                 </Typography>
 
+                <StatusEditor server = {server}/>
+            </Stack>
+
+            <EditableMetricField
+                label = "Carbon Score"
+                flexBasis = "170px"
+                value = {server.carbonIntensity ?? 0}
+                displayValue = {`${server.carbonIntensity ?? '-'} gCO2`}
+                onSave={(v) => updateCarbonScore(server.region, server.id, v)}
+            />
+
+            <EditableMetricField
+                label = "Current Load"
+                flexBasis = "170px"
+                value = {server.currentLoad ?? 0}
+                displayValue = {`${server.currentLoad ?? 0}%`}
+                onSave={(v) => updateLoad(server.region, server.id, v)}
+            >
                 <Box sx={{
                     height: '8px',
                     width: '100%',
@@ -182,28 +262,16 @@ function ServerEditRow({ server }: {server: ServerStatus}){
                         backgroundColor: BrandColors.MainPrimary,
                     }}/>
                 </Box>
-            </Stack>
+            </EditableMetricField>
 
-            <Stack sx={{
-                width: {xs: '100%', sm: '140px'},
-                gap: '6px'
-            }}>
-                <Typography sx={{
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    color: theme.palette.text.secondary,
-                }}>
-                    Latency
-                </Typography>
+            <EditableMetricField
+                label = "Latency"
+                flexBasis = "120px"
+                value = {server.latencyMs ?? 0}
+                displayValue = {server.latencyMs !== null ? `${server.latencyMs}ms`: 'N/A'}
+                onSave={(v) => updateLatency(server.region, server.id, v)}
+            />
 
-                <Typography sx={{
-                    fontWeight: 600,
-                    fontSize: '17px',
-                    color: theme.palette.text.primary,
-                }}>
-                    {server.latencyMs !== null ? `${server.latencyMs}ms`: 'N/A'}
-                </Typography>
-            </Stack>
         </Stack>
     );
 }

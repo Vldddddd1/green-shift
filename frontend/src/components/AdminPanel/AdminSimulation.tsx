@@ -117,6 +117,7 @@ function AdminSimulation(){
                             fontWeight: 700,
                             fontSize: '18px',
                             textAlign: 'center',
+                            touchAction: 'none',
                         }}/>
                 </Stack>
 
@@ -145,6 +146,7 @@ function AdminSimulation(){
                             color: theme.palette.text.primary,
                             fontWeight: 600,
                             fontSize: '15px',
+                            touchAction: 'none',
                     }}>
                         {REGION_CATALOG.map((region) => (
                             <option
@@ -171,6 +173,7 @@ function AdminSimulation(){
                         color: TextColors.DarkThemeWhite,
                         fontWeight: 600,
                         fontSize: '15px',
+                        touchAction: 'none',
                 }}>
                     {submitting ? 'Simulating' : 'Simulate Requests'}
                 </Box>
@@ -235,6 +238,7 @@ function AdminSimulation(){
                             color: regionMarkerStates.offline.fill,
                             fontWeight: 600,
                             fontSize: '14px',
+                            touchAction: 'none',
                     }}>
                         Reset Simulation
                     </Box>
