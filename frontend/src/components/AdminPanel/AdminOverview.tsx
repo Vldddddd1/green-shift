@@ -78,8 +78,8 @@ function AdminOverview(){
                         gap: '32px',
                     }}>
                         <PerformancePanel
-                            averageLatencyMs = {metrics.averageLatencyMs} //nu exista inca in api resposne
-                            carbonReductionPercent = {metrics.carbonReductionPercent} //nu exista inca in api response
+                            averageLatencyMs = {metrics.averageLatencyMs} 
+                            carbonReductionPercent = {metrics.carbonReductionPercent} 
                             activeRegion = {metrics.activeRegion}
                             apiHealth = {metrics.apiHealth}
                         />

@@ -218,7 +218,7 @@ export function useLiveMetrics(): { metrics: LiveMetrics; connected: boolean } {
                 apiHealth,
                 lastUpdate: formatTime(new Date()),
                 recentSwitches: switchesRef.current,
-                totalRequests: statsData.total_requests, // null - nu sunt trimise de backend inca
+                totalRequests: statsData.total_requests,
                 averageLatencyMs: statsData.average_latency_ms,
                 carbonReductionPercent: statsData.carbon_reduction_percent,
             }));
