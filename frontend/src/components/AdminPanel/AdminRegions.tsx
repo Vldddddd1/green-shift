@@ -15,16 +15,22 @@ import StatusDot from "../StatusDot";
 import StatusPill from "../StatusPill";
 import AdminPageHeader from "./AdminPageHeader";
 
+const CARBON_SCORE_LIMITS = {min: 0, max: 1000}
+const CURRENT_LOAD_LIMITS = {min: 0, max: 100}
+const LATENCY_LIMITS = {min: 0, max: 1000}
+
 interface EditableMetricFieldProps{
     label: string;
     value: number;
     displayValue: string;
     flexBasis: string;
+    min: number;
+    max: number;
     onSave: (value: number) => Promise<void>;
     children?: React.ReactNode;
 }
 
-function EditableMetricField({ label, value, displayValue, flexBasis, onSave, children}: EditableMetricFieldProps){
+function EditableMetricField({ label, value, displayValue, flexBasis, min, max, onSave, children}: EditableMetricFieldProps){
     const theme = useTheme();
     const [editing, setEditing] = useState(false);
     const [draft, setDraft] = useState(String(value));
@@ -33,9 +39,10 @@ function EditableMetricField({ label, value, displayValue, flexBasis, onSave, ch
      async function save(){
         const parsed = Number(draft);
         if(Number.isNaN(parsed)) return setEditing(false);
+        const clamped = Math.min(max, Math.max(min, parsed));
         setSaving(true);
         try{
-            await onSave(parsed);
+            await onSave(clamped);
         }
         finally{
             setSaving(false);
@@ -66,6 +73,9 @@ function EditableMetricField({ label, value, displayValue, flexBasis, onSave, ch
                     {editing ? (
                         <Box
                             component = "input"
+                            type = "number"
+                            min = {min}
+                            max = {max}
                             autoFocus
                             value = {draft}
                             onChange={(e) => setDraft(e.target.value)}
@@ -236,6 +246,8 @@ function ServerEditRow({ server }: {server: ServerStatus}){
             <EditableMetricField
                 label = "Carbon Score"
                 flexBasis = "170px"
+                min = {CARBON_SCORE_LIMITS.min}
+                max = {CARBON_SCORE_LIMITS.max}
                 value = {server.carbonIntensity ?? 0}
                 displayValue = {`${server.carbonIntensity ?? '-'} gCO2`}
                 onSave={(v) => updateCarbonScore(server.region, server.id, v)}
@@ -244,6 +256,8 @@ function ServerEditRow({ server }: {server: ServerStatus}){
             <EditableMetricField
                 label = "Current Load"
                 flexBasis = "170px"
+                min = {CURRENT_LOAD_LIMITS.min}
+                max = {CURRENT_LOAD_LIMITS.max}
                 value = {server.currentLoad ?? 0}
                 displayValue = {`${server.currentLoad ?? 0}%`}
                 onSave={(v) => updateLoad(server.region, server.id, v)}
@@ -267,6 +281,8 @@ function ServerEditRow({ server }: {server: ServerStatus}){
             <EditableMetricField
                 label = "Latency"
                 flexBasis = "120px"
+                min = {LATENCY_LIMITS.min}
+                max = {LATENCY_LIMITS.max}
                 value = {server.latencyMs ?? 0}
                 displayValue = {server.latencyMs !== null ? `${server.latencyMs}ms`: 'N/A'}
                 onSave={(v) => updateLatency(server.region, server.id, v)}

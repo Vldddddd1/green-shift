@@ -21,18 +21,18 @@ class ServerResponse(BaseModel):
 class UpdateCarbonScoreRequest(BaseModel):
     zone: str
     server: str
-    carbon_score: int
+    carbon_score: int = Field(..., ge = 0, le = 1000)
 
 
 class UpdateLoadRequest(BaseModel):
     zone: str
     server: str
-    current_load: int
+    current_load: int = Field(..., ge = 0, le = 100)
 
 class UpdateLatencyRequest(BaseModel):
     zone: str
     server: str
-    latency: int
+    latency: int = Field(..., ge = 0, le = 1000)
 
 class UpdateStatusRequest(BaseModel):
     zone: str

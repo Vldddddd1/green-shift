@@ -1,9 +1,9 @@
-import { Stack, Typography } from "@mui/material";
-import { TextColors } from "../assets/themes/colors";
+import { Stack, Typography, useTheme } from "@mui/material";
 import { NA } from "../assets/format"
 import type { ReactNode } from "react";
 
 export function MetricRow({ label, value, valueColor }: { label: string; value: ReactNode; valueColor?: string }) {
+    const theme = useTheme()
     const isNA = value === NA;
 
     return (
@@ -13,7 +13,7 @@ export function MetricRow({ label, value, valueColor }: { label: string; value: 
         }}>
             <Typography sx={{
                 fontSize: {xs: '11px', md: '13px'},
-                color: TextColors.OverviewContent
+                color: theme.palette.text.secondary
             }}>
                 {label}
             </Typography>
@@ -22,7 +22,7 @@ export function MetricRow({ label, value, valueColor }: { label: string; value: 
                 sx={{
                     fontSize: {xs: '12px', md: '15px'},
                     fontWeight: 600,
-                    color: isNA ? TextColors.DarkThemeGray : (valueColor ?? TextColors.DarkThemeText)
+                    color: isNA ? theme.palette.text.secondary : (valueColor ?? theme.palette.text.primary)
             }}>
                 {value}
             </Typography>
