@@ -131,7 +131,7 @@ function AdminSettings(){
                 />
 
                 <SettingsRow
-                    title = "API Health Ckeck"
+                    title = "API Health Check"
                     description = "Backend connectivity for /servers and /route endpoints"
                     action = {<ActionPill 
                                 label = {apiHealth !== null ? API_STATUS_CONFIG[apiHealth].label : 'N/A'} 
