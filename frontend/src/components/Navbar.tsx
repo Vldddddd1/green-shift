@@ -46,6 +46,7 @@ function Navbar({ onToggleOverview }: NavbarProps) {
             justifyContent: { xs: 'space-between', md: 'none' },
             gap: '12px',
             zIndex: 10000,
+            touchAction: 'none',
             ...gradientTopBarSx(theme),
         }}>
             <BackButton />

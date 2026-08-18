@@ -1,28 +1,18 @@
 import { API_BASE } from "../hooks/liveMetrics";
+import { getAdminToken } from "./authSession";
 
-let cachedToken: string | null = null;
-
-export async function getAdminToken(): Promise<string> {
-    if(cachedToken) return cachedToken;
-    const res = await fetch(`${API_BASE}/admin/login`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username: 'admin', password: 'greenshift2026'}),
-    });
-
-    if(!res.ok) throw new Error('Admin login unsuccessful');
-    const data = await res.json();
-    cachedToken = data.token;
-    return cachedToken!;
+function authHeaders(): Record<string, string>{
+    const token = getAdminToken();
+    if(!token) throw new Error("Admin session expired. Sign in again");
+    return { Authorization: `Bearer ${token}` };
 }
 
 async function postAdmin<T>(path: string, body: unknown): Promise<T> {
-    const token = await getAdminToken();
     const res = await fetch(`${API_BASE}/admin/${path}`,{
         method: 'POST',
         headers:{
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            ...authHeaders(),
         },
         body: JSON.stringify(body),
     });
@@ -44,12 +34,11 @@ export function resetSimulation(): Promise<{status: string}> {
 }
 
 async function patchAdmin(path: string, body: unknown): Promise<void> {
-    const token = await getAdminToken();
     const res = await fetch(`${API_BASE}/admin/${path}`,{
         method: 'PATCH',
         headers:{
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            ...authHeaders(),
         },
         body: JSON.stringify(body),
     });

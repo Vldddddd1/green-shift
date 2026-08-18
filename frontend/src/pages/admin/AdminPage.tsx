@@ -10,13 +10,21 @@ function AdminPage(){
 
     return(
         <LiveMetricsProvider>
-            <AdminNavbar/>
-            <Box sx={{ 
-                minHeight: '100svh',
-                marginLeft: {xs: 0, sm: theme.fluid.sidebarWidth},
-                paddingTop: {xs: theme.fluid.navbarHeight, sm: 0},
+            <Box sx={{
+                display: {xs: 'block', sm: 'flex'},
+                height: '100svh',
             }}>
-                <Outlet/>
+                <AdminNavbar/>
+                <Box sx={{ 
+                    flex: {sm: '1 1 0'},
+                    minWidth: 0,
+                    height: '100%',
+                    overflowY: 'auto',
+                    overscrollBehaviorY: 'contain',
+                    paddingTop: {xs: theme.fluid.navbarHeight, sm: 0},
+                }}>
+                    <Outlet/>
+                </Box>
             </Box>
         </LiveMetricsProvider>
     )

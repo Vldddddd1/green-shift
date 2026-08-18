@@ -15,6 +15,7 @@ import { useLiveMetricsContext } from '../../hooks/liveMetrics';
 import RoundedIconButton from '../RoundedIconButton';
 import { gradientTopBarSx } from '../../assets/themes/sharedStyles';
 import StatusDot from '../StatusDot';
+import LogoutButton from './LogoutButton';
 
 interface NavItem {
     label: string;
@@ -210,6 +211,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
             </Stack>
             
+                <LogoutButton/>
         </Stack>
     );
 }
@@ -223,11 +225,11 @@ function AdminNavbar() {
             {/* DESKTOP + TABLET */}
             <Box sx={{
                 display: { xs: 'none', sm: 'block' },
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                bottom: 0,
+                height: '100%',
                 width: theme.fluid.sidebarWidth,
+                flexShrink: 0,
+                overflowY: 'auto',
+                touchAction: 'none',
                 zIndex: 9000,
                 borderRight: `1px solid ${theme.custom.adminSidebarBorder}`,
                 transition: 'background-color 0.5s ease, color 0.5s ease',
@@ -249,6 +251,7 @@ function AdminNavbar() {
                     justifyContent: 'space-between',
                     paddingX: theme.fluid.edgeOffset,
                     zIndex: 9000,
+                    touchAction: 'none',
                     ...gradientTopBarSx(theme),
                 }}>
                 <BackButton />
