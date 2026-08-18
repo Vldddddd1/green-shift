@@ -1,6 +1,8 @@
 import { useActionState, } from "react";
 import { Stack, Box, Typography, useTheme } from "@mui/material";
 import { BrandColors, regionMarkerStates, TextColors } from "../../assets/themes/colors";
+import BackButton from "../BackButton";
+import DashboardButton from "../DashboardButton";
 
 interface LoginFieldProps{
     label: string;
@@ -81,6 +83,15 @@ function LoginCard({ onLogin} : LoginCardProps){
                 backgroundColor: theme.custom.adminSidebarBackground,
                 border: `1px solid ${theme.custom.adminSidebarBorder}`,
         }}>
+            <Stack
+                direction = 'row'
+                sx = {{
+                    gap: '8px',
+            }}>
+                <BackButton/>
+                <DashboardButton/>
+            </Stack>
+
             <Typography sx={{
                 fontWeight: 700,
                 fontSize: '22px',
