@@ -32,7 +32,6 @@ def get_stats() -> dict:
         "carbon_reduction_percent": round(carbon_reduction_percent, 1) if carbon_reduction_percent is not None else None,
     }
 
-
 def reset_stats():
     stats["total_requests"] = 0
     stats["requests_per_server"] = {}

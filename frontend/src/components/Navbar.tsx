@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Stack, Box, IconButton, Menu, MenuItem } from "@mui/material";
-import { useTheme, alpha } from "@mui/material/styles";
+import { Stack, Box, Menu, MenuItem } from "@mui/material";
+import { useTheme, } from "@mui/material/styles";
 
 import { Link } from "react-router";
 
@@ -10,10 +10,11 @@ import BackButton from "../components/BackButton";
 import ThemeButton from "./ThemeButton";
 import AdminButton from "./AdminButton";
 
-import { BackgroundColors, BrandColors } from "../assets/themes/colors";
 
 import { Logo } from "./Logo";
 import MenuIcon from '../assets/icons/menu.svg?react';
+import RoundedIconButton from "./RoundedIconButton";
+import { gradientBorderSx, gradientTopBarSx } from "../assets/themes/sharedStyles";
 
 interface NavbarProps {
     onToggleOverview?: () => void;
@@ -30,15 +31,6 @@ function Navbar({ onToggleOverview }: NavbarProps) {
         setAnchorEl(prev => (prev ? null : e.currentTarget));
     };
 
-    const menuItemSx = {
-        fontFamily: 'Sora',
-        fontSize: '14px',
-        color: theme.palette.text.primary,
-        borderRadius: '8px',
-        margin: '4px',
-        '&:hover': { backgroundColor: alpha(BrandColors.MainPrimary, 0.14) },
-    }
-
     return (
         <Stack direction="row" sx={{
             width: { xs: '100%', md: '35%' },
@@ -54,16 +46,8 @@ function Navbar({ onToggleOverview }: NavbarProps) {
             justifyContent: { xs: 'space-between', md: 'none' },
             gap: '12px',
             zIndex: 10000,
-
-            borderLeft: '3.5px solid transparent',
-            borderRight: '3.5px solid transparent',
-            borderBottom: '3.5px solid transparent',
-            backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}), ${theme.custom.navBorderGradient}`,
-            backgroundOrigin: 'border-box',
-            backgroundClip: 'padding-box, border-box',
-            transition: 'background-color 0.5s ease, color 0.5s ease',
-            borderBottomLeftRadius: '32px',
-            borderBottomRightRadius: '32px',
+            touchAction: 'none',
+            ...gradientTopBarSx(theme),
         }}>
             <BackButton />
 
@@ -94,35 +78,26 @@ function Navbar({ onToggleOverview }: NavbarProps) {
                 display: { xs: 'flex', md: 'none' },
                 zIndex: 10000,
             }}>
-                <IconButton
+                <RoundedIconButton
                     onClick={handleMenuButtonClick}
-                    sx={{
-                        backgroundColor: BrandColors.MainPrimary,
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                    }}
-                >
-                    <MenuIcon width={16} height={16} style={{ color: theme.custom.themeIconColor }} />
-                </IconButton>
+                    icon = {<MenuIcon width={16} height={16} style={{ color: theme.custom.themeIconColor }} />}
+                />
+
                 <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={closeMenu}
+                    sx = {{
+                        zIndex: 10000,
+                    }}
                     slotProps={{
                         paper: {
                             sx: {
                                 marginTop: '8px',
                                 minWidth: '200px',
-                                borderLeft: '3.5px solid transparent',
-                                borderRight: '3.5px solid transparent',
-                                borderBottom: '3.5px solid transparent',
-                                backgroundImage: `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}), ${theme.custom.navBorderGradient}`,
-                                backgroundOrigin: 'border-box',
-                                backgroundClip: 'padding-box, border-box',
+                                ...gradientBorderSx(theme),
                                 boxShadow: theme.custom.cardShadow,
                                 borderRadius: '12px',
-                                transition: 'background-color 0.5s ease, color 0.5s ease'
                             }
                         }
                     }}>

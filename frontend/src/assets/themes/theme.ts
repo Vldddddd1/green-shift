@@ -2,7 +2,6 @@ import { BrandColors, TextColors, BackgroundColors, shadows } from './colors.ts'
 import type { PaletteMode } from '@mui/material';
 
 // Fluid values: clamp(min, preferred, max)
-// See each key's usage in LandingPage.tsx for what it drives.
 export interface FluidTokens {
     edgeOffset: string;
     textSm: string;
@@ -20,8 +19,6 @@ export interface FluidTokens {
     sidebarWidth: string;
 }
 
-// Values that differ by light/dark mode but aren't colors pulled straight
-// from the palette - things components used to re-derive themselves via a
 // `theme.palette.mode === 'dark' ? a : b` ternary.
 export interface CustomTokens {
     navBorderGradient: string;
@@ -34,6 +31,8 @@ export interface CustomTokens {
     adminSidebarBackground: string;
     adminSidebarBorder: string;
     adminSidebarMutedText: string;
+    adminMutedSurface: string;
+    adminInputBackground: string;
 }
 
 declare module '@mui/material/styles' {
@@ -48,21 +47,16 @@ declare module '@mui/material/styles' {
 }
 
 const fluid: FluidTokens = {
-    // Corner anchor. The logo sits this far from the top-left corner, the
-    // theme toggle this far from the top-right corner, and the same distance
-    // pulls the footer credit up from the bottom
-    // e.g. <Box sx={{ top: theme.fluid.edgeOffset, right: theme.fluid.edgeOffset }}>
+    // Corner anchor.
     edgeOffset: 'clamp(16px, calc(-24.35px + 4.18vw), 32px)',
 
-    // Smallest text on the page. Right now that's only the footer credit line
     // ("Green-Shift - Eco-Routing Cloud Balancer - Simplified demo build").
     textSm: 'clamp(11px, calc(5.96px + 0.52vw), 13px)',
 
     // ("ECO-ROUTING CLOUD BALANCER") and the paragraph below the headline
     textMd: 'clamp(14px, calc(3.91px + 1.04vw), 18px)',
 
-    // The headline itself - "Route traffic to the cleanest grid,
-    // automatically." The one thing on this page allowed to be huge.
+    // The headline itself - "Route traffic to the cleanest grid, automatically."
     textXl: 'clamp(32px, calc(-28.53px + 6.27vw), 56px)',
 
     // e.g. the Stack wrapping the eyebrow/headline/paragraph, as `maxWidth`
@@ -83,9 +77,6 @@ const fluid: FluidTokens = {
     // Height of the small "Theme" toggle button.
     toggleHeight: 'clamp(28px, calc(17.91px + 1.04vw), 32px)',
 
-    // Gap between the eyebrow, headline and paragraph inside the text block.
-    // Tighter than sectionGap on purpose - these three lines are meant to
-    // read as one group, not three separate sections.
     // e.g. the same Stack that uses elementMaxWidth, as `gap`
     elementGap: 'clamp(12px, calc(-8.18px + 2.09vw), 20px)',
 
@@ -95,6 +86,7 @@ const fluid: FluidTokens = {
     sectionGap: 'clamp(12px, calc(-38.44px + 5.22vw), 32px)',
 
     navbarHeight: 'clamp(48px, calc(15.65px + 4.18vw), 64px)',
+
     sidebarWidth: '280px',
 };
 
@@ -109,7 +101,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         cardShadow: shadows.darkMode,
         adminSidebarBackground: BackgroundColors.AdminSidebarDark,
         adminSidebarBorder: 'rgba(255,255,255,0.08)',
-        adminSidebarMutedText: TextColors.OverviewContent
+        adminSidebarMutedText: TextColors.OverviewContent,
+        adminMutedSurface: 'rgba(255,255,255,0.03)',
+        adminInputBackground: 'rgba(0,0,0,0.25)'
     } : {
         navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
         backIconColor: TextColors.LightThemeText,
@@ -120,7 +114,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         cardShadow: shadows.lightMode,
         adminSidebarBackground: BackgroundColors.CardBackground,
         adminSidebarBorder: 'rgba(0,0,0,0.08)',
-        adminSidebarMutedText: TextColors.LightThemeGray
+        adminSidebarMutedText: TextColors.LightThemeGray,
+        adminMutedSurface: 'rgba(0,0,0,0.03)',
+        adminInputBackground: 'rgba(255,255,255,255.25)'
     };
 
     return {

@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 
 import { Stack, Box, Typography, useTheme, } from '@mui/material';
-import { BrandColors, TextColors } from '../../assets/themes/colors';
+import { BrandColors, } from '../../assets/themes/colors';
 import { adminCardSx, adminCardTitleSx } from './cardStyles';
+import FilterPill from './FilterPill';
 
 export interface ServerRequestStat {
     id: string;
@@ -16,6 +17,8 @@ interface RequestsByServerProps {
 }
 
 function ServerRow({ id, requests, percent }: ServerRequestStat) {
+    const theme = useTheme();
+    
     return (
         <Stack sx={{
             gap: '8px',
@@ -30,7 +33,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                 <Typography sx={{
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     {id}
                 </Typography>
@@ -38,7 +41,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                 <Typography sx={{
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: TextColors.DarkThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     {`${requests} req - ${percent}%`}
                 </Typography>
@@ -48,7 +51,7 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
                 height: '8px',
                 width: '100%',
                 borderRadius: '4px',
-                backgroundColor: 'rgba(255,255,255,0.08)',
+                backgroundColor: theme.custom.adminSidebarBorder,
                 overflow: 'hidden',
             }}>
                 <Box sx={{
@@ -60,38 +63,6 @@ function ServerRow({ id, requests, percent }: ServerRequestStat) {
             </Box>
         </Stack>
     );
-}
-
-interface RegionFilterPillProps {
-    label: string;
-    active: boolean;
-    onClick: () => void;
-}
-
-function RegionFilterPill({ label, active, onClick }: RegionFilterPillProps) {
-    return (
-        <Box
-            component='button'
-            onClick={onClick}
-            sx={{
-                cursor: 'pointer',
-                padding: '6px 14px',
-                borderRadius: '20px',
-                fontSize: '12px',
-                fontWeight: 600,
-                fontFamily: 'Sora',
-                border: `1px solid ${active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.15)'}`,
-                backgroundColor: active ? BrandColors.MainPrimary : 'rgba(255,255,255,0.04)',
-                color: active ? TextColors.DarkThemeWhite : TextColors.OverviewContent,
-                transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                '&:hover': {
-                    borderColor: BrandColors.MainPrimary
-                }
-            }}
-        >
-            {label}
-        </Box>
-    )
 }
 
 function RequestsByServer({ servers }: RequestsByServerProps) {
@@ -122,7 +93,7 @@ function RequestsByServer({ servers }: RequestsByServerProps) {
             {servers.length === 0 ? (
                 <Typography sx={{
                     fontSize: '13px',
-                    color: TextColors.DarkThemeGray,
+                    color: theme.palette.text.secondary,
                 }}>
                     No request data available yet.
                 </Typography>
@@ -135,13 +106,13 @@ function RequestsByServer({ servers }: RequestsByServerProps) {
                             flexWrap: 'wrap',
                         }}
                     >
-                        <RegionFilterPill
+                        <FilterPill
                             label = 'All'
                             active = {selectedRegion === null}
                             onClick={() => setSelectedRegion(null)}
                         />
                         {regions.map(region => (
-                            <RegionFilterPill
+                            <FilterPill
                                 key = {region}
                                 label = {region}
                                 active = {selectedRegion === region}

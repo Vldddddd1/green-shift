@@ -1,24 +1,19 @@
 import { Stack, Box, Typography, useTheme, useMediaQuery } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 
-import type { ReactNode } from 'react';
+import StatusDot from '../StatusDot';
 
 import { BrandColors, TextColors, } from '../../assets/themes/colors';
+import { floatingPanelSx } from '../../assets/themes/sharedStyles';
 
 import { useLiveMetrics } from '../../hooks/liveMetrics';
-import type { APIStatus } from '../../hooks/liveMetrics';
-
 import { RegionStatus } from './RegionStatus';
+import { API_STATUS_CONFIG } from '../../assets/apiStatus';
+
+import { NA, display } from '../../assets/format';
+import { MetricRow } from '../MetricRow';
 
 const DEFAULT_POSITION = { x: 20, y: 20 } //CAN BE ADJUSTED
-
-const NA = 'N/A';
-
-export const API_STATUS_CONFIG: Record<APIStatus, { label: string; color: string }> = {
-    healthy: { label: 'Healthy', color: BrandColors.MainPrimary },
-    degraded: { label: 'Degraded', color: '#E0A800' },
-    offline: { label: 'Offline', color: '#C0392B' },
-}
 
 interface PanelPosition {
     x: number;
@@ -27,48 +22,6 @@ interface PanelPosition {
 
 interface OverviewDetailsProps{
     visible?: boolean;
-}
-
-function StatusDot({ color, size }: { color: string; size?: string }) {
-    return (
-        <Box sx={{
-            width: size,
-            height: size,
-            borderRadius: '50%',
-            backgroundColor: color,
-            flexShrink: 0,
-        }} />
-    )
-}
-
-function display(value: string | number | null | undefined): string {
-    if (value === null || value === undefined || value === '') return NA;
-    return String(value);
-}
-
-export function MetricRow({ label, value, valueColor }: { label: string; value: ReactNode; valueColor?: string }) {
-    const isNA = value === NA;
-
-    return (
-        <Stack direction='row' sx={{
-            justifyContent: 'space-between',
-            width: '100%',
-        }}>
-            <Typography sx={{
-                fontSize: {xs: '11px', md: '13px'},
-                color: TextColors.OverviewContent
-            }}>
-                {label}
-            </Typography>
-            <Typography sx={{
-                fontSize: {xs: '12px', md: '15px'},
-                fontWeight: 600,
-                color: isNA ? TextColors.DarkThemeGray : (valueColor ?? TextColors.DarkThemeText)
-            }}>
-                {value}
-            </Typography>
-        </Stack>
-    );
 }
 
 export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
@@ -92,9 +45,27 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
     const panelRef = useRef<HTMLDivElement | null>(null);
     const legendRef = useRef<HTMLDivElement | null>(null);
 
-    const legendHeight = legendRef.current?.offsetHeight ?? 135;
+    // const legendHeight = legendRef.current?.offsetHeight ?? 135;
+    const [legendHeight, setLegendHeight] = useState(135);
+    const [measuredPanelHeight, setMeasuredPanelHeight] = useState(400);
+
+    useLayoutEffect(() => {
+        setLegendHeight(legendRef.current?.offsetHeight ?? 135);
+    }, [showLegend]);
+
+    useLayoutEffect(() => {
+        const el = panelRef.current;
+        if (!el) return;
+        const observer = new ResizeObserver(() => {
+            setMeasuredPanelHeight(el.offsetHeight);
+        });
+        observer.observe(el);
+
+        return () => observer.disconnect()
+    }, [])
+
     const maxLegendTop = Math.max(window.innerHeight - legendHeight, 0);
-    const desiredLegendTop = position.y + (panelRef.current?.offsetHeight ?? 400);
+    const desiredLegendTop = position.y + measuredPanelHeight;
     const legendTop = Math.min(desiredLegendTop, maxLegendTop);
 
     useEffect(() => {
@@ -102,7 +73,7 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
         const maxY = Math.max(window.innerHeight - panelHeight - (showLegend ? legendHeight : 0), 0);
 
         setPosition(pos => (pos.y > maxY ? { ...pos, y: maxY } : pos));
-    }, [showLegend]);
+    }, [showLegend, legendHeight]);
 
     const handlePointerDown = (e: React.PointerEvent) => {
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -120,9 +91,8 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
         const dy = e.clientY - dragRef.current.startY;
 
         const panelHeight = panelRef.current?.offsetHeight ?? 120;
-        // const maxX = window.innerWidth - 360; // 360 - panel width
         const panelWidth = panelRef.current?.offsetWidth ?? 360;
-        const maxX = window.innerHeight - panelWidth;
+        const maxX = window.innerWidth - panelWidth;
         const maxY = Math.max(window.innerHeight - panelHeight - (showLegend ? legendHeight : 0), 0);
 
         setPosition({
@@ -150,26 +120,10 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                     top: `${position.y}px`,
                     left: `${position.x}px`,
                     zIndex: 9000,
-
                     gap: {xs: '10px', md: '16px'},
                     width: {xs: '240px', md: '360px'},
                     padding: {xs: '14px 16px', md: '22px 24px'},
-                    borderRadius: '18px',
-                    boxShadow: '0px 10px 24px 0px rgba(0,0,0,0.25)',
-
-                    borderTop: '3.5px solid transparent',
-                    borderLeft: '3.5px solid transparent',
-                    borderRight: '3.5px solid transparent',
-                    borderBottom: '3.5px solid transparent',
-                    backgroundImage: `linear-gradient(rgba(32, 32, 32, 0.8), rgba(32, 32, 32, 0.8)), ${theme.custom.navBorderGradient}`,
-                    backgroundOrigin: 'border-box',
-                    backgroundClip: 'padding-box, border-box',
-                    transition: 'background-color 0.5s ease, color 0.5s ease',
-
-                    userSelect: 'none',
-                    touchAction: 'none',
-                    cursor: 'grab',
-                    '&:active': { cursor: 'grabbing' }
+                    ...floatingPanelSx(theme),
                 }}>
                 <Stack
                     direction='row'
@@ -216,7 +170,7 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                 />
                 <MetricRow
                     label="Savings Multiplier"
-                    value={display(metrics.savingsMultiplier != null ? `${metrics.savingsMultiplier.toFixed(1)}` : NA)}
+                    value={display(metrics.savingsMultiplier != null ? `${metrics.savingsMultiplier.toFixed(1)}x` : NA)}
                 />
                 {metrics.apiHealth === null ? (
                     <MetricRow label="API Connection" value={NA} valueColor={TextColors.DarkThemeGray} />
@@ -267,10 +221,12 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                         {NA}
                     </Typography>
                 ) : (
-                    <Stack sx={{
-                        gap: '6px',
-                        maxHeight: {xs: '90px', md: 'none'},
-                        overflowY: {xs: 'none', md: 'visible'},
+                    <Stack 
+                        onPointerDown = {(e) => e.stopPropagation()}
+                        sx={{
+                            gap: '6px',
+                            maxHeight: {xs: '150px', md: 'none'},
+                            overflowY: {xs: 'auto', md: 'visible'},
                     }}>
                         {metrics.recentSwitches.map(s => (
                         <Typography key={s.id}

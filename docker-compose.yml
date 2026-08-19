@@ -7,6 +7,27 @@ services:
     volumes:
       - ./backend:/app
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "4173:4173"
+    environment:
+      API_PROXY_TARGET: http://backend:8000
+    depends_on:
+      - backend
+
+  frontend-dev:
+    build: 
+      context: ./frontend
+      target: dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      API_PROXY_TARGET: http://backend:8000
+
   eu-west-1:
     build: ./server
     environment:
@@ -30,6 +51,30 @@ services:
     environment:
       SERVER_NAME: eu-west-4
       ZONE: eu-west
+
+  eu-central-1:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-central-1
+      ZONE: eu-central
+
+  eu-central-2:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-central-2
+      ZONE: eu-central
+
+  eu-central-3:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-central-3
+      ZONE: eu-central
+
+  eu-central-4:
+    build: ./server
+    environment:
+      SERVER_NAME: eu-central-4
+      ZONE: eu-central
 
   us-west-1:
     build: ./server
@@ -55,47 +100,23 @@ services:
       SERVER_NAME: us-west-4
       ZONE: us-west
 
-  eu-east-1:
+  af-south-1:
     build: ./server
     environment:
-      SERVER_NAME: eu-east-1
-      ZONE: eu-east
+      SERVER_NAME: af-south-1
+      ZONE: af-south
 
-  eu-east-2:
+  af-south-2:
     build: ./server
     environment:
-      SERVER_NAME: eu-east-2
-      ZONE: eu-east
+      SERVER_NAME: af-south-2
+      ZONE: af-south
 
-  eu-east-3:
+  af-south-3:
     build: ./server
     environment:
-      SERVER_NAME: eu-east-3
-      ZONE: eu-east
-
-  eu-east-4:
-    build: ./server
-    environment:
-      SERVER_NAME: eu-east-4
-      ZONE: eu-east
-
-  africa-1:
-    build: ./server
-    environment:
-      SERVER_NAME: africa-1
-      ZONE: africa
-
-  africa-2:
-    build: ./server
-    environment:
-      SERVER_NAME: africa-2
-      ZONE: africa
-
-  africa-3:
-    build: ./server
-    environment:
-      SERVER_NAME: africa-3
-      ZONE: africa
+      SERVER_NAME: af-south-3
+      ZONE: af-south
 
   us-east-1:
     build: ./server
@@ -121,50 +142,62 @@ services:
       SERVER_NAME: us-east-4
       ZONE: us-east
 
-  asia-south-1:
+  ap-south-1:
     build: ./server
     environment:
-      SERVER_NAME: asia-south-1
-      ZONE: asia-south
+      SERVER_NAME: ap-south-1
+      ZONE: ap-south
 
-  asia-south-2:
+  ap-south-2:
     build: ./server
     environment:
-      SERVER_NAME: asia-south-2
-      ZONE: asia-south
+      SERVER_NAME: ap-south-2
+      ZONE: ap-south
 
-  asia-south-3:
+  ap-south-3:
     build: ./server
     environment:
-      SERVER_NAME: asia-south-3
-      ZONE: asia-south
+      SERVER_NAME: ap-south-3
+      ZONE: ap-south
 
-  australia-1:
+  ap-southeast-1:
     build: ./server
     environment:
-      SERVER_NAME: australia-1
-      ZONE: australia
+      SERVER_NAME: ap-southeast-1
+      ZONE: ap-southeast
 
-  australia-2:
+  ap-southeast-2:
     build: ./server
     environment:
-      SERVER_NAME: australia-2
-      ZONE: australia
+      SERVER_NAME: ap-southeast-2
+      ZONE: ap-southeast
 
-  asia-east-1:
+  ap-northeast-1:
     build: ./server
     environment:
-      SERVER_NAME: asia-east-1
-      ZONE: asia-east
+      SERVER_NAME: ap-northeast-1
+      ZONE: ap-northeast
 
-  asia-east-2:
+  ap-northeast-2:
     build: ./server
     environment:
-      SERVER_NAME: asia-east-2
-      ZONE: asia-east
+      SERVER_NAME: ap-northeast-2
+      ZONE: ap-northeast
 
-  asia-east-3:
+  ap-northeast-3:
     build: ./server
     environment:
-      SERVER_NAME: asia-east-3
-      ZONE: asia-east
+      SERVER_NAME: ap-northeast-3
+      ZONE: ap-northeast
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command:
+      - "http"
+      - "--url=https://epilogue-chihuahua-dramatize.ngrok-free.dev"
+      - "frontend:4173"
+    depends_on:
+      - frontend

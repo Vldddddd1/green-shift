@@ -4,6 +4,14 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import svgr from 'vite-plugin-svgr'
 
+const apiProxy = {
+  '/api':{
+        target: process.env.API_PROXY_TARGET ?? 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        rewrite: (path: string) => path.replace(/^\/api/, ''),
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -16,6 +24,7 @@ export default defineConfig({
     }),
   ],
   server: {
+    proxy: apiProxy,
     fs: {
       allow: ['..'],
     },
@@ -23,6 +32,10 @@ export default defineConfig({
       usePolling: true,
       interval: 100,
     }
+  },
+  preview:{
+    allowedHosts: ["epilogue-chihuahua-dramatize.ngrok-free.dev"],
+    proxy: apiProxy
   },
   test: {
     environment: 'jsdom',

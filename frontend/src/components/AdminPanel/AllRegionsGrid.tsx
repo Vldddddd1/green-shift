@@ -1,26 +1,15 @@
-import { Stack, Box, Typography, useTheme, } from '@mui/material';
+import { Stack, Typography, useTheme, } from '@mui/material';
 import { Link } from 'react-router';
-import { regionMarkerStates, TextColors } from '../../assets/themes/colors';
-import { adminCardSx, adminCardTitleSx } from './cardStyles';
+import { regionMarkerStates, } from '../../assets/themes/colors';
+import { adminCardSx, adminCardTitleSx, adminHeaderRowSx } from './cardStyles';
 import { REGION_CATALOG } from './regionCatalog'
 
 import type { RegionCatalogEntry } from './regionCatalog'
-import type { RegionMarkerState } from '../../assets/themes/colors';
-
-// onlineAzCount === null - backend unreachable
-// onlineAzCount === 0 - every AZ down
-// 0 < onlineAzCount < azCount - partial up
-// onlineAzCount >= azCount - full up
+import { deriveRegionStatus } from './regionStatus';
+import StatusDot from '../StatusDot';
 
 interface AllRegionsGridProps{
     onlineAzCounts: Record<string, number>; // key = region.id; missing = unavailable
-}
-
-function deriveRegionStatus(onlineAzCount: number | null, azCount: number): { state: RegionMarkerState; label: string}{
-    if(onlineAzCount === null) return {state:'unavailable', label:'No live data'};
-    if(onlineAzCount <= 0) return {state:'offline', label:'All AZs offline'};
-    if(onlineAzCount >= azCount) return {state:'active', label:'All AZs online'};
-    return {state: 'available', label: `${onlineAzCount} / ${azCount} AZs online`}
 }
 
 interface RegionChipProps extends RegionCatalogEntry{
@@ -28,6 +17,8 @@ interface RegionChipProps extends RegionCatalogEntry{
 }
 
 function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
+    const theme = useTheme();
+    
     const { state, label } = deriveRegionStatus(onlineAzCount, azCount);
     const { fill } = regionMarkerStates[state];
 
@@ -37,22 +28,21 @@ function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
             gap: '6px',
             padding: '14px',
             borderRadius: '10px',
-            backgroundColor: 'rgba(255,255,255,0.03)',
+            backgroundColor: theme.custom.adminMutedSurface,
         }}>
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '13px',
-                color: TextColors.DarkThemeGray,
+                color: theme.palette.text.secondary,
             }}>
                 {id}
             </Typography>
 
             <Typography sx={{
                 fontSize: '10px',
-                color: TextColors.DarkThemeGray,
+                color: theme.palette.text.secondary,
             }}>
-                {`${location} · ${azCount} AZs`}
+                {`${location} - ${azCount} AZs`}
             </Typography>
             <Stack 
                 direction = 'row'
@@ -61,17 +51,12 @@ function RegionChip({ id, location, azCount, onlineAzCount}: RegionChipProps){
                     gap: '5px',
                 }}
             >
-                <Box sx={{
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    backgroundColor: fill,
-                    flexShrink: 0,
-                }}/>
+                <StatusDot color = {fill} size = '6px'/>
+
                 <Typography sx={{
                     fontSize: '10px',
                     fontWeight: 600,
-                    color: TextColors.OverviewContent
+                    color: theme.palette.text.secondary
                 }}>
                     {label}
                 </Typography>
@@ -89,11 +74,10 @@ function AllRegionsGrid({ onlineAzCounts}: AllRegionsGridProps){
             gap: '16px',
         }}>
             <Stack
-                direction = 'row'
-                sx = {{
-                    alignItems: 'center',
-                    width: '100%',
-                }}>
+                direction = {{xs: 'column', sm: 'row'}}
+                sx = {
+                    adminHeaderRowSx
+            }>
                     <Typography sx={{
                         ...adminCardTitleSx,
                         flex: '1 0 0 ',

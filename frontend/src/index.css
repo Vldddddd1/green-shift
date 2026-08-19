@@ -1,5 +1,5 @@
 html, body {
-    background-color: #202020;
+    overscroll-behavior: none;
 }
 
 .no-transitions, .no-transitions * {

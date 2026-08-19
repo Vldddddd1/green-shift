@@ -1,7 +1,8 @@
 import { forwardRef } from 'react';
 import { Stack, Box, Typography, useTheme, } from '@mui/material'
-import { BrandColors, TextColors, BackgroundColors, regionMarkerStates } from '../../assets/themes/colors'
+import { BrandColors, TextColors, regionMarkerStates } from '../../assets/themes/colors'
 import type { RegionMarkerState } from '../../assets/themes/colors'
+import StatusDot from '../StatusDot';
 
 interface RegionDetailsPanelProps {
     region: { id: string; name: string; geography: string };
@@ -48,9 +49,9 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                 gap: '14px',
                 padding: '20px 22px',
                 borderRadius: '16px',
-                backgroundColor: theme.palette.mode === 'dark' ? BackgroundColors.DarkThemeBackground : BackgroundColors.LightThemeBackground,
+                backgroundColor: theme.palette.background.default,
                 borderLeft: `4px solid ${BrandColors.MainPrimary}`,
-                boxShadow: '0px 8px 20px 0px rgba(0,0,0,0.15)',
+                boxShadow: '0px 8px 20px rgba(0,0,0,0.15)',
             }}>
                 <Stack direction='row'
                 sx={{
@@ -60,7 +61,7 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     <Typography sx={{
                         fontSize: '20px',
                         fontWeight: 600,
-                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
+                        color: theme.palette.text.primary,
                     }}>
                         {region.name.toUpperCase()}
                     </Typography>
@@ -69,14 +70,14 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
 
                 <Typography sx={{
                     fontSize: '12px',
-                    color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     CARBON INTENSITY
                 </Typography>
                 <Typography sx={{
                     fontSize: '30px',
                     fontWeight: 700,
-                    color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
+                    color: theme.palette.text.primary,
                 }}>
                     {carbonIntensity !== null ? `${carbonIntensity} gCO₂/kWh` : 'N/A'}
                 </Typography>
@@ -86,15 +87,11 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     gap: '8px',
                     alignItems: 'center',
                 }}>
-                    <Box sx={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        backgroundColor: fill
-                    }}/>
+                    <StatusDot color = {fill} size = '8px'/>
+                    
                     <Typography sx={{
                         fontSize: '12px',
-                        color: theme.palette.mode === 'dark' ? TextColors.LightThemeGray : TextColors.DarkThemeGray
+                        color: theme.palette.text.secondary
                     }}>
                         {state === 'active' ? 'Currently receiving traffic' : region.geography}
                     </Typography>
@@ -107,7 +104,7 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                     <Typography sx={{
                         fontSize: '20px',
                         fontWeight: 600,
-                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeText : TextColors.LightThemeText,
+                        color: theme.palette.text.primary,
                     }}>
                         Region Details
                     </Typography>
@@ -119,14 +116,14 @@ export const RegionDetailsPanel = forwardRef<HTMLDivElement, RegionDetailsPanelP
                 }}>
                     <Typography sx={{
                         fontSize: '13px',
-                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeGray : TextColors.LightThemeGray
+                        color: theme.palette.text.secondary
                     }}>
                         Last Routing Decision
                     </Typography>
                     <Typography sx={{
                         fontSize: '13px',
                         fontWeight: 600,
-                        color: theme.palette.mode === 'dark' ? TextColors.DarkThemeGray : TextColors.LightThemeGray
+                        color: theme.palette.text.secondary
                     }}>
                         {lastRoutingDecision}
                     </Typography>

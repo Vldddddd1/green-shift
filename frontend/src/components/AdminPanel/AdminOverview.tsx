@@ -1,49 +1,17 @@
-import { Stack, Box, Typography, useTheme, alpha, } from '@mui/material';
-import { BrandColors, TextColors, } from '../../assets/themes/colors';
-
+import { Stack, Box, } from '@mui/material';
 import { onlineAzCountByRegion, useLiveMetricsContext } from '../../hooks/liveMetrics';
 import { REGION_CATALOG } from './regionCatalog';
 
+import { adminPageSx } from './cardStyles';
 import StatCard from './StatCard';
 import RequestsByServer from './RequestsByServer';
 import PerformancePanel from './PerformancePanel';
 import RecentSimulations from './RecentSimulations';
 import AllRegionsGrid from './AllRegionsGrid';
-
-function LivePill({ connected, lastUpdate, }: { connected: boolean; lastUpdate: string | null }) {
-    const dotColor = connected ? BrandColors.MainPrimary : TextColors.DarkThemeGray;
-    const label = connected ? `Last updated ${lastUpdate ?? 'just now'}` : 'Not connected';
-
-    return (
-        <Stack
-            direction='row'
-            sx={{
-                alignItems: 'center',
-                gap: '8px',
-                padding: '8px 14px',
-                borderRadius: '20px',
-                border: `1px solid ${connected ? BrandColors.MainPrimary : 'rgba(255,255,255,0.15)'}`,
-                backgroundColor: connected ? alpha(BrandColors.MainPrimary, 0.14) : 'rgba(255,255,255,0.04)',
-            }}>
-                <Box sx={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    backgroundColor: dotColor,
-                }}/>
-                <Typography sx={{
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: connected ? TextColors.DarkThemeGray : TextColors.OverviewContent,
-                }}>
-                    {label}
-                </Typography>
-        </Stack>
-    );
-}
+import StatusPill from '../StatusPill';
+import AdminPageHeader from './AdminPageHeader';
 
 function AdminOverview(){
-    const theme = useTheme();
     const { metrics, connected } = useLiveMetricsContext();
 
     const onlineRegionCount = new Set(
@@ -53,38 +21,14 @@ function AdminOverview(){
     const onlineAzCounts = onlineAzCountByRegion(metrics.servers)
 
     return(
-        <Stack sx={{
-            gap: '28px',
-            padding: '40px',
-            width: '100%',
-        }}>
-            <Stack 
-                direction = 'row'
-                sx ={{
-                    alignItems: 'center',
-                    width: '100%',
-                }}>
-                    <Stack sx={{
-                        flex: '1 0 0',
-                        gap: '4px',
-                    }}>
-                        <Typography sx={{
-                            fontFamily: 'Sora',
-                            fontWeight: 800,
-                            fontSize: '30px',
-                            color: theme.palette.text.primary,
-                        }}>
-                            Overview
-                        </Typography>
-                        <Typography sx={{
-                            fontSize: '14px',
-                            color: theme.palette.text.secondary,
-                        }}>
-                            Live traffic simulation across all configured regions.
-                        </Typography>
-                    </Stack>
-                    <LivePill connected = {connected} lastUpdate = {metrics.lastUpdate}/>
-            </Stack>
+        <Stack sx = {
+            adminPageSx
+        }>
+            <AdminPageHeader
+                title = "Overview"
+                subtitle = "Live traffic simulation across all configured regions"
+                action = {<StatusPill active = {connected} label = {connected ? `Last updated ${metrics.lastUpdate ?? 'just now'}` : 'Not connected'}/>}
+            />
 
             <Stack
                 direction = 'row'
@@ -98,17 +42,17 @@ function AdminOverview(){
                     <StatCard
                         label = "REGIONS LIVE"
                         value = {connected ? `${onlineRegionCount} / ${REGION_CATALOG.length}` : null}
-                        helperText = {connected ? 'Live from /carbon' : 'Awaiting live data'}
+                        helperText = {connected ? 'Live from /servers' : 'Awaiting live data'}
                     />
                     <StatCard
                         label = "CARBON SAVED"
-                        value = {metrics.carbonSavedKg !== null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO₂` : null}
+                        value = {metrics.carbonSavedKg !== null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO2` : null}
                         helperText = "vs. static routing"
                     />
                     <StatCard
                         label = "SAVINGS MULTIPLIER"
                         value = {metrics.savingsMultiplier !== null ? `x${metrics.savingsMultiplier.toFixed(1)}`: null}
-                        helperText = "cleaner-grid efficiency"
+                        helperText = "Cleaner-grid efficiency"
                     />
             </Stack>
 
@@ -134,8 +78,8 @@ function AdminOverview(){
                         gap: '32px',
                     }}>
                         <PerformancePanel
-                            averageLatencyMs = {metrics.averageLatencyMs} //nu exista inca in api resposne
-                            carbonReductionPercent = {metrics.carbonReductionPercent} //nu exista inca in api response
+                            averageLatencyMs = {metrics.averageLatencyMs} 
+                            carbonReductionPercent = {metrics.carbonReductionPercent} 
                             activeRegion = {metrics.activeRegion}
                             apiHealth = {metrics.apiHealth}
                         />

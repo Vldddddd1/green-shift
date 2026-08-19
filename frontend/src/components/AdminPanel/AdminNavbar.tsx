@@ -1,4 +1,5 @@
-import { Stack, Box, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Stack, Box, Typography, Drawer } from '@mui/material';
 import { useTheme, alpha } from '@mui/material';
 import { NavLink } from 'react-router';
 
@@ -6,9 +7,15 @@ import { Logo } from '../Logo';
 
 import BackButton from '../BackButton';
 import ThemeButton from '../ThemeButton';
+import DashboardButton from '../DashboardButton';
+import MenuIcon from "../../assets/icons/menu.svg?react";
 
 import { BrandColors, regionMarkerStates } from '../../assets/themes/colors';
 import { useLiveMetricsContext } from '../../hooks/liveMetrics';
+import RoundedIconButton from '../RoundedIconButton';
+import { gradientTopBarSx } from '../../assets/themes/sharedStyles';
+import StatusDot from '../StatusDot';
+import LogoutButton from './LogoutButton';
 
 interface NavItem {
     label: string;
@@ -31,7 +38,6 @@ function SectionLabel({ children }: { children: string }) {
     return (
         <Typography sx={{
             width: '100%',
-            fontFamily: 'Sora',
             fontWeight: 600,
             fontSize: '11px',
             letterSpacing: '1px',
@@ -43,7 +49,7 @@ function SectionLabel({ children }: { children: string }) {
     );
 }
 
-function SidebarNavItem({ label, to }: NavItem) {
+function SidebarNavItem({ label, to, onNavigate }: NavItem & { onNavigate?: () => void }) {
     const theme = useTheme();
 
     return (
@@ -51,6 +57,7 @@ function SidebarNavItem({ label, to }: NavItem) {
             component={NavLink}
             to={to}
             end={to === '/admin'}
+            onClick={onNavigate}
             sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -77,7 +84,6 @@ function SidebarNavItem({ label, to }: NavItem) {
                 })
             } />
             <Typography sx={{
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '16px',
                 color: theme.custom.adminSidebarMutedText,
@@ -89,9 +95,9 @@ function SidebarNavItem({ label, to }: NavItem) {
     )
 }
 
-function AdminNavbar() {
+function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     const theme = useTheme();
-    
+
     const { connected } = useLiveMetricsContext();
     const apiStatus: 'online' | 'offline' = connected ? 'online' : 'offline';
 
@@ -99,11 +105,7 @@ function AdminNavbar() {
         <Stack
             sx={{
                 width: theme.fluid.sidebarWidth,
-                height: '100svh',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                zIndex: 9000,
+                height: '100%',
                 alignItems: 'center',
                 gap: '4px',
                 paddingTop: '28px',
@@ -131,11 +133,11 @@ function AdminNavbar() {
                 }}>
                 <BackButton />
                 <ThemeButton />
+                <DashboardButton />
             </Stack>
 
             <Typography sx={{
                 width: '100%',
-                fontFamily: 'Sora',
                 fontWeight: 600,
                 fontSize: '11px',
                 letterSpacing: '1.2px',
@@ -161,7 +163,7 @@ function AdminNavbar() {
                 gap: '4px',
             }}>
                 {MONITORING_ITEMS.map((item) => (
-                    <SidebarNavItem key={item.to} {...item} />
+                    <SidebarNavItem key={item.to} {...item} onNavigate={onNavigate} />
                 ))}
             </Stack>
 
@@ -185,32 +187,111 @@ function AdminNavbar() {
                 ))}
             </Stack>
 
-            <Box sx={{ flexGrow: 1 }}/>
+            <Box sx={{ flexGrow: 1 }} />
 
-            <Stack 
-            direction = 'row' 
-            sx={{
-                width: '100%',
-                alignItems: 'center',
-                gap: '8px',
-            }}
+            <Stack
+                direction='row'
+                sx={{
+                    width: '100%',
+                    alignItems: 'center',
+                    gap: '8px',
+                }}
             >
-                <Box sx={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: apiStatus === 'online' ? regionMarkerStates.active.fill : regionMarkerStates.offline.fill
-                }}/>
+                <StatusDot
+                    color = {apiStatus === 'online' ? regionMarkerStates.active.fill : regionMarkerStates.offline.fill}
+                    size = '8px'
+                />
+
                 <Typography sx={{
-                    fontFamily: 'Sora',
                     fontSize: '12px',
                     color: theme.custom.adminSidebarMutedText
                 }}>
                     API connection {apiStatus === 'online' ? 'healthy' : 'unavailable'}
                 </Typography>
+
             </Stack>
+            
+                <LogoutButton/>
         </Stack>
+    );
+}
+
+function AdminNavbar() {
+    const theme = useTheme();
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    return (
+        <>
+            {/* DESKTOP + TABLET */}
+            <Box sx={{
+                display: { xs: 'none', sm: 'block' },
+                height: '100%',
+                width: theme.fluid.sidebarWidth,
+                flexShrink: 0,
+                touchAction: 'none',
+                zIndex: 9000,
+                borderRight: `1px solid ${theme.custom.adminSidebarBorder}`,
+                transition: 'background-color 0.5s ease, color 0.5s ease',
+            }}>
+                <SidebarContent />
+            </Box>
+
+            {/* MOBILE */}
+            <Stack
+                direction='row'
+                sx={{
+                    display: { xs: 'flex', sm: 'none' },
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: theme.fluid.navbarHeight,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingX: theme.fluid.edgeOffset,
+                    zIndex: 9000,
+                    touchAction: 'none',
+                    ...gradientTopBarSx(theme),
+                }}>
+                <BackButton />
+
+                <Box sx={{
+                    height: '28px',
+                    '& svg': {
+                        height: '100%',
+                        width: 'auto',
+                    }
+                }}>
+                    <Logo />
+                </Box>
+
+                <RoundedIconButton
+                    onClick={() => setMobileOpen(true)}
+                    icon = {<MenuIcon width={16} height={16} style={{ color: theme.custom.themeIconColor,}} />}
+                />
+
+            </Stack>
+
+            <Drawer
+                anchor='left'
+                open={mobileOpen}
+                onClose={() => setMobileOpen(false)}
+                sx={{
+                    zIndex: 9999,
+                }}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            backgroundColor: theme.custom.adminSidebarBackground,
+                            backgroundImage: 'none',
+                        }
+                    }
+                }}>
+                <SidebarContent onNavigate={() => setMobileOpen(false)} />
+            </Drawer>
+        </>
     )
+
 }
 
 export default AdminNavbar;

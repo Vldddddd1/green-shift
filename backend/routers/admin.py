@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from services.state_service import get_state, reset_state
 from services.routing_service import decide_route, update_load_after_request
 from services.forwarding_service import forward_to_region
-from services.stats_service import reset_stats
+from services.stats_service import reset_stats, record_request
 from services.auth_service import verify_credentials, ADMIN_TOKEN, require_auth
 from models.schemas import (
     UpdateCarbonScoreRequest,
@@ -52,16 +52,35 @@ def update_status(payload: UpdateStatusRequest):
         raise HTTPException(status_code=404, detail="Zone or server not found")
 
     zones[payload.zone][payload.server]["status"] = payload.status
+    zones[payload.zone][payload.server]["manual_override"] = True
     return {"status": "updated"}
+
+@router.post("/release-override", dependencies=[Depends(require_auth)])
+def release_override(payload: UpdateStatusRequest):
+    zones = get_state()
+    if payload.zone not in zones or payload.server not in zones[payload.zone]:
+        raise HTTPException(status_code=404, detail="Zone or server not found")
+
+    zones[payload.zone][payload.server]["manual_override"] = False
+    return {"status": "override released"}
 
 
 @router.post("/simulate", dependencies=[Depends(require_auth)])
 def simulate_requests(payload: SimulateRequest):
+    if payload.zone is not None and payload.zone not in get_state():
+        raise HTTPException(status_code=404, detail="Unknown zone")
+
     results = []
     for _ in range(payload.count):
-        zone, server = decide_route()
+        zone, server = decide_route(payload.zone)
         forward_to_region(server)
         update_load_after_request(zone, server)
+
+        carbon_score = get_state()[zone][server]["carbon_score"]
+        latency = get_state()[zone][server]["latency"]
+
+        record_request(zone, server, carbon_score, latency)
+
         results.append({"zone": zone, "server": server})
 
     return {"simulated": payload.count, "results": results}
