@@ -167,10 +167,12 @@ export const OverviewDetails = ({ visible = true}: OverviewDetailsProps) => {
                 <MetricRow
                     label="Carbon Emissions Saved"
                     value={display(metrics.carbonSavedKg != null ? `${metrics.carbonSavedKg.toFixed(1)} kg CO2` : NA)}
+                    valueColor={ theme.palette.mode === 'dark' ? theme.palette.text.primary : TextColors.DarkThemeText}
                 />
                 <MetricRow
                     label="Savings Multiplier"
                     value={display(metrics.savingsMultiplier != null ? `${metrics.savingsMultiplier.toFixed(1)}x` : NA)}
+                    valueColor={ theme.palette.mode === 'dark' ? theme.palette.text.primary : TextColors.DarkThemeText}
                 />
                 {metrics.apiHealth === null ? (
                     <MetricRow label="API Connection" value={NA} valueColor={TextColors.DarkThemeGray} />
