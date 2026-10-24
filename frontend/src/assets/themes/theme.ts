@@ -1,6 +1,10 @@
 import { BrandColors, TextColors, BackgroundColors, shadows } from './colors.ts';
 import type { PaletteMode } from '@mui/material';
 
+const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const cartoKey = isLocal ? import.meta.env.VITE_CARTO_KEY : import.meta.env.VITE_CARTO_KEY_SITE;
+const keyParam = cartoKey ? `?key=${cartoKey}` : '';
+
 // Fluid values: clamp(min, preferred, max)
 export interface FluidTokens {
     edgeOffset: string;
@@ -95,7 +99,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
         navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.DarkThemeText} 100%)`,
         backIconColor: TextColors.DarkThemeWhite,
         themeIconColor: TextColors.DarkThemeWhite,
-        mapTileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        mapTileUrl: `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png${keyParam}`,
         landingBodyColor: TextColors.DarkThemeWhite,
         landingFooterColor: TextColors.DarkThemeText,
         cardShadow: shadows.darkMode,
@@ -108,7 +112,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
         navBorderGradient: `linear-gradient(90deg, ${BrandColors.MainPrimary} 40%, ${TextColors.LightThemeText} 100%)`,
         backIconColor: TextColors.LightThemeText,
         themeIconColor: TextColors.LightThemeText,
-        mapTileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        mapTileUrl: `https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png${keyParam}`,
         landingBodyColor: TextColors.LightThemeGray,
         landingFooterColor: TextColors.LightThemeGray,
         cardShadow: shadows.lightMode,

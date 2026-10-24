@@ -12,6 +12,10 @@ EXPOSE 5173
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 FROM base AS build
+ARG VITE_CARTO_KEY_SITE
+ENV VITE_CARTO_KEY_SITE=$VITE_CARTO_KEY_SITE
+ARG VITE_CARTO_KEY
+ENV VITE_CARTO_KEY=$VITE_CARTO_KEY
 RUN npm run build
 
 FROM build AS prod

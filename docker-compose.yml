@@ -8,7 +8,11 @@ services:
       - ./backend:/app
 
   frontend:
-    build: ./frontend
+    build: 
+        context: ./frontend
+        args: 
+            VITE_CARTO_KEY_SITE: ${VITE_CARTO_KEY_SITE}
+            VITE_CARTO_KEY: ${VITE_CARTO_KEY}
     ports:
       - "4173:4173"
     environment:
@@ -27,6 +31,8 @@ services:
       - /app/node_modules
     environment:
       API_PROXY_TARGET: http://backend:8000
+      VITE_CARTO_KEY: ${VITE_CARTO_KEY}
+      
 
   eu-west-1:
     build: ./server

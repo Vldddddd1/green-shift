@@ -172,7 +172,7 @@ export const RegionMap = ({ regions, servers }: RegionMapProps) => {
                 <TileLayer
                     url={theme.custom.mapTileUrl}
                     noWrap={true}
-                    attribution='© OpenStreetMap, © CARTO' />
+                    attribution='© OpenStreetMap contributors, © CARTO' />
                 <MapPanelSync
                     selected={selected}
                     panelHeight={panelHeight}
